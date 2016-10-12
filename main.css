@@ -1,0 +1,2251 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+/*!
+ *  Font Awesome 3.2.1
+ *  the iconic font designed for Bootstrap
+ *  ------------------------------------------------------------------------------
+ *  The full suite of pictographic icons, examples, and documentation can be
+ *  found at http://fontawesome.io.  Stay up to date on Twitter at
+ *  http://twitter.com/fontawesome.
+ *
+ *  License
+ *  ------------------------------------------------------------------------------
+ *  - The Font Awesome font is licensed under SIL OFL 1.1 -
+ *    http://scripts.sil.org/OFL
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -
+ *    http://opensource.org/licenses/mit-license.html
+ *  - Font Awesome documentation licensed under CC BY 3.0 -
+ *    http://creativecommons.org/licenses/by/3.0/
+ *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
+ *    "Font Awesome by Dave Gandy - http://fontawesome.io"
+ *
+ *  Author - Dave Gandy
+ *  ------------------------------------------------------------------------------
+ *  Email: dave@fontawesome.io
+ *  Twitter: http://twitter.com/davegandy
+ *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
+ */
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.eot?v=3.2.1');
+  src: url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.eot?#iefix&v=3.2.1') format('embedded-opentype'), url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.woff?v=3.2.1') format('woff'), url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.ttf?v=3.2.1') format('truetype'), url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.svg#fontawesomeregular?v=3.2.1') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* FONT AWESOME CORE
+ * -------------------------- */
+[class^="icon-"],
+[class*=" icon-"] {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  *margin-right: .3em;
+}
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  text-decoration: inherit;
+  display: inline-block;
+  speak: none;
+}
+/* makes the font 33% larger relative to the icon container */
+.icon-large:before {
+  vertical-align: -10%;
+  font-size: 1.33333333em;
+}
+/* makes sure icons active on rollover in links */
+a [class^="icon-"],
+a [class*=" icon-"] {
+  display: inline;
+}
+/* increased font size for icon-large */
+[class^="icon-"].icon-fixed-width,
+[class*=" icon-"].icon-fixed-width {
+  display: inline-block;
+  width: 1.14285714em;
+  text-align: right;
+  padding-right: 0.28571429em;
+}
+[class^="icon-"].icon-fixed-width.icon-large,
+[class*=" icon-"].icon-fixed-width.icon-large {
+  width: 1.42857143em;
+}
+.icons-ul {
+  margin-left: 2.14285714em;
+  list-style-type: none;
+}
+.icons-ul > li {
+  position: relative;
+}
+.icons-ul .icon-li {
+  position: absolute;
+  left: -2.14285714em;
+  width: 2.14285714em;
+  text-align: center;
+  line-height: inherit;
+}
+[class^="icon-"].hide,
+[class*=" icon-"].hide {
+  display: none;
+}
+.icon-muted {
+  color: #eeeeee;
+}
+.icon-light {
+  color: #ffffff;
+}
+.icon-dark {
+  color: #333333;
+}
+.icon-border {
+  border: solid 1px #eeeeee;
+  padding: .2em .25em .15em;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.icon-2x {
+  font-size: 2em;
+}
+.icon-2x.icon-border {
+  border-width: 2px;
+  -webkit-border-top-right-radius: 4px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 4px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.icon-3x {
+  font-size: 3em;
+}
+.icon-3x.icon-border {
+  border-width: 3px;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.icon-4x {
+  font-size: 4em;
+}
+.icon-4x.icon-border {
+  border-width: 4px;
+  -webkit-border-top-right-radius: 6px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+.icon-5x {
+  font-size: 5em;
+}
+.icon-5x.icon-border {
+  border-width: 5px;
+  -webkit-border-top-right-radius: 7px;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  -moz-border-radius-topright: 7px;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-bottomleft: 0;
+  -moz-border-radius-topleft: 0;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+}
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}
+[class^="icon-"].pull-left,
+[class*=" icon-"].pull-left {
+  margin-right: .3em;
+}
+[class^="icon-"].pull-right,
+[class*=" icon-"].pull-right {
+  margin-left: .3em;
+}
+/* EXTRAS
+ * -------------------------- */
+/* Stacked and layered icon */
+.icon-stack {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  vertical-align: -35%;
+}
+.icon-stack [class^="icon-"],
+.icon-stack [class*=" icon-"] {
+  display: block;
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: 1em;
+  line-height: inherit;
+  *line-height: 2em;
+}
+.icon-stack .icon-stack-base {
+  font-size: 2em;
+  *line-height: 1em;
+}
+/* Animated rotating icon */
+.icon-spin {
+  display: inline-block;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+/* Prevent stack and spinners from being taken inline when inside a link */
+a .icon-stack,
+a .icon-spin {
+  display: inline-block;
+  text-decoration: none;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+/* Icon rotations and mirroring */
+.icon-rotate-90:before {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+}
+.icon-rotate-180:before {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+.icon-rotate-270:before {
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+.icon-flip-horizontal:before {
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+.icon-flip-vertical:before {
+  -webkit-transform: scale(1, -1);
+  -moz-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  -o-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+/* ensure rotation occurs inside anchor tags */
+a .icon-rotate-90:before,
+a .icon-rotate-180:before,
+a .icon-rotate-270:before,
+a .icon-flip-horizontal:before,
+a .icon-flip-vertical:before {
+  display: inline-block;
+}
+/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
+   readers do not read off random characters that represent icons */
+.icon-glass:before {
+  content: "\f000";
+}
+.icon-music:before {
+  content: "\f001";
+}
+.icon-search:before {
+  content: "\f002";
+}
+.icon-envelope-alt:before {
+  content: "\f003";
+}
+.icon-heart:before {
+  content: "\f004";
+}
+.icon-star:before {
+  content: "\f005";
+}
+.icon-star-empty:before {
+  content: "\f006";
+}
+.icon-user:before {
+  content: "\f007";
+}
+.icon-film:before {
+  content: "\f008";
+}
+.icon-th-large:before {
+  content: "\f009";
+}
+.icon-th:before {
+  content: "\f00a";
+}
+.icon-th-list:before {
+  content: "\f00b";
+}
+.icon-ok:before {
+  content: "\f00c";
+}
+.icon-remove:before {
+  content: "\f00d";
+}
+.icon-zoom-in:before {
+  content: "\f00e";
+}
+.icon-zoom-out:before {
+  content: "\f010";
+}
+.icon-power-off:before,
+.icon-off:before {
+  content: "\f011";
+}
+.icon-signal:before {
+  content: "\f012";
+}
+.icon-gear:before,
+.icon-cog:before {
+  content: "\f013";
+}
+.icon-trash:before {
+  content: "\f014";
+}
+.icon-home:before {
+  content: "\f015";
+}
+.icon-file-alt:before {
+  content: "\f016";
+}
+.icon-time:before {
+  content: "\f017";
+}
+.icon-road:before {
+  content: "\f018";
+}
+.icon-download-alt:before {
+  content: "\f019";
+}
+.icon-download:before {
+  content: "\f01a";
+}
+.icon-upload:before {
+  content: "\f01b";
+}
+.icon-inbox:before {
+  content: "\f01c";
+}
+.icon-play-circle:before {
+  content: "\f01d";
+}
+.icon-rotate-right:before,
+.icon-repeat:before {
+  content: "\f01e";
+}
+.icon-refresh:before {
+  content: "\f021";
+}
+.icon-list-alt:before {
+  content: "\f022";
+}
+.icon-lock:before {
+  content: "\f023";
+}
+.icon-flag:before {
+  content: "\f024";
+}
+.icon-headphones:before {
+  content: "\f025";
+}
+.icon-volume-off:before {
+  content: "\f026";
+}
+.icon-volume-down:before {
+  content: "\f027";
+}
+.icon-volume-up:before {
+  content: "\f028";
+}
+.icon-qrcode:before {
+  content: "\f029";
+}
+.icon-barcode:before {
+  content: "\f02a";
+}
+.icon-tag:before {
+  content: "\f02b";
+}
+.icon-tags:before {
+  content: "\f02c";
+}
+.icon-book:before {
+  content: "\f02d";
+}
+.icon-bookmark:before {
+  content: "\f02e";
+}
+.icon-print:before {
+  content: "\f02f";
+}
+.icon-camera:before {
+  content: "\f030";
+}
+.icon-font:before {
+  content: "\f031";
+}
+.icon-bold:before {
+  content: "\f032";
+}
+.icon-italic:before {
+  content: "\f033";
+}
+.icon-text-height:before {
+  content: "\f034";
+}
+.icon-text-width:before {
+  content: "\f035";
+}
+.icon-align-left:before {
+  content: "\f036";
+}
+.icon-align-center:before {
+  content: "\f037";
+}
+.icon-align-right:before {
+  content: "\f038";
+}
+.icon-align-justify:before {
+  content: "\f039";
+}
+.icon-list:before {
+  content: "\f03a";
+}
+.icon-indent-left:before {
+  content: "\f03b";
+}
+.icon-indent-right:before {
+  content: "\f03c";
+}
+.icon-facetime-video:before {
+  content: "\f03d";
+}
+.icon-picture:before {
+  content: "\f03e";
+}
+.icon-pencil:before {
+  content: "\f040";
+}
+.icon-map-marker:before {
+  content: "\f041";
+}
+.icon-adjust:before {
+  content: "\f042";
+}
+.icon-tint:before {
+  content: "\f043";
+}
+.icon-edit:before {
+  content: "\f044";
+}
+.icon-share:before {
+  content: "\f045";
+}
+.icon-check:before {
+  content: "\f046";
+}
+.icon-move:before {
+  content: "\f047";
+}
+.icon-step-backward:before {
+  content: "\f048";
+}
+.icon-fast-backward:before {
+  content: "\f049";
+}
+.icon-backward:before {
+  content: "\f04a";
+}
+.icon-play:before {
+  content: "\f04b";
+}
+.icon-pause:before {
+  content: "\f04c";
+}
+.icon-stop:before {
+  content: "\f04d";
+}
+.icon-forward:before {
+  content: "\f04e";
+}
+.icon-fast-forward:before {
+  content: "\f050";
+}
+.icon-step-forward:before {
+  content: "\f051";
+}
+.icon-eject:before {
+  content: "\f052";
+}
+.icon-chevron-left:before {
+  content: "\f053";
+}
+.icon-chevron-right:before {
+  content: "\f054";
+}
+.icon-plus-sign:before {
+  content: "\f055";
+}
+.icon-minus-sign:before {
+  content: "\f056";
+}
+.icon-remove-sign:before {
+  content: "\f057";
+}
+.icon-ok-sign:before {
+  content: "\f058";
+}
+.icon-question-sign:before {
+  content: "\f059";
+}
+.icon-info-sign:before {
+  content: "\f05a";
+}
+.icon-screenshot:before {
+  content: "\f05b";
+}
+.icon-remove-circle:before {
+  content: "\f05c";
+}
+.icon-ok-circle:before {
+  content: "\f05d";
+}
+.icon-ban-circle:before {
+  content: "\f05e";
+}
+.icon-arrow-left:before {
+  content: "\f060";
+}
+.icon-arrow-right:before {
+  content: "\f061";
+}
+.icon-arrow-up:before {
+  content: "\f062";
+}
+.icon-arrow-down:before {
+  content: "\f063";
+}
+.icon-mail-forward:before,
+.icon-share-alt:before {
+  content: "\f064";
+}
+.icon-resize-full:before {
+  content: "\f065";
+}
+.icon-resize-small:before {
+  content: "\f066";
+}
+.icon-plus:before {
+  content: "\f067";
+}
+.icon-minus:before {
+  content: "\f068";
+}
+.icon-asterisk:before {
+  content: "\f069";
+}
+.icon-exclamation-sign:before {
+  content: "\f06a";
+}
+.icon-gift:before {
+  content: "\f06b";
+}
+.icon-leaf:before {
+  content: "\f06c";
+}
+.icon-fire:before {
+  content: "\f06d";
+}
+.icon-eye-open:before {
+  content: "\f06e";
+}
+.icon-eye-close:before {
+  content: "\f070";
+}
+.icon-warning-sign:before {
+  content: "\f071";
+}
+.icon-plane:before {
+  content: "\f072";
+}
+.icon-calendar:before {
+  content: "\f073";
+}
+.icon-random:before {
+  content: "\f074";
+}
+.icon-comment:before {
+  content: "\f075";
+}
+.icon-magnet:before {
+  content: "\f076";
+}
+.icon-chevron-up:before {
+  content: "\f077";
+}
+.icon-chevron-down:before {
+  content: "\f078";
+}
+.icon-retweet:before {
+  content: "\f079";
+}
+.icon-shopping-cart:before {
+  content: "\f07a";
+}
+.icon-folder-close:before {
+  content: "\f07b";
+}
+.icon-folder-open:before {
+  content: "\f07c";
+}
+.icon-resize-vertical:before {
+  content: "\f07d";
+}
+.icon-resize-horizontal:before {
+  content: "\f07e";
+}
+.icon-bar-chart:before {
+  content: "\f080";
+}
+.icon-twitter-sign:before {
+  content: "\f081";
+}
+.icon-facebook-sign:before {
+  content: "\f082";
+}
+.icon-camera-retro:before {
+  content: "\f083";
+}
+.icon-key:before {
+  content: "\f084";
+}
+.icon-gears:before,
+.icon-cogs:before {
+  content: "\f085";
+}
+.icon-comments:before {
+  content: "\f086";
+}
+.icon-thumbs-up-alt:before {
+  content: "\f087";
+}
+.icon-thumbs-down-alt:before {
+  content: "\f088";
+}
+.icon-star-half:before {
+  content: "\f089";
+}
+.icon-heart-empty:before {
+  content: "\f08a";
+}
+.icon-signout:before {
+  content: "\f08b";
+}
+.icon-linkedin-sign:before {
+  content: "\f08c";
+}
+.icon-pushpin:before {
+  content: "\f08d";
+}
+.icon-external-link:before {
+  content: "\f08e";
+}
+.icon-signin:before {
+  content: "\f090";
+}
+.icon-trophy:before {
+  content: "\f091";
+}
+.icon-github-sign:before {
+  content: "\f092";
+}
+.icon-upload-alt:before {
+  content: "\f093";
+}
+.icon-lemon:before {
+  content: "\f094";
+}
+.icon-phone:before {
+  content: "\f095";
+}
+.icon-unchecked:before,
+.icon-check-empty:before {
+  content: "\f096";
+}
+.icon-bookmark-empty:before {
+  content: "\f097";
+}
+.icon-phone-sign:before {
+  content: "\f098";
+}
+.icon-twitter:before {
+  content: "\f099";
+}
+.icon-facebook:before {
+  content: "\f09a";
+}
+.icon-github:before {
+  content: "\f09b";
+}
+.icon-unlock:before {
+  content: "\f09c";
+}
+.icon-credit-card:before {
+  content: "\f09d";
+}
+.icon-rss:before {
+  content: "\f09e";
+}
+.icon-hdd:before {
+  content: "\f0a0";
+}
+.icon-bullhorn:before {
+  content: "\f0a1";
+}
+.icon-bell:before {
+  content: "\f0a2";
+}
+.icon-certificate:before {
+  content: "\f0a3";
+}
+.icon-hand-right:before {
+  content: "\f0a4";
+}
+.icon-hand-left:before {
+  content: "\f0a5";
+}
+.icon-hand-up:before {
+  content: "\f0a6";
+}
+.icon-hand-down:before {
+  content: "\f0a7";
+}
+.icon-circle-arrow-left:before {
+  content: "\f0a8";
+}
+.icon-circle-arrow-right:before {
+  content: "\f0a9";
+}
+.icon-circle-arrow-up:before {
+  content: "\f0aa";
+}
+.icon-circle-arrow-down:before {
+  content: "\f0ab";
+}
+.icon-globe:before {
+  content: "\f0ac";
+}
+.icon-wrench:before {
+  content: "\f0ad";
+}
+.icon-tasks:before {
+  content: "\f0ae";
+}
+.icon-filter:before {
+  content: "\f0b0";
+}
+.icon-briefcase:before {
+  content: "\f0b1";
+}
+.icon-fullscreen:before {
+  content: "\f0b2";
+}
+.icon-group:before {
+  content: "\f0c0";
+}
+.icon-link:before {
+  content: "\f0c1";
+}
+.icon-cloud:before {
+  content: "\f0c2";
+}
+.icon-beaker:before {
+  content: "\f0c3";
+}
+.icon-cut:before {
+  content: "\f0c4";
+}
+.icon-copy:before {
+  content: "\f0c5";
+}
+.icon-paperclip:before,
+.icon-paper-clip:before {
+  content: "\f0c6";
+}
+.icon-save:before {
+  content: "\f0c7";
+}
+.icon-sign-blank:before {
+  content: "\f0c8";
+}
+.icon-reorder:before {
+  content: "\f0c9";
+}
+.icon-list-ul:before {
+  content: "\f0ca";
+}
+.icon-list-ol:before {
+  content: "\f0cb";
+}
+.icon-strikethrough:before {
+  content: "\f0cc";
+}
+.icon-underline:before {
+  content: "\f0cd";
+}
+.icon-table:before {
+  content: "\f0ce";
+}
+.icon-magic:before {
+  content: "\f0d0";
+}
+.icon-truck:before {
+  content: "\f0d1";
+}
+.icon-pinterest:before {
+  content: "\f0d2";
+}
+.icon-pinterest-sign:before {
+  content: "\f0d3";
+}
+.icon-google-plus-sign:before {
+  content: "\f0d4";
+}
+.icon-google-plus:before {
+  content: "\f0d5";
+}
+.icon-money:before {
+  content: "\f0d6";
+}
+.icon-caret-down:before {
+  content: "\f0d7";
+}
+.icon-caret-up:before {
+  content: "\f0d8";
+}
+.icon-caret-left:before {
+  content: "\f0d9";
+}
+.icon-caret-right:before {
+  content: "\f0da";
+}
+.icon-columns:before {
+  content: "\f0db";
+}
+.icon-sort:before {
+  content: "\f0dc";
+}
+.icon-sort-down:before {
+  content: "\f0dd";
+}
+.icon-sort-up:before {
+  content: "\f0de";
+}
+.icon-envelope:before {
+  content: "\f0e0";
+}
+.icon-linkedin:before {
+  content: "\f0e1";
+}
+.icon-rotate-left:before,
+.icon-undo:before {
+  content: "\f0e2";
+}
+.icon-legal:before {
+  content: "\f0e3";
+}
+.icon-dashboard:before {
+  content: "\f0e4";
+}
+.icon-comment-alt:before {
+  content: "\f0e5";
+}
+.icon-comments-alt:before {
+  content: "\f0e6";
+}
+.icon-bolt:before {
+  content: "\f0e7";
+}
+.icon-sitemap:before {
+  content: "\f0e8";
+}
+.icon-umbrella:before {
+  content: "\f0e9";
+}
+.icon-paste:before {
+  content: "\f0ea";
+}
+.icon-lightbulb:before {
+  content: "\f0eb";
+}
+.icon-exchange:before {
+  content: "\f0ec";
+}
+.icon-cloud-download:before {
+  content: "\f0ed";
+}
+.icon-cloud-upload:before {
+  content: "\f0ee";
+}
+.icon-user-md:before {
+  content: "\f0f0";
+}
+.icon-stethoscope:before {
+  content: "\f0f1";
+}
+.icon-suitcase:before {
+  content: "\f0f2";
+}
+.icon-bell-alt:before {
+  content: "\f0f3";
+}
+.icon-coffee:before {
+  content: "\f0f4";
+}
+.icon-food:before {
+  content: "\f0f5";
+}
+.icon-file-text-alt:before {
+  content: "\f0f6";
+}
+.icon-building:before {
+  content: "\f0f7";
+}
+.icon-hospital:before {
+  content: "\f0f8";
+}
+.icon-ambulance:before {
+  content: "\f0f9";
+}
+.icon-medkit:before {
+  content: "\f0fa";
+}
+.icon-fighter-jet:before {
+  content: "\f0fb";
+}
+.icon-beer:before {
+  content: "\f0fc";
+}
+.icon-h-sign:before {
+  content: "\f0fd";
+}
+.icon-plus-sign-alt:before {
+  content: "\f0fe";
+}
+.icon-double-angle-left:before {
+  content: "\f100";
+}
+.icon-double-angle-right:before {
+  content: "\f101";
+}
+.icon-double-angle-up:before {
+  content: "\f102";
+}
+.icon-double-angle-down:before {
+  content: "\f103";
+}
+.icon-angle-left:before {
+  content: "\f104";
+}
+.icon-angle-right:before {
+  content: "\f105";
+}
+.icon-angle-up:before {
+  content: "\f106";
+}
+.icon-angle-down:before {
+  content: "\f107";
+}
+.icon-desktop:before {
+  content: "\f108";
+}
+.icon-laptop:before {
+  content: "\f109";
+}
+.icon-tablet:before {
+  content: "\f10a";
+}
+.icon-mobile-phone:before {
+  content: "\f10b";
+}
+.icon-circle-blank:before {
+  content: "\f10c";
+}
+.icon-quote-left:before {
+  content: "\f10d";
+}
+.icon-quote-right:before {
+  content: "\f10e";
+}
+.icon-spinner:before {
+  content: "\f110";
+}
+.icon-circle:before {
+  content: "\f111";
+}
+.icon-mail-reply:before,
+.icon-reply:before {
+  content: "\f112";
+}
+.icon-github-alt:before {
+  content: "\f113";
+}
+.icon-folder-close-alt:before {
+  content: "\f114";
+}
+.icon-folder-open-alt:before {
+  content: "\f115";
+}
+.icon-expand-alt:before {
+  content: "\f116";
+}
+.icon-collapse-alt:before {
+  content: "\f117";
+}
+.icon-smile:before {
+  content: "\f118";
+}
+.icon-frown:before {
+  content: "\f119";
+}
+.icon-meh:before {
+  content: "\f11a";
+}
+.icon-gamepad:before {
+  content: "\f11b";
+}
+.icon-keyboard:before {
+  content: "\f11c";
+}
+.icon-flag-alt:before {
+  content: "\f11d";
+}
+.icon-flag-checkered:before {
+  content: "\f11e";
+}
+.icon-terminal:before {
+  content: "\f120";
+}
+.icon-code:before {
+  content: "\f121";
+}
+.icon-reply-all:before {
+  content: "\f122";
+}
+.icon-mail-reply-all:before {
+  content: "\f122";
+}
+.icon-star-half-full:before,
+.icon-star-half-empty:before {
+  content: "\f123";
+}
+.icon-location-arrow:before {
+  content: "\f124";
+}
+.icon-crop:before {
+  content: "\f125";
+}
+.icon-code-fork:before {
+  content: "\f126";
+}
+.icon-unlink:before {
+  content: "\f127";
+}
+.icon-question:before {
+  content: "\f128";
+}
+.icon-info:before {
+  content: "\f129";
+}
+.icon-exclamation:before {
+  content: "\f12a";
+}
+.icon-superscript:before {
+  content: "\f12b";
+}
+.icon-subscript:before {
+  content: "\f12c";
+}
+.icon-eraser:before {
+  content: "\f12d";
+}
+.icon-puzzle-piece:before {
+  content: "\f12e";
+}
+.icon-microphone:before {
+  content: "\f130";
+}
+.icon-microphone-off:before {
+  content: "\f131";
+}
+.icon-shield:before {
+  content: "\f132";
+}
+.icon-calendar-empty:before {
+  content: "\f133";
+}
+.icon-fire-extinguisher:before {
+  content: "\f134";
+}
+.icon-rocket:before {
+  content: "\f135";
+}
+.icon-maxcdn:before {
+  content: "\f136";
+}
+.icon-chevron-sign-left:before {
+  content: "\f137";
+}
+.icon-chevron-sign-right:before {
+  content: "\f138";
+}
+.icon-chevron-sign-up:before {
+  content: "\f139";
+}
+.icon-chevron-sign-down:before {
+  content: "\f13a";
+}
+.icon-html5:before {
+  content: "\f13b";
+}
+.icon-css3:before {
+  content: "\f13c";
+}
+.icon-anchor:before {
+  content: "\f13d";
+}
+.icon-unlock-alt:before {
+  content: "\f13e";
+}
+.icon-bullseye:before {
+  content: "\f140";
+}
+.icon-ellipsis-horizontal:before {
+  content: "\f141";
+}
+.icon-ellipsis-vertical:before {
+  content: "\f142";
+}
+.icon-rss-sign:before {
+  content: "\f143";
+}
+.icon-play-sign:before {
+  content: "\f144";
+}
+.icon-ticket:before {
+  content: "\f145";
+}
+.icon-minus-sign-alt:before {
+  content: "\f146";
+}
+.icon-check-minus:before {
+  content: "\f147";
+}
+.icon-level-up:before {
+  content: "\f148";
+}
+.icon-level-down:before {
+  content: "\f149";
+}
+.icon-check-sign:before {
+  content: "\f14a";
+}
+.icon-edit-sign:before {
+  content: "\f14b";
+}
+.icon-external-link-sign:before {
+  content: "\f14c";
+}
+.icon-share-sign:before {
+  content: "\f14d";
+}
+.icon-compass:before {
+  content: "\f14e";
+}
+.icon-collapse:before {
+  content: "\f150";
+}
+.icon-collapse-top:before {
+  content: "\f151";
+}
+.icon-expand:before {
+  content: "\f152";
+}
+.icon-euro:before,
+.icon-eur:before {
+  content: "\f153";
+}
+.icon-gbp:before {
+  content: "\f154";
+}
+.icon-dollar:before,
+.icon-usd:before {
+  content: "\f155";
+}
+.icon-rupee:before,
+.icon-inr:before {
+  content: "\f156";
+}
+.icon-yen:before,
+.icon-jpy:before {
+  content: "\f157";
+}
+.icon-renminbi:before,
+.icon-cny:before {
+  content: "\f158";
+}
+.icon-won:before,
+.icon-krw:before {
+  content: "\f159";
+}
+.icon-bitcoin:before,
+.icon-btc:before {
+  content: "\f15a";
+}
+.icon-file:before {
+  content: "\f15b";
+}
+.icon-file-text:before {
+  content: "\f15c";
+}
+.icon-sort-by-alphabet:before {
+  content: "\f15d";
+}
+.icon-sort-by-alphabet-alt:before {
+  content: "\f15e";
+}
+.icon-sort-by-attributes:before {
+  content: "\f160";
+}
+.icon-sort-by-attributes-alt:before {
+  content: "\f161";
+}
+.icon-sort-by-order:before {
+  content: "\f162";
+}
+.icon-sort-by-order-alt:before {
+  content: "\f163";
+}
+.icon-thumbs-up:before {
+  content: "\f164";
+}
+.icon-thumbs-down:before {
+  content: "\f165";
+}
+.icon-youtube-sign:before {
+  content: "\f166";
+}
+.icon-youtube:before {
+  content: "\f167";
+}
+.icon-xing:before {
+  content: "\f168";
+}
+.icon-xing-sign:before {
+  content: "\f169";
+}
+.icon-youtube-play:before {
+  content: "\f16a";
+}
+.icon-dropbox:before {
+  content: "\f16b";
+}
+.icon-stackexchange:before {
+  content: "\f16c";
+}
+.icon-instagram:before {
+  content: "\f16d";
+}
+.icon-flickr:before {
+  content: "\f16e";
+}
+.icon-adn:before {
+  content: "\f170";
+}
+.icon-bitbucket:before {
+  content: "\f171";
+}
+.icon-bitbucket-sign:before {
+  content: "\f172";
+}
+.icon-tumblr:before {
+  content: "\f173";
+}
+.icon-tumblr-sign:before {
+  content: "\f174";
+}
+.icon-long-arrow-down:before {
+  content: "\f175";
+}
+.icon-long-arrow-up:before {
+  content: "\f176";
+}
+.icon-long-arrow-left:before {
+  content: "\f177";
+}
+.icon-long-arrow-right:before {
+  content: "\f178";
+}
+.icon-apple:before {
+  content: "\f179";
+}
+.icon-windows:before {
+  content: "\f17a";
+}
+.icon-android:before {
+  content: "\f17b";
+}
+.icon-linux:before {
+  content: "\f17c";
+}
+.icon-dribbble:before {
+  content: "\f17d";
+}
+.icon-skype:before {
+  content: "\f17e";
+}
+.icon-foursquare:before {
+  content: "\f180";
+}
+.icon-trello:before {
+  content: "\f181";
+}
+.icon-female:before {
+  content: "\f182";
+}
+.icon-male:before {
+  content: "\f183";
+}
+.icon-gittip:before {
+  content: "\f184";
+}
+.icon-sun:before {
+  content: "\f185";
+}
+.icon-moon:before {
+  content: "\f186";
+}
+.icon-archive:before {
+  content: "\f187";
+}
+.icon-bug:before {
+  content: "\f188";
+}
+.icon-vk:before {
+  content: "\f189";
+}
+.icon-weibo:before {
+  content: "\f18a";
+}
+.icon-renren:before {
+  content: "\f18b";
+}
+#inline-availability-marker {
+  display: inline;
+  color: white;
+  position: relative;
+  font-size: 8px;
+  vertical-align: middle;
+}
+#inline-availability-marker .availability-type {
+  display: none;
+}
+#inline-availability-marker .availability-type [class*="icon-"] {
+  font-size: 80%;
+}
+#inline-availability-marker .availability-type.active {
+  display: inline;
+}
+#inline-availability-marker .availability-type.add-leagues {
+  background: #5cb85c;
+}
+#inline-availability-marker .availability-type.drop-leagues {
+  background: #d9534f;
+}
+#inline-availability-marker .availability-type.trade-leagues {
+  background: #f0ad4e;
+}
+#inline-availability-marker span {
+  display: inline;
+  padding: 0px;
+  color: white;
+}
+.fantasy-finder .browser-action-footer {
+  vertical-align: bottom;
+  background: rgba(0, 0, 0, 0.1);
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  text-align: center;
+}
+.fantasy-finder .browser-action-footer #loader {
+  display: none;
+}
+.fantasy-finder .browser-action-footer .footer-btn {
+  display: inline-block;
+  vertical-align: bottom;
+}
+.fantasy-finder #player-results {
+  position: absolute;
+  top: 40px;
+  bottom: 28px;
+  left: 0px;
+  right: 0px;
+  overflow: scroll;
+}
+.fantasy-finder #player-results .loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -15px;
+  font-size: 21px;
+  color: black;
+}
+.fantasy-finder .player-search-input-wrapper {
+  padding: 5px 10px;
+}
+.fantasy-finder .player-search-input-wrapper .player-search-input {
+  width: 100%;
+}
+.fantasy-finder .search-player {
+  text-align: left;
+  font-size: 14px;
+}
+.fantasy-finder .search-player .player-img {
+  display: inline-block;
+}
+.fantasy-finder .search-player .player-img img {
+  height: 40px;
+  width: 55px;
+}
+.fantasy-finder .search-player .player-search-name {
+  display: inline-block;
+  vertical-align: top;
+  padding: 15px 5px 15px 10px;
+  max-width: 125px;
+}
+.fantasy-finder .search-player .player-search-name a {
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+.fantasy-finder .search-player .player-search-name a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+.fantasy-finder .search-player .player-search-name .player-positions {
+  font-size: 12px;
+}
+.fantasy-finder .search-player #inline-availability-marker {
+  font-size: 12px;
+  padding: 15px 0px;
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .search-player:nth-child(odd) {
+  background: #f9f9f9;
+}
+.fantasy-finder .search-player:nth-child(odd).current {
+  background: #c6c6c6;
+}
+.fantasy-finder .search-player:nth-child(even) {
+  background: rgba(15, 91, 26, 0.1);
+}
+.fantasy-finder .search-player:nth-child(even).current {
+  background: #c6c6c6;
+}
+.fantasy-finder .search-player .player-search-availability {
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .search-player .player-details {
+  display: none;
+}
+.fantasy-finder .search-player .player-details .player-details-header {
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-topleft: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 5px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  background: #168727;
+  color: white;
+  padding: 0px 5px;
+}
+.fantasy-finder .search-player .player-details .player-details-header h2 {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  text-align: center;
+  font-size: 16px;
+  margin: 5px 0px;
+}
+.fantasy-finder .search-player .player-details .player-details-header h2:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.fantasy-finder .search-player .player-details .player-details-header h2.selected {
+  background: rgba(0, 0, 0, 0.2);
+}
+.fantasy-finder .search-player .player-details .player-details-section {
+  display: none;
+}
+.fantasy-finder .search-player .player-details .player-details-section.active {
+  display: block;
+}
+.fantasy-finder .search-player .player-details .player-details-section.player-details-stats table {
+  font-size: 12px;
+}
+.fantasy-finder .search-player .player-search-expand {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  float: right;
+  margin-top: 15px;
+}
+.fantasy-finder .search-player .expand-icon {
+  margin-right: 5px;
+  padding: 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+.fantasy-finder .search-player .expand-icon:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.fantasy-finder .search-player.open {
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  margin: 10px 5px;
+}
+.fantasy-finder .search-player.open #inline-availability-marker {
+  display: none;
+}
+.fantasy-finder .search-player.open .player-details {
+  display: block;
+  margin: auto;
+}
+.fantasy-finder .search-player.open .player-details .league-row {
+  width: 100%;
+}
+.fantasy-finder #settings-btn .icon-gear {
+  margin-right: 5px;
+}
+.reasons {
+  width: 100%;
+}
+.win-reason {
+  vertical-align: top;
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}
+.win-reason img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+.win-reason-padder {
+  padding: 0px 20px;
+}
+.install-text {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+#auth-text {
+  width: 100%;
+}
+#auth-text .login-buttons {
+  margin-top: 15px;
+}
+.win-title {
+  text-align: center;
+}
+.win-info {
+  margin: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  border: 1px solid black;
+  padding: 20px;
+  padding-bottom: 50px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.win-info.hide {
+  display: none;
+}
+.league-table {
+  display: table;
+  margin: auto;
+  text-align: left;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.league-table.hide {
+  display: none;
+}
+.league-table .league-row {
+  display: table-row;
+}
+.league-table .league-row:first-child .league-col {
+  font-weight: bold;
+  text-align: center;
+}
+.league-table .league-col {
+  display: table-cell;
+  padding: 5px 10px;
+}
+.login {
+  display: inline-block;
+  text-align: center;
+  font-size: 24px;
+}
+.login .site-icon {
+  width: 75px;
+  height: 20px;
+  background-size: 75px 20px;
+  margin-top: 10px;
+}
+.install-centerer {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  background: white;
+  margin: auto;
+  padding: 20px 30px;
+}
+.install-full {
+  background: #ebebeb;
+  min-height: 100%;
+}
+.fantasy-finder .visibility-settings .league-row {
+  width: 400px;
+}
+.fantasy-finder .visibility-settings .league-row .league-text {
+  width: 250px;
+  display: inline-block;
+}
+.fantasy-finder .visibility-settings .league-row .ff-btn {
+  display: inline-block;
+  vertical-align: top;
+}
+.settings-caption-text {
+  width: 400px;
+  margin: 10px 0px;
+}
+.settings {
+  display: inline-block;
+}
+.settings .hide {
+  display: none;
+}
+.changelog {
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .site-icon.espn {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn.png");
+  background-size: 10px;
+}
+.fantasy-finder .site-icon.espn.full {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn-full-red.png");
+  background-size: 75px 20px;
+}
+.fantasy-finder .site-icon.espn.full.red {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn-full-white.png");
+}
+.fantasy-finder .site-icon.yahoo {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/yahoo.png");
+  background-size: 10px;
+}
+.fantasy-finder .site-icon.yahoo.full {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/yahoo-full.png");
+  background-size: 75px 20px;
+}
+body {
+  font-family: helvetica, arial, sans-serif;
+}
+.fantasy-finder .hide {
+  display: none;
+}
+.fantasy-finder .ff-name {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+.fantasy-finder .pointer {
+  cursor: pointer;
+}
+.fantasy-finder #ff-popup {
+  font-family: helvetica, arial, sans-serif;
+  display: none;
+  position: absolute;
+  height: auto;
+  width: auto;
+  background-color: white;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  /* Maximum possible Z-value take that ESPN! */
+  padding: 12px;
+  font-size: 14px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.fantasy-finder #ff-popup:hover {
+  display: block;
+}
+.fantasy-finder #ff-popup .popup-arrow {
+  position: absolute;
+  left: -31px;
+  top: 50px;
+  border: 15px solid transparent;
+  border-right-color: rgba(0, 0, 0, 0.6);
+}
+.fantasy-finder #ff-popup .popup-arrow .popup-arrow-inner {
+  position: absolute;
+  top: -15px;
+  left: -14px;
+  border: 15px solid transparent;
+  border-right-color: white;
+}
+.fantasy-finder #ff-popup h2 {
+  color: white;
+  font-size: 14px;
+  margin: 0px;
+}
+.fantasy-finder #ff-popup.arrow-right .popup-arrow {
+  right: -30px;
+  left: auto;
+  border-color: transparent;
+  border-left-color: rgba(0, 0, 0, 0.6);
+}
+.fantasy-finder #ff-popup.arrow-right .popup-arrow .popup-arrow-inner {
+  position: absolute;
+  top: -15px;
+  right: -14px;
+  left: auto;
+  border: 15px solid transparent;
+  border-left-color: white;
+}
+.fantasy-finder #ff-popup .league-data .league-name {
+  width: 120px;
+}
+.fantasy-finder #ff-popup .close {
+  cursor: pointer;
+  float: right;
+}
+.fantasy-finder #ff-popup .league-data .not-available {
+  max-width: 20em;
+}
+.fantasy-finder .player-data-section {
+  display: none;
+  width: 250px;
+}
+.fantasy-finder .player-data-section.active {
+  display: block;
+}
+.fantasy-finder .player-data-section.player-stats table {
+  font-size: 12px;
+}
+.fantasy-finder #ff-popup.active {
+  display: block;
+}
+.fantasy-finder #ff-large {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  background-color: red;
+  top: 0;
+  right: 0;
+  z-index: 2147483647;
+  /* Maximum possible Z-value take that ESPN! */
+  -webkit-transition: opacity 1s;
+}
+.fantasy-finder #ff-large.active {
+  opacity: 1;
+  height: 100px;
+}
+.fantasy-finder .player-profile-img {
+  width: 75px;
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .player-profile-img img {
+  width: 75px;
+}
+.fantasy-finder .player-profile-img .temp-default-player {
+  height: 40px;
+  width: 55px;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/images/default_profile.png");
+}
+.fantasy-finder .player-info {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 160px;
+}
+.fantasy-finder .player-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+.fantasy-finder .player-name a {
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+.fantasy-finder .player-name a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+.fantasy-finder .ff-btn {
+  display: inline-block;
+  padding: 5px 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+  margin: 2px;
+}
+.fantasy-finder .ff-btn.grey {
+  background: #6b717c;
+  background: -ms-linear-gradient(top, #898c91, #4e5766);
+  background: -webkit-gradient(linear, left top, left bottom, from(#898c91), to(#4e5766));
+  background: -moz-linear-gradient(center top, #898c91 0%, #4e5766 100%);
+  background: -moz-gradient(center top, #898c91 0%, #4e5766 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.grey:hover {
+  background: #757b87;
+  background: -ms-linear-gradient(top, #919498, #596375);
+  background: -webkit-gradient(linear, left top, left bottom, from(#919498), to(#596375));
+  background: -moz-linear-gradient(center top, #919498 0%, #596375 100%);
+  background: -moz-gradient(center top, #919498 0%, #596375 100%);
+}
+.fantasy-finder .ff-btn.grey:active {
+  background: #757b87;
+  background: -ms-linear-gradient(top, #919498, #596375);
+  background: -webkit-gradient(linear, left top, left bottom, from(#919498), to(#596375));
+  background: -moz-linear-gradient(center top, #919498 0%, #596375 100%);
+  background: -moz-gradient(center top, #919498 0%, #596375 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.status1 {
+  background: #449d44;
+  background: -ms-linear-gradient(top, #5cb85c, #2c822c);
+  background: -webkit-gradient(linear, left top, left bottom, from(#5cb85c), to(#2c822c));
+  background: -moz-linear-gradient(center top, #5cb85c 0%, #2c822c 100%);
+  background: -moz-gradient(center top, #5cb85c 0%, #2c822c 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.status1:hover {
+  background: #4da94d;
+  background: -ms-linear-gradient(top, #67bd67, #339533);
+  background: -webkit-gradient(linear, left top, left bottom, from(#67bd67), to(#339533));
+  background: -moz-linear-gradient(center top, #67bd67 0%, #339533 100%);
+  background: -moz-gradient(center top, #67bd67 0%, #339533 100%);
+}
+.fantasy-finder .ff-btn.status1:active {
+  background: #4da94d;
+  background: -ms-linear-gradient(top, #67bd67, #339533);
+  background: -webkit-gradient(linear, left top, left bottom, from(#67bd67), to(#339533));
+  background: -moz-linear-gradient(center top, #67bd67 0%, #339533 100%);
+  background: -moz-gradient(center top, #67bd67 0%, #339533 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.status2 {
+  background: #c13834;
+  background: -ms-linear-gradient(top, #d9534f, #a91d19);
+  background: -webkit-gradient(linear, left top, left bottom, from(#d9534f), to(#a91d19));
+  background: -moz-linear-gradient(center top, #d9534f 0%, #a91d19 100%);
+  background: -moz-gradient(center top, #d9534f 0%, #a91d19 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.status2:hover {
+  background: #ce403c;
+  background: -ms-linear-gradient(top, #dc5f5c, #bf211c);
+  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f5c), to(#bf211c));
+  background: -moz-linear-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+  background: -moz-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+}
+.fantasy-finder .ff-btn.status2:active {
+  background: #ce403c;
+  background: -ms-linear-gradient(top, #dc5f5c, #bf211c);
+  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f5c), to(#bf211c));
+  background: -moz-linear-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+  background: -moz-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.status3 {
+  background: #e1952a;
+  background: -ms-linear-gradient(top, #f0ad4e, #d27e06);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f0ad4e), to(#d27e06));
+  background: -moz-linear-gradient(center top, #f0ad4e 0%, #d27e06 100%);
+  background: -moz-gradient(center top, #f0ad4e 0%, #d27e06 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.status3:hover {
+  background: #eea031;
+  background: -ms-linear-gradient(top, #f1b45c, #eb8c07);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f1b45c), to(#eb8c07));
+  background: -moz-linear-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+  background: -moz-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+}
+.fantasy-finder .ff-btn.status3:active {
+  background: #eea031;
+  background: -ms-linear-gradient(top, #f1b45c, #eb8c07);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f1b45c), to(#eb8c07));
+  background: -moz-linear-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+  background: -moz-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.login {
+  background: #30487b;
+  background: -ms-linear-gradient(top, #425f9c, #1e315a);
+  background: -webkit-gradient(linear, left top, left bottom, from(#425f9c), to(#1e315a));
+  background: -moz-linear-gradient(center top, #425f9c 0%, #1e315a 100%);
+  background: -moz-gradient(center top, #425f9c 0%, #1e315a 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.login:hover {
+  background: #35518a;
+  background: -ms-linear-gradient(top, #4766a7, #243c6e);
+  background: -webkit-gradient(linear, left top, left bottom, from(#4766a7), to(#243c6e));
+  background: -moz-linear-gradient(center top, #4766a7 0%, #243c6e 100%);
+  background: -moz-gradient(center top, #4766a7 0%, #243c6e 100%);
+}
+.fantasy-finder .ff-btn.login:active {
+  background: #35518a;
+  background: -ms-linear-gradient(top, #4766a7, #243c6e);
+  background: -webkit-gradient(linear, left top, left bottom, from(#4766a7), to(#243c6e));
+  background: -moz-linear-gradient(center top, #4766a7 0%, #243c6e 100%);
+  background: -moz-gradient(center top, #4766a7 0%, #243c6e 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.twitter {
+  background: #0087ba;
+  background: -ms-linear-gradient(top, #00aced, #006287);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00aced), to(#006287));
+  background: -moz-linear-gradient(center top, #00aced 0%, #006287 100%);
+  background: -moz-gradient(center top, #00aced 0%, #006287 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.twitter:hover {
+  background: #0096ce;
+  background: -ms-linear-gradient(top, #00b7fc, #0074a1);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00b7fc), to(#0074a1));
+  background: -moz-linear-gradient(center top, #00b7fc 0%, #0074a1 100%);
+  background: -moz-gradient(center top, #00b7fc 0%, #0074a1 100%);
+}
+.fantasy-finder .ff-btn.twitter:active {
+  background: #0096ce;
+  background: -ms-linear-gradient(top, #00b7fc, #0074a1);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00b7fc), to(#0074a1));
+  background: -moz-linear-gradient(center top, #00b7fc 0%, #0074a1 100%);
+  background: -moz-gradient(center top, #00b7fc 0%, #0074a1 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.twitter .icon-twitter {
+  margin-right: 5px;
+}
+.fantasy-finder .ff-btn.medium {
+  padding: 15px 30px;
+  font-size: 20px;
+}
+.fantasy-finder .ff-btn.large {
+  padding: 20px 40px;
+  font-size: 24px;
+}
+.fantasy-finder .state-text {
+  display: none;
+}
+.fantasy-finder .status1 .state-text.state1 {
+  display: block;
+}
+.fantasy-finder .status2 .state-text.state2 {
+  display: block;
+}
+.fantasy-finder .login-centerer {
+  margin-bottom: 20px;
+}
+.fantasy-finder .ff-btn-text {
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .ff-btn-icon {
+  margin-right: 5px;
+}
+.fantasy-finder .league-name {
+  display: inline-block;
+  vertical-align: top;
+  width: 130px;
+  line-height: 20px;
+  margin-top: 5px;
+  padding: 0px 5px;
+  max-height: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.fantasy-finder .player-league-data {
+  margin: 5px 0px;
+}
+.fantasy-finder .player-section-header {
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-topleft: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 5px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  background: #168727;
+  padding: 5px;
+  color: white;
+}
+.fantasy-finder .player-section-header h2 {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  text-align: center;
+}
+.fantasy-finder .player-section-header h2:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.fantasy-finder .player-section-header h2.selected {
+  background: rgba(0, 0, 0, 0.2);
+}
+.fantasy-finder .league-row {
+  width: 240px;
+  height: 30px;
+  padding: 5px 0px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.fantasy-finder .league-row .league-row-padder {
+  padding: 0px 5px;
+}
+.fantasy-finder .league-row .ff-btn {
+  float: right;
+  width: 80px;
+  margin: 0px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.fantasy-finder .league-row:last-child {
+  border-bottom: 0px;
+}
+.fantasy-finder .league-row:nth-child(odd) {
+  background: #f9f9f9;
+}
+.fantasy-finder .league-row:nth-child(even) {
+  background: rgba(15, 91, 26, 0.1);
+}
+.fantasy-finder .league-row .site-icon {
+  width: 10px;
+  height: 10px;
+  margin-top: 9px;
+  display: inline-block;
+}
+.fantasy-finder #player-results .no-search-results {
+  text-align: center;
+  margin-top: 7em;
+}
+.fantasy-finder #sync #loader {
+  display: none;
+}

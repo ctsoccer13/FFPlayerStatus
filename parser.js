@@ -1,0 +1,390 @@
+// nameDict has this structure.
+// var nameDict = {
+// 	'tony': {
+// 		'romo': {
+//			id:123,
+//		},
+// 		'sucker': {
+//			id:234,
+//		}
+// 	},
+// 	'jason': {
+// 		'garrett': 456
+// 	}
+// };
+var foundLastNames = {};
+
+var addInlineAvailability = true;
+
+var cachedResponses = {};
+
+var playerDict = {};
+
+/**
+ * Parse the DOM and search for valid player names. Surround names with <span>
+ * tags.
+ */
+var injectMarkup = function(inNodes) {
+	var nodes = [];
+
+	var addMarkup = function(node, firstName, lastName, playerId) {
+		var regex = new RegExp('(' + firstName + '\\s' + lastName + ')', 'gi');
+		var surround = '<span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
+			'"" style="display:inline;">$1</span></span>';
+		var newtext = node.replace(regex, surround);
+		//html = html.replaceText(regex,surround);
+		//text = text.replace(regex, surround);
+		return newtext;
+	};
+
+	var addMarkupDST = function(node, playerId) {
+		var newtext = '<span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
+			'"" style="display:inline;">' + node + '</span></span>';
+		return newtext;
+	};
+
+	var findName = function(node) {
+		var parts =  node.nodeValue.split(/\s/);
+		var text = $(node).text();
+		var changed = false;
+		for (var i = 0; i < parts.length; i++) {
+			// This includes  ` and . - which break a.j. green da`quan etc..
+			//var token = parts[i].toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=\`~()]/g,'');
+			var token = parts[i].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?]/g,'');
+			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?]/g,'') : '';
+			nextTokenLastName = nextTokenLastName.replace(/'s$/g, '');
+			var nameHash = window['playerDict'][nextTokenLastName];
+			// Is there a record for the first name and if the last name
+			// has a record of the player id.
+			var playerId = nameHash && nameHash[token] ? nameHash[token].id : '';
+			if (nameHash && playerId) {
+				// Optimization, just skip the next token.
+				i++;
+				if (nextTokenLastName==="dst") {
+					text = addMarkupDST(text, playerId)
+				} else {
+					text = addMarkup(text, token, nextTokenLastName, playerId);
+				}
+				changed = true;
+				// Store the last name as one that has been found.
+				foundLastNames[nextTokenLastName] = {playerId: playerId};
+			// If we find another instance of a last name we looked up.
+			} 
+			// else if (foundLastNames[token]) {
+			// 	text = addMarkup(text, token, '', foundLastNames[token].playerId);
+			// 	changed = true;
+			// }
+		};
+		if(changed === true) {
+			node.parentElement.innerHTML = text;
+		}
+	};
+
+	var findTextNodes = function(index, node) {
+		// If this is a TEXT Node trim the whitespace and push.
+
+		//console.log($(node).prop("tagName"));
+
+		if (node.nodeType == 3 && node.nodeValue.trim()) {
+			nodes.push(node);
+			// There are probably other kinds of nodes we should be skipping.
+		} else if ($(node).prop("tagName") !== undefined && $(node).prop("tagName").toLowerCase() === "iframe") {
+
+		} else if (node.nodeName != 'SCRIPT') {
+
+			$(node).contents().each(findTextNodes);
+		}
+	};
+
+	var postMarkupAddAvailability = function () {
+		var playerIdArr = _.uniq(_.map($(".ff-name[data-playerId]"), function (currNode) {
+			return $(currNode).data().playerid;
+		}));
+
+		for (var i = playerIdArr.length - 1; i >= 0; i--) {
+			var currPlayerId = playerIdArr[i];
+			getPlayer(currPlayerId, function (player) {
+				if (!player) {
+					return;
+				}
+
+				var leagueStatusMap = {
+					add: 0,
+					drop: 0,
+					trade: 0
+				};
+				if (player.leagueStatus !== undefined) {
+
+					for (var i = player.leagueStatus.length - 1; i >= 0; i--) {
+						var currLeagueStatus = player.leagueStatus[i];
+						switch (currLeagueStatus.status) {
+						case 1:
+							leagueStatusMap.add++;
+							break;
+						case 2:
+							leagueStatusMap.drop++;
+							break;
+						case 3:
+							leagueStatusMap.trade++;
+							break;
+						}
+
+					}
+					$('.ff-name[data-playerid="' + player.id + '"]').append(Handlebars.templates.InlineAvailability(leagueStatusMap));
+				}
+			});
+		}
+	};
+
+	if (inNodes===undefined) {
+		$(document.body).contents().each(findTextNodes);
+	} else {
+		inNodes.contents().each(findTextNodes);
+	}
+
+	for (var i = 0; i < nodes.length; ++i) {
+		findName(nodes[i]);
+	}
+
+	if (addInlineAvailability) {
+		postMarkupAddAvailability();
+	}
+};
+
+
+/**
+ * Register hover handlers and position the popup next to the player's name.
+ */
+var registerHoverHandlers = function(popup) {
+	var cancelId;
+
+	var handlerIn = _.bind(function(event) {
+		var popupWidth = popup.width();
+		clearTimeout(cancelId);
+		popup.toggleClass('active', true);
+		popup.toggleClass('arrow-right', false);
+
+		var element = $(event.currentTarget);
+		var position = element.offset();
+		var popupLeft = position.left + $(element).width() + 20;
+
+		if (popupLeft + popupWidth > $(window).width() - 50) {
+			popupLeft = position.left - 50 - popupWidth;
+			popup.toggleClass('arrow-right', true);
+		}
+
+		popup.css('left', popupLeft);
+		popup.css('top', position.top - 50);
+		fillPopup(element.data().playerid, handlerOut);
+
+		// setTimeout(function () {
+		// 	if($("#ff-popup ins.adsbygoogle").html().length === 0) {
+		// 		$(".hidden-ad-trigger").click();
+		// 	}
+		// }, 500)
+
+	}, window);
+
+	var handlerOut = function(event) {
+		// TODO: Cancel this timeout if a user makes interaction inside of the popup.
+		cancelId = setTimeout(function() {
+			popup.toggleClass('active', false);
+		}, 1500);
+	};
+
+	$('.ff-name').hover(handlerIn, handlerOut);
+};
+
+/**
+ * Build popup.
+ */
+var buildPopup = function() {
+	var popupHtml = '<div class="fantasy-finder"><div id="ff-popup"><div class="name"></div></div></div>';
+	$(document.body).append(popupHtml)
+};
+
+/**
+ * Render the popup with data, this is asynchronous because of the call to background.js
+ */
+var fillPopup = function(playerId, closeHandler) {
+	getPlayer(playerId, function(player) {
+		if (!player) {
+			return;
+		}
+
+		var tempPlayer = $(Handlebars.templates.PopupTemplate(player));
+
+		var tempPlayerImg = new Image();
+		tempPlayerImg.src =  player.profileImage;
+		tempPlayerImg.onload = function () {
+			$("#ff-popup").find(".temp-default-player").replaceWith("<img src='" + player.profileImage + "'>");
+		};
+
+		$('#ff-popup').html(tempPlayer);
+		$('#ff-popup .close').click(function(){
+			$('#ff-popup').toggleClass('active', false);
+		});
+
+		for (var i = 0; i < player.leagueStatus.length; i++) {
+			var currLeague = player.leagueStatus[i];
+
+			var leagueEntry = $(Handlebars.templates.LeagueAvailabilityRow({
+				league: currLeague.leagueName,
+				leagueSite: currLeague.site,
+				btnName: getTextForPlayerLeagueStatus(currLeague.status),
+				btnClass: "status" + currLeague.status,
+				btnLink: currLeague.actionUrl,
+				iconClass: getIconClassForPlayerLeagueStatus(currLeague.status),
+				playerId: player.id,
+				playerName: player.name
+			}));
+
+			$("#ff-popup .league-data").append(leagueEntry);
+		}
+		if (player.leagueStatus.length == 0) {
+			$("#ff-popup .league-data").append('<br/><span class="not-available">' + player.name + '\'s position is not allowed in any of your leagues.</span>');
+		}
+
+		$('.ff-btn').click(function(event) {
+			var data = $(event.currentTarget).data();
+			chrome.runtime.sendMessage({method: 'logStuff', data: ['_trackEvent', 'PlayerAction', data.actionType, data.playerName + ':' + data.playerId, 1]});
+			chrome.runtime.sendMessage({method: 'logStuff', data: ['_trackEvent', 'PlayerActionUrl', data.actionType, window.location.href]});
+
+		});
+		$(".player-section-header h2").click(function (event) {
+			$(".player-section-header h2").removeClass("selected");
+			var currHeader = $(event.currentTarget);
+			var sectionTarget = currHeader.data().sectionRef;
+
+			currHeader.addClass("selected");
+
+			$("#ff-popup .player-data-section").removeClass("active");
+			$("#ff-popup " + sectionTarget).addClass("active");
+		});
+
+		//Add Stats
+		$.ajax({
+			url: "http://games.espn.go.com/ffl/format/playerpop/overview?playerId=" + player.id + "&playerIdType=playerId&seasonId=2013&xhr=1",
+			type: "GET",
+			success: function (response) {
+				var jqResp = $(response);
+				jqResp.find("#overviewTabs #moreStatsView0 .pc").remove();
+				jqResp.find("#overviewTabs #moreStatsView0 table").removeAttr("style");
+				$("#ff-popup .player-stats").html(jqResp.find("#overviewTabs #moreStatsView0").html());
+			}
+		});
+
+		$('.player-statistics').click(function() {
+			chrome.runtime.sendMessage({method: 'logStuff', data: ['_trackEvent', 'PopUpStats', player.name + ':' + player.id]});
+		});
+
+		chrome.runtime.sendMessage({method: 'logStuff', data: ['_trackEvent', 'PopUp', player.name + ':' + player.id]});
+	});
+};
+
+var getTextForPlayerLeagueStatus = function (status) {
+	var statusText = "";
+	switch (status) {
+		case 1:
+			statusText = "Add";
+			break;
+		case 2:
+			statusText = "Drop";
+			break;
+		case 3:
+			statusText = "Trade";
+			break;
+	}
+	return statusText;
+};
+
+var getIconClassForPlayerLeagueStatus = function (status) {
+	var iconClass = "";
+	switch (status) {
+		case 1:
+			iconClass = "icon-plus";
+			break;
+		case 2:
+			iconClass = "icon-remove";
+			break;
+		case 3:
+			iconClass = "icon-random";
+			break;
+	}
+	return iconClass;
+};
+
+/**
+ * Ask the background script for a players information.
+ */
+var getPlayer = function(playerId, callback) {
+	if (cachedResponses[playerId]) {
+		callback(cachedResponses[playerId]);
+		console.log('cache hit');
+		return;
+	}
+
+	chrome.runtime.sendMessage(
+		{method: 'getPlayerById', playerId: playerId},
+		function(response) {
+			cachedResponses[playerId] = response;
+			callback(response);
+	});
+};
+
+var evaluateUrl = function(callback) {
+	chrome.extension.sendMessage({method: "getSettings"}, function(response) {
+		var settingDefaults = {
+			inline: true,
+			popup_trigger: "hover",
+			popup_position: "hovercard",
+			globalAnnotations: true,
+			rosterAnnotations: true
+		};
+		response = _.extend(settingDefaults, response);
+
+
+		var blacklist = [];
+		// Cancel parsing if the user has explicitly turned off annotations.
+		if (response.globalAnnotations === false) {
+			return;
+		}
+		if (response.rosterAnnotations === false) {
+			blacklist.push('games.espn.go.com/ffl');
+			blacklist.push('football.fantasysports.yahoo.com/f1')
+		}
+
+
+		addInlineAvailability = !!response.inline;
+		var proceed = true;
+		blacklist = response.blacklist ? blacklist.push(response.blacklist) : blacklist;
+
+		for (var i = 0; i < blacklist.length; i++) {
+			if (window.location.href.indexOf(blacklist[i]) > -1)  {
+				proceed = false;
+				break;
+			}
+		};
+
+		if (proceed) {
+			callback();
+		}
+	});
+}
+
+evaluateUrl(function() {
+	chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
+  		window.playerDict = response;
+  		buildPopup();
+		var popup = $('#ff-popup');
+		injectMarkup();
+		registerHoverHandlers(popup);
+  	});
+});
+// var observer = new MutationObserver(function(mutations) {
+// 	var popup = $('#ff-popup');
+// 	injectMarkup(mutations.addedNodes);
+// 	registerHoverHandlers(popup);
+// });
+// observer.observe(document, {childList: true, subtree: true});
+

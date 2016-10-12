@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="lib/underscore-min.js"></script>
+        <script type="text/javascript" src="lib/handlebars.js"></script>
+        <script type="text/javascript" src="templates.js"></script>
+		<script type="text/javascript" src="browser_action.js"></script>
+
+	<style type="text/css" media="screen">
+            body { min-width:300px; min-height: 400px;  margin: 0px;}
+            #loader { display: none; }
+        </style>
+        <link rel="stylesheet" href="main.css" type="text/css" charset="utf-8">
+    </head>
+    <body class="fantasy-finder">
+        <div class="player-search-input-wrapper">
+            <input id="search" class="player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/>
+        </div>
+        <div id="player-results">
+        </div>
+        <div class="browser-action-footer">
+            <div class="footer-btn">
+                <div id="settings-btn" class="ff-btn grey">
+                    <span class="icon-gear"></span><span>Settings</span>
+                </div>
+            </div>
+            <a href="https://twitter.com/share?text=%40ff_finder" target="_blank">
+                <div class="ff-btn twitter">
+                    <span class="icon-twitter"></span>Tweet us a bug
+                </div>
+            </a>
+        </div>
+    </body>
+</html>
