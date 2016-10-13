@@ -23,9 +23,11 @@ var injectMarkup = function(inNodes) {
 		return newtext;
 	};
 
-	var addMarkupDST = function(node, playerId) {
-		var newtext = '<span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
-			'"" style="display:inline;">' + node + '</span></span>';
+	var addMarkupDST = function(node, team, playerId) {
+		var regex = new RegExp('(' + team + '\\s' + 'D/ST' + ')', 'gi');
+		var surround = '<span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
+			'"" style="display:inline;">$1</span></span>';
+		var newtext = node.replace(regex, surround);
 		return newtext;
 	};
 
@@ -37,20 +39,20 @@ var injectMarkup = function(inNodes) {
 			// This includes  ` and . - which break a.j. green da`quan etc..
 			//var token = parts[i].toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=\`~()]/g,'');
 			var token = parts[i].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?"]/g,'');
-			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?."]/g,'') : '';
-			nextTokenLastName = nextTokenLastName.replace(/'s$/g, '');
+			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/'s$/g, '') : '';
+			nextTokenLastName = nextTokenLastName.replace(/[,\/#!$%\^&\*;:{}=~()?."']/g,'');
 			var nameHash = window['playerDict'][nextTokenLastName];
 			// Is there a record for the first name and if the last name
 			// has a record of the player id.
 			var playerId = nameHash && nameHash[token] ? nameHash[token].id : '';
 			if (nameHash && playerId) {
-				// Optimization, just skip the next token.
-				i++;
 				if (nextTokenLastName==="dst") {
-					text = addMarkupDST(text, playerId)
+					text = addMarkupDST(text, parts[i], playerId)
 				} else {
 					text = addMarkup(text, token, nextTokenLastName, playerId);
 				}
+				// Optimization, just skip the next token.
+				i++;
 				changed = true;
 				// Store the last name as one that has been found.
 				foundLastNames[nextTokenLastName] = {playerId: playerId};
