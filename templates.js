@@ -15,21 +15,21 @@ function program1(depth0,data) {
   buffer += "<span id=\"inline-availability-marker\" class=\"inline-availability\">\n	<span class=\"availability-type add-leagues ";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.add), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\">\n		<span class=\"ff-icon-plus\"></span>\n		<span class=\"inline-availability-txt\">";
+  buffer += "\">\n		<span class=\"icon-plus\"></span>\n		<span class=\"inline-availability-txt\">";
   if (helper = helpers.add) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.add); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "</span>\n	</span>\n	<span class=\"availability-type drop-leagues ";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.drop), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\">\n		<span class=\"ff-icon-remove\"></span>\n		<span class=\"inline-availability-txt\">";
+  buffer += "\">\n		<span class=\"icon-remove\"></span>\n		<span class=\"inline-availability-txt\">";
   if (helper = helpers.drop) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.drop); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "</span>\n	</span>\n	<span class=\"availability-type trade-leagues ";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.trade), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\">\n		<span class=\"ff-icon-random\"></span>\n		<span class=\"inline-availability-txt\">";
+  buffer += "\">\n		<span class=\"icon-random\"></span>\n		<span class=\"inline-availability-txt\">";
   if (helper = helpers.trade) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.trade); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
