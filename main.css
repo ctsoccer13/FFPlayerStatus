@@ -1879,7 +1879,7 @@ body {
   border-left-color: white;
 }
 .fantasy-finder #ff-popup .league-data .league-name {
-  width: 120px;
+  width: 140px;
 }
 .fantasy-finder #ff-popup .close {
   cursor: pointer;
@@ -1890,7 +1890,7 @@ body {
 }
 .fantasy-finder .player-data-section {
   display: none;
-  width: 250px;
+  width: 270px;
 }
 .fantasy-finder .player-data-section.active {
   display: block;
@@ -2210,7 +2210,7 @@ body {
   background: rgba(0, 0, 0, 0.2);
 }
 .fantasy-finder .league-row {
-  width: 240px;
+  width: 260px;
   height: 30px;
   padding: 5px 0px;
   border-bottom: 1px solid #e0e0e0;

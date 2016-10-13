@@ -1,17 +1,3 @@
-// nameDict has this structure.
-// var nameDict = {
-// 	'tony': {
-// 		'romo': {
-//			id:123,
-//		},
-// 		'sucker': {
-//			id:234,
-//		}
-// 	},
-// 	'jason': {
-// 		'garrett': 456
-// 	}
-// };
 var foundLastNames = {};
 
 var addInlineAvailability = true;
@@ -50,8 +36,8 @@ var injectMarkup = function(inNodes) {
 		for (var i = 0; i < parts.length; i++) {
 			// This includes  ` and . - which break a.j. green da`quan etc..
 			//var token = parts[i].toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=\`~()]/g,'');
-			var token = parts[i].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?]/g,'');
-			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?]/g,'') : '';
+			var token = parts[i].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?"]/g,'');
+			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?."]/g,'') : '';
 			nextTokenLastName = nextTokenLastName.replace(/'s$/g, '');
 			var nameHash = window['playerDict'][nextTokenLastName];
 			// Is there a record for the first name and if the last name
@@ -225,11 +211,15 @@ var fillPopup = function(playerId, closeHandler) {
 			$('#ff-popup').toggleClass('active', false);
 		});
 
+		var leagueId;
 		for (var i = 0; i < player.leagueStatus.length; i++) {
 			var currLeague = player.leagueStatus[i];
-
+			if(leagueId===undefined) {
+				leagueId = currLeague.leagueId;
+			}
+			var leagueName = currLeague.status!==1 ? currLeague.leagueName + ' ' + currLeague.ownedByTeamName : currLeague.leagueName;
 			var leagueEntry = $(Handlebars.templates.LeagueAvailabilityRow({
-				league: currLeague.leagueName,
+				league: leagueName,
 				leagueSite: currLeague.site,
 				btnName: getTextForPlayerLeagueStatus(currLeague.status),
 				btnClass: "status" + currLeague.status,
@@ -261,16 +251,22 @@ var fillPopup = function(playerId, closeHandler) {
 			$("#ff-popup .player-data-section").removeClass("active");
 			$("#ff-popup " + sectionTarget).addClass("active");
 		});
-
+		var year = new Date().getFullYear();
 		//Add Stats
 		$.ajax({
-			url: "http://games.espn.go.com/ffl/format/playerpop/overview?playerId=" + player.id + "&playerIdType=playerId&seasonId=2013&xhr=1",
+			url: location.protocol + "//games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + player.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
+
 			type: "GET",
 			success: function (response) {
 				var jqResp = $(response);
 				jqResp.find("#overviewTabs #moreStatsView0 .pc").remove();
 				jqResp.find("#overviewTabs #moreStatsView0 table").removeAttr("style");
 				$("#ff-popup .player-stats").html(jqResp.find("#overviewTabs #moreStatsView0").html());
+				// if ($("#ff-popup .player-profile-img .temp-default-player").length) {
+				// 	var img = jqResp.find('.mugshot img').attr('src');
+				// 	player.profileImage = img;
+				// 	$("#ff-popup").find("temp-default-player").replaceWith("<img src='" + player.profileImage + "'>");
+				// }
 			}
 		});
 

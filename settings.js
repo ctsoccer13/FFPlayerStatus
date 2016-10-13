@@ -203,12 +203,20 @@
 			success: _.bind(function(response) {
 				var listItems = $(response).find('#games-tabs1 li a');
 				listItems.each(function(i, elem) {
-					console.log($(elem).text());
 					teams.push($(elem).text());
 				});
 	  		}, this)
 		});
 		return teams;
+	}
+
+	var getLeagueTeamsShortNames = function(teams) {
+		var abbrevs = [];
+		teams.forEach(function(team) {
+			var parts = team.split(/\s/);
+			abbrevs.push(parts[parts.length-1]);
+		});
+		return abbrevs;
 	}
 
 	var getLeagueName = function(url, league) {
@@ -253,12 +261,13 @@
 
 	$(document).ready(function() {
 		populateListOnLoad();
-		$('#teamlist_btn').click(function(){
+		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
 	    	var league = parseURL(url);
 	    	var teams = getLeagueTeams(url);
 	    	getLeagueName(url, league);
 	    	league.teamName = teams[league.teamId-1];
+	    	league.shortNames = getLeagueTeamsShortNames(teams);
 	    	league.site = 'espn';
 	    	league.sport = 'football';
 			league.playerIdToTeamIndex = {};

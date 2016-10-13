@@ -108,7 +108,7 @@ var searchInput = function(event) {
 			$(".search-player[data-player-id='" + playerId + "'] .player-details-section" + ref).addClass("active");
 
 			$.ajax({
-				url: "http://games.espn.go.com/ffl/format/playerpop/overview?playerId=" + playerId + "&playerIdType=playerId&seasonId=2013&xhr=1",
+				url: location.protocol + "//games.espn.go.com/ffl/format/playerpop/overview?playerId=" + playerId + "&playerIdType=playerId&seasonId=2013&xhr=1",
 				type: "GET",
 				success: function (response) {
 					var jqResp = $(response);

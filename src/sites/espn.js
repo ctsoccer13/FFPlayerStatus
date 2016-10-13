@@ -44,10 +44,10 @@ ff.Espn = Site.extend({
 		this.baseUrl = 'http://games.espn.go.com/';
 
 		// This is a little weird, but not sure where else to put it.
-		this.urlToSport = {
-			"ffl": "football",
-			"flb": "baseball"
-		};
+		// this.urlToSport = {
+		// 	"ffl": "football",
+		// 	"flb": "baseball"
+		// };
 	},
 
 	// handleUserTeamsPage: function(userId, page) {
@@ -85,15 +85,15 @@ ff.Espn = Site.extend({
 	// 	//}
 	// },
 
-	baseballFetchTakenPlayers: function(league) {
-		console.log('baseball league', league);
+	// baseballFetchTakenPlayers: function(league) {
+	// 	console.log('baseball league', league);
 
-		//batters
-		//&slotCategoryGroup=1
-		//pitchers = 2
-		this._fetchTakenPlayersForLeague(league, undefined, 1);
-		this._fetchTakenPlayersForLeague(league, undefined, 2);
-	},
+	// 	//batters
+	// 	//&slotCategoryGroup=1
+	// 	//pitchers = 2
+	// 	this._fetchTakenPlayersForLeague(league, undefined, 1);
+	// 	this._fetchTakenPlayersForLeague(league, undefined, 2);
+	// },
 
 
 	footballFetchTakenPlayers: function(league) {
@@ -179,7 +179,7 @@ ff.Espn = Site.extend({
 	           if(name.includes("D/ST")) {
 	           		var nametoks = name.split(/\s+/);
 	           		name = nametoks[0] + " " + nametoks[1];
-	           		var player = new Player(currPlayerId, name, null, "D/ST");
+	           		var player = new Player(currPlayerId, name, null, "D/ST", league.leagueId);
 	           		listOfPlayers[currPlayerId] = player;
 	           		this.addPlayerToDict(player);
 	           		continue;
@@ -187,7 +187,7 @@ ff.Espn = Site.extend({
 	           var tmp = nameDiv[0].innerText.split(" ")[2];
 	           var team = tmp.split(/\s+/)[0];
 	           var pos = tmp.split(/\s+/)[1];
-	           var player = new Player(currPlayerId, name, team, pos);
+	           var player = new Player(currPlayerId, name, team, pos, league.leagueId);
 
 	           listOfPlayers[currPlayerId] = player;
 	           this.addPlayerToDict(player);

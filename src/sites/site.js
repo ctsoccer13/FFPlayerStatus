@@ -2,9 +2,9 @@ var Site = Class.extend({
   init: function(ff, siteName, sport){
     this.ff = ff;
     this.site = siteName;
-    this.sport = sport;
-    this.requireIframe = false;
-    this.fetchingUserId = false;
+    // this.sport = sport;
+    // this.requireIframe = false;
+    // this.fetchingUserId = false;
     this.baseUrl;
     this.userId;
     this.lastLogin;
@@ -166,16 +166,16 @@ var Site = Class.extend({
     //this.save();
   },
 
-  getSportForLeagueUrl: function (leagueUrl) {
-    var urlKeys = _.keys(this.urlToSport);
-    for (var i = 0; i < urlKeys.length; i++) {
-      var currKey = urlKeys[i];
-      if (leagueUrl.indexOf(currKey) !== -1) {
-        return this.urlToSport[currKey];
-      }
-    }
-    return undefined;
-  },
+  // getSportForLeagueUrl: function (leagueUrl) {
+  //   var urlKeys = _.keys(this.urlToSport);
+  //   for (var i = 0; i < urlKeys.length; i++) {
+  //     var currKey = urlKeys[i];
+  //     if (leagueUrl.indexOf(currKey) !== -1) {
+  //       return this.urlToSport[currKey];
+  //     }
+  //   }
+  //   return undefined;
+  // },
 
   getLeaguesFromStorage: function() {
     var leagueInfo = this.ff.storage.getValue(this.getSiteUserKey());

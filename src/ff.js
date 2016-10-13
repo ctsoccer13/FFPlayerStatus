@@ -90,6 +90,7 @@ ff.FF.prototype.updatePlayerStatus = function(player) {
 		var ownedByTeamId = league.playerIdToTeamIndex[idForSite];
 
 		if (ownedByTeamId) {
+			playerStatus.ownedByTeamName = league.shortNames[ownedByTeamId-1];
 			if (ownedByTeamId === teamId) {
 				playerStatus.status = DROP;
 				playerStatus.actionUrl = this[league.site].buildDropUrl(idForSite, league);
@@ -114,16 +115,7 @@ ff.FF.prototype.playerSearch = function(searchSpace, playerName, callback) {
 	var validPlayers = _.filter(players, function(player) {
 		return player.name.toLowerCase().indexOf(playerName) >= 0;
 	});
-	// var results = [];
-	// for (var i = 0; i < validNames.length; i++) {
-	// 	var playerId = searchSpace[validNames[i]].id;
-	// 	var player = this.getPlayerById(playerId);
 
-	// 	// We have to do this because Tony Curtis ID: 9434 exists in players.js but not in nameDict.js
-	// 	if (player) {
-	// 		results.push(player);
-	// 	}
-	// };
 	return callback(validPlayers);
 };
 
@@ -138,67 +130,7 @@ ff.FF.prototype.getPlayerById = function(playerId) {
 		return;
 	}
 	this.updatePlayerStatus(player);
-	// var leagues = this.getLeaguesFromStorage();
-	// player.leagueStatus.length = 0;
-	// for (var i = 0; i < leagues.length; ++i) {
-	// 	var league = leagues[i];
-	// 	if (league.sport === 'baseball' || league.seasonId === '2013') {
-	// 		continue;
-	// 	}
-	// 	var leagueId = league.leagueId;
-	// 	var teamId = league.teamId;
-	// 	var playerStatus = new PlayerStatus();
-	// 	playerStatus.site = league.site;
-	// 	playerStatus.leagueId = leagueId;
-	// 	playerStatus.leagueName = leagues[i].leagueName;
 
-	// 	var idForSite = playerId;
-
-	// 	// if (league.site === 'yahoo') {
-	// 	// 	var espnId = playerId;
-	// 	// 	var yId = this.espnToYahoo[playerId];
-	// 	// 	if (!yId) {
-	// 	// 		console.log('Matched player from espn but not Yahoo.. espnId', espnId)
-	// 	// 		continue;
-	// 	// 	}
-	// 	// 	idForSite = yId;
-	// 	// }
-
-	// 	var ownedByTeamId = league.playerIdToTeamIndex[idForSite];
-	// 	// if (ownedByTeamId) {
-	// 	// 	console.log('i found someone who was owned', player.name)
-	// 	// } else {
-	// 	// 	console.log('not owned', player.name);
-	// 	// }
-
-	// 	if (ownedByTeamId) {
-	// 		if (ownedByTeamId === teamId) {
-	// 			playerStatus.status = DROP;
-	// 			playerStatus.actionUrl = this[league.site].buildDropUrl(idForSite, league);
-	// 		} else {
-	// 			playerStatus.status = TRADE;
-	// 			playerStatus.actionUrl = this[league.site].buildTradeUrl(idForSite, ownedByTeamId, league);
-	// 		}
-
-	// 		player.leagueStatus.push(playerStatus);
-	// 	} else {
-	// 		playerStatus.status = FREE_AGENT;
-	// 		playerStatus.actionUrl = this[league.site].buildFreeAgentUrl(idForSite, league);
-	// 		player.leagueStatus.push(playerStatus);
-
-	// 		// Map the leagues player options to this players YAHOO_POSITIONS
-	// 		// Lookup the players YAHOO_POSITIONS.
-
-	// 		// var transformedYAHOO_POSITIONS = _.map(leagues[i].playerOptions, function(val) {
-	// 		// 	return YAHOO_POSITIONS[val];
-	// 		// });
-
-	// 		// if (_.intersection(transformedYAHOO_POSITIONS, window.playerIdToPosition[playerId]).length > 0) {
-	// 		// 	player.leagueStatus.push(playerStatus);
-	// 		// }
-
-	// 	}
-	// }
 	return player;
 };
 
@@ -241,6 +173,7 @@ PlayerStatus = function() {
 	this.status;
 	this.site;
 	this.actionUrl;
+	this.ownedByTeamName;
 };
 
 // Player = function(id) {
@@ -261,7 +194,7 @@ PlayerStatus = function() {
 // 	this.positions = this.positions.join(',');
 // };
 
-Player = function(id, name, team, pos) {
+Player = function(id, name, team, pos, leagueId) {
 	this.id = id;
 	this.name = name;
 	this.leagueIds;
@@ -269,8 +202,14 @@ Player = function(id, name, team, pos) {
 		return;
 	}
 	this.team = team;
-	this.profileImage = 'http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/' +
-			this.id + '.png&w=350&h=254';
+	var year = new Date().getFullYear();
+	$.ajax({
+		url: "http://games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + this.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
+		type: "GET",
+		success: function (response) {
+			this.profileImage = $(response).find('.mugshot img').attr('src');
+		}.bind(this)
+	});
 	this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
 	this.leagueStatus = [];
 	this.positions = pos;
