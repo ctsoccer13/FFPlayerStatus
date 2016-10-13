@@ -365,7 +365,16 @@ a .icon-flip-vertical:before {
 }
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
    readers do not read off random characters that represent icons */
-.icon-glass:before {
+.ff-icon-plus:before {
+  content: "\f067";
+}
+.ff-icon-remove:before {
+  content: "\f00d";
+}
+.ff-icon-random:before {
+  content: "\f074";
+}
+/*.icon-glass:before {
   content: "\f000";
 }
 .icon-music:before {
@@ -403,9 +412,6 @@ a .icon-flip-vertical:before {
 }
 .icon-ok:before {
   content: "\f00c";
-}
-.icon-remove:before {
-  content: "\f00d";
 }
 .icon-zoom-in:before {
   content: "\f00e";
@@ -660,9 +666,6 @@ a .icon-flip-vertical:before {
 .icon-resize-small:before {
   content: "\f066";
 }
-.icon-plus:before {
-  content: "\f067";
-}
 .icon-minus:before {
   content: "\f068";
 }
@@ -695,9 +698,6 @@ a .icon-flip-vertical:before {
 }
 .icon-calendar:before {
   content: "\f073";
-}
-.icon-random:before {
-  content: "\f074";
 }
 .icon-comment:before {
   content: "\f075";
@@ -740,9 +740,6 @@ a .icon-flip-vertical:before {
 }
 .icon-camera-retro:before {
   content: "\f083";
-}
-.icon-key:before {
-  content: "\f084";
 }
 .icon-gears:before,
 .icon-cogs:before {
@@ -1464,7 +1461,7 @@ a .icon-flip-vertical:before {
 }
 .icon-renren:before {
   content: "\f18b";
-}
+}*/
 #inline-availability-marker {
   display: inline;
   color: white;
