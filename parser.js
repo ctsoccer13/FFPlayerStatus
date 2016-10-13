@@ -298,13 +298,13 @@ var getIconClassForPlayerLeagueStatus = function (status) {
 	var iconClass = "";
 	switch (status) {
 		case 1:
-			iconClass = "icon-plus";
+			iconClass = "fa fa-plus";
 			break;
 		case 2:
-			iconClass = "icon-remove";
+			iconClass = "fa fa-remove";
 			break;
 		case 3:
-			iconClass = "icon-random";
+			iconClass = "fa fa-random";
 			break;
 	}
 	return iconClass;
