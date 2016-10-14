@@ -39,7 +39,7 @@ var injectMarkup = function(inNodes) {
 			// This includes  ` and . - which break a.j. green da`quan etc..
 			//var token = parts[i].toLowerCase().replace(/[\.,\/#!$%\^&\*;:{}=\`~()]/g,'');
 			var token = parts[i].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()?"]/g,'');
-			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/'s$/g, '') : '';
+			var nextTokenLastName = parts[i + 1] ? parts[i + 1].toLowerCase().replace(/['’]s$/g, '') : '';
 			nextTokenLastName = nextTokenLastName.replace(/[,\/#!$%\^&\*;:{}=~()?."']/g,'');
 			var nameHash = window['playerDict'][nextTokenLastName];
 			// Is there a record for the first name and if the last name
