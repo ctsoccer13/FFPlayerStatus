@@ -20,7 +20,7 @@
  "content_scripts": [
    {
      "matches": ["<all_urls>"],
-     "css": ["main.css", "css/font-awesome.min.css", "css/bootstrap.min.css"],
+     "css": ["main.css", "css/font-awesome.min.css"],
      "js": [
        "lib/jquery-2.0.3.min.js",
        "lib/replaceText.min.js",
@@ -69,7 +69,7 @@
   "images/yahoo.png"
  ],
  "browser_action": {
-     "default_name": "Fantasy Finder",
+     "default_name": "FF Player Status",
      "default_popup": "browser_action.html",
      "default_icon": "images/FantasyFinder.png"
  }
