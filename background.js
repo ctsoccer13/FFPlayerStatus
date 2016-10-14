@@ -135,8 +135,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				sendResponse(this.fantasyFind.getUserSettings());
 				break;
 
-			case "addToBlackList":
-				sendResponse(this.fantasyFind.addToBlackList(request.url));
+			case "addBlacklistURL":
+				sendResponse(this.fantasyFind.addBlacklistURL(request.url));
+				break;
+
+			case "removeBlacklistURL":
+				sendResponse(this.fantasyFind.removeBlacklistURL(request.url));
 				break;
 
 			case "logStuff":

@@ -281,18 +281,10 @@
 		});
 		$('#blacklist_add_btn').click(function() {
 			var url = $('#blacklist_input').val();
-			// var tbl = document.getElementById('blacklist_tbl').getElementsByTagName('tbody')[0];
-			// var row = tbl.insertRow(tbl.rows.length);
-			// var urlCell = row.insertCell(0);
-			// urlCell.appendChild(document.createTextNode(url));
-			// var xCell = row.insertCell(1);
-			// xCell
-			// xCell.append
-
-
 			var element = '<tr><td>' + url + '</td><td id="blacklist_remove_cell"><i class="fa fa-remove" id="blacklist_remove_btn" aria-hidden="true"></i></td></tr>';
 			$('#blacklist_tbl > tbody:last-child').append(element);
 			$('#blacklist_input').val('');
+			chrome.runtime.sendMessage({method: 'addBlacklistURL', url: url}, function(response){});
 		});
 		$("#blacklist_input").keyup(function(event){
 		    if(event.keyCode == 13){
@@ -301,6 +293,7 @@
 		});
 		$('#blacklist_tbl').on('click', '#blacklist_remove_btn', function(){
 			$(this).closest('tr').remove();
+			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: url}, function(response){});
 		});
 	});
 })();
