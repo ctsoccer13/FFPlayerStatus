@@ -864,3 +864,30 @@ body {
 .fantasy-finder #sync #loader {
   display: none;
 }
+.blacklist {
+  width: 500px;
+}
+#blacklist-input-grp {
+  display: inline-block;
+  float: left;
+  width: 100%;
+}
+#blacklist_input {
+  display: inline-block;
+  float: left;
+  width:85%;
+}
+#blacklist_btn_span {
+  display: inline-block;
+  width:15%;
+}
+#blacklist_add_btn {
+  width: 100%;
+}
+#blacklist_tbl {
+  width: 100%;
+}
+#blacklist_remove_cell {
+  width: 10%;
+  text-align: center;
+}

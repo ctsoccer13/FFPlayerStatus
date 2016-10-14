@@ -33,15 +33,15 @@
 			renderPopupPosition(response.popup_position);
 			renderAnnotations(response.globalAnnotations, response.rosterAnnotations);
 
-			this.FF.getUserIds(function(userIdObj) {
-				var siteKeys = _.keys(userIdObj);
+			// this.FF.getUserIds(function(userIdObj) {
+			// 	var siteKeys = _.keys(userIdObj);
 
-				if (siteKeys.length === 0) {
-					chrome.tabs.create({url: 'install.html', active: true}, function(tab) {});
-				} else {
-					renderUserTeams();
-				}
-			});
+			// 	if (siteKeys.length === 0) {
+			// 		chrome.tabs.create({url: 'install.html', active: true}, function(tab) {});
+			// 	} else {
+			// 		renderUserTeams();
+			// 	}
+			// });
 
 			/**
 			*	Had to put this here because we don't have access to the dom structure at the beginning of the self executing function.
@@ -281,11 +281,26 @@
 		});
 		$('#blacklist_add_btn').click(function() {
 			var url = $('#blacklist_input').val();
+			// var tbl = document.getElementById('blacklist_tbl').getElementsByTagName('tbody')[0];
+			// var row = tbl.insertRow(tbl.rows.length);
+			// var urlCell = row.insertCell(0);
+			// urlCell.appendChild(document.createTextNode(url));
+			// var xCell = row.insertCell(1);
+			// xCell
+			// xCell.append
+
+
+			var element = '<tr><td>' + url + '</td><td id="blacklist_remove_cell"><i class="fa fa-remove" id="blacklist_remove_btn" aria-hidden="true"></i></td></tr>';
+			$('#blacklist_tbl > tbody:last-child').append(element);
+			$('#blacklist_input').val('');
 		});
 		$("#blacklist_input").keyup(function(event){
 		    if(event.keyCode == 13){
 		        $("#blacklist_add_btn").click();
 		    }
+		});
+		$('#blacklist_tbl').on('click', '#blacklist_remove_btn', function(){
+			$(this).closest('tr').remove();
 		});
 	});
 })();
