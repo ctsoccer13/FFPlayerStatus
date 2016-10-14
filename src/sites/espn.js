@@ -158,6 +158,11 @@ ff.Espn = Site.extend({
 			window.playerDict[lastName] = {};
 		}
 		window.playerDict[lastName][firstName] = player;
+		// For players like C.J. Anderson with .'s in their name, which some type and others don't...
+		if(firstName.indexOf(".")!== -1) {
+			firstName = firstName.replace(/\./g, '');
+			window.playerDict[lastName][firstName] = player;
+		}
 	},
 
 	fetchAllPlayersForLeague: function(league, listOfPlayers, opt_offset) {
