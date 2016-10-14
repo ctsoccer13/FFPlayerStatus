@@ -279,5 +279,13 @@
 	    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
 	    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
 		});
+		$('#blacklist_add_btn').click(function() {
+			var url = $('#blacklist_input').val();
+		});
+		$("#blacklist_input").keyup(function(event){
+		    if(event.keyCode == 13){
+		        $("#blacklist_add_btn").click();
+		    }
+		});
 	});
 })();
