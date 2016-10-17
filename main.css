@@ -865,6 +865,8 @@ body {
   display: none;
 }
 .blacklist {
+  display: inline-block;
+  vertical-align: top;
   width: 500px;
 }
 #blacklist-input-grp {
