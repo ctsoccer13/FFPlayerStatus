@@ -213,7 +213,7 @@ var fillPopup = function(playerId, closeHandler) {
 			$('#ff-popup').toggleClass('active', false);
 		});
 
-		var leagueId;
+		var leagueId = 0;
 		for (var i = 0; i < player.leagueStatus.length; i++) {
 			var currLeague = player.leagueStatus[i];
 			if(leagueId===undefined) {
