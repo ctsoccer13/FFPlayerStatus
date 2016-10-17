@@ -148,7 +148,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				break;
 
 			case "addTeam":
-				this.fantasyFind[request.site]._fetchTakenPlayersForLeague(request.league);
+				// this.fantasyFind[request.site]._fetchTakenPlayersForLeague(request.league);
 				sendResponse(this.fantasyFind[request.site].addUserTeam(request.league));
 				break;
 

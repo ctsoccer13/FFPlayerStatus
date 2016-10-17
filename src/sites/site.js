@@ -153,7 +153,7 @@ var Site = Class.extend({
   },
 
   addUserTeam: function(leagueVars) {
-    this._fetchTakenPlayersForLeague(leagueVars);
+    this.fetchTakenPlayers(leagueVars);
     var tempLeaguesObject = this.ff.storage.get(this.getSiteUserKey(), 'leagues');
     tempLeaguesObject = tempLeaguesObject || [];
     tempLeaguesObject.push(leagueVars);

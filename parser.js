@@ -177,7 +177,7 @@ var registerHoverHandlers = function(popup) {
 		// TODO: Cancel this timeout if a user makes interaction inside of the popup.
 		cancelId = setTimeout(function() {
 			popup.toggleClass('active', false);
-		}, 1500);
+		}, 500);
 	};
 
 	$('.ff-name').hover(handlerIn, handlerOut);

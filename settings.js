@@ -254,7 +254,7 @@
 		}
 		var div = $('.teamlist');
 		for (var i = 0; i < leaguesLength; ++i) {
-			var template = $('<li>' + leagues[i].teamName + '</li>');
+			var template = $('<li class="espnleague">' + leagues[i].teamName + '</li>');
 			div.append(template);
 		}
 	}
@@ -287,6 +287,7 @@
 			league.availablePlayers = {};
 			var row = $('<li class="espnleague">' + league.teamName + '</li>');
 			$('.teamlist').append(row);
+			$('#teamlist_input').val('');
 	    	//leagues.push(league);
 	    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
 	    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
