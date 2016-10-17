@@ -370,6 +370,10 @@ var evaluateUrl = function(callback) {
 	});
 }
 
+if(performance.navigation.type == 1) {
+	cachedResponses = {};
+}
+
 evaluateUrl(function() {
 	chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
   		window.playerDict = response;
