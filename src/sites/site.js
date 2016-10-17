@@ -161,6 +161,18 @@ var Site = Class.extend({
     this.leagues.push(leagueVars);
   },
 
+  removeUserTeam: function(leagueId) {
+    var leagues = this.ff.storage.get(this.getSiteUserKey(), 'leagues');
+    leagues = leagues || [];
+    for(var i = 0; i < leagues.length; i++) {
+      if(leagues[i].leagueId === leagueId) {
+        leagues.splice(i, 1);
+        this.ff.storage.set(this.getSiteUserKey(), 'leagues', leagues);
+        return;
+      }
+    }
+  },
+
   addPlayerMapping: function(league, currPlayerId, owningTeamId) {
     league.playerIdToTeamIndex[currPlayerId] = owningTeamId;
     //this.save();
