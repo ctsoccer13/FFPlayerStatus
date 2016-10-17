@@ -355,7 +355,7 @@ var evaluateUrl = function(callback) {
 
 		addInlineAvailability = !!response.inline;
 		var proceed = true;
-		blacklist = response.blacklist ? blacklist.push(response.blacklist) : blacklist;
+		blacklist = response.blacklist ? blacklist.concat(response.blacklist) : blacklist;
 
 		for (var i = 0; i < blacklist.length; i++) {
 			if (window.location.href.indexOf(blacklist[i]) > -1)  {

@@ -259,8 +259,21 @@
 		}
 	}
 
+	var populateBlacklistOnLoad = function() {
+		var settings = this.FF.getUserSettings();
+		if(settings) {
+			var blacklist = settings['blacklist'];
+			if(blacklist) {
+				for (var i = 0; i < blacklist.length; i++) {
+					$('#blacklist_tbl > tbody:last-child').append('<tr><td>' + blacklist[i] + '</td><td id="blacklist_remove_cell"><i class="fa fa-remove" id="blacklist_remove_btn" aria-hidden="true"></i></td></tr>');
+				}
+			}
+		}
+	}
+
 	$(document).ready(function() {
 		populateListOnLoad();
+		populateBlacklistOnLoad();
 		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
 	    	var league = parseURL(url);
@@ -272,9 +285,8 @@
 	    	league.sport = 'football';
 			league.playerIdToTeamIndex = {};
 			league.availablePlayers = {};
-			$('.teamlist').append($('<li>', {
-	    		text: league.teamName
-	    	}));
+			var row = $('<li class="espnleague">' + league.teamName + '</li>');
+			$('.teamlist').append(row);
 	    	//leagues.push(league);
 	    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
 	    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
@@ -293,7 +305,7 @@
 		});
 		$('#blacklist_tbl').on('click', '#blacklist_remove_btn', function(){
 			$(this).closest('tr').remove();
-			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: url}, function(response){});
+			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: $(this).closest('tr').text()}, function(response){});
 		});
 	});
 })();

@@ -891,3 +891,13 @@ body {
   width: 10%;
   text-align: center;
 }
+ul.teamlist {
+  list-style-type: none;
+}
+ul.teamlist li.espnleague {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn.png");
+  background-size: 10px;
+  background-repeat: no-repeat;
+  background-position: left center;
+  padding-left: 20px;
+}
