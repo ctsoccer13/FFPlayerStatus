@@ -31,6 +31,16 @@ var injectMarkup = function(inNodes) {
 		return newtext;
 	};
 
+	var checkCustomMapping = function(text) {
+		var idx = text.toLowerCase().indexOf("big ben");
+		if(idx !== -1) {
+			var regex = new RegExp('(?![^<]*>|[^<>]*</)(big ben)', 'gi');
+			var surround = ' <span class="fantasy-finder"><span class="ff-name" data-playerId="5536" style="display:inline;">$1</span></span> ';
+			text = text.replace(regex, surround);
+		}
+		return text;
+	};
+
 	var findName = function(node) {
 		var parts =  node.nodeValue.split(/\s/);
 		var text = $(node).text();
@@ -65,6 +75,11 @@ var injectMarkup = function(inNodes) {
 			// 	changed = true;
 			// }
 		};
+		var newtext = checkCustomMapping(text);
+		if(newtext!==text) {
+			text = newtext;
+			changed = true;
+		}
 		if(changed === true) {
 			var newNode = document.createElement('span');
 			newNode.innerHTML = text;
@@ -397,16 +412,17 @@ evaluateUrl(function() {
 		registerHoverHandlers(popup);
   	});
 });
-var observer = new MutationObserver(function(mutations) {
-	for(var i = 0; i < mutations.length; i++) {
-		if(mutations[i].addedNodes.length > 0) {
-			var popup = $('#ff-popup');
-			injectMarkup(mutations[i].addedNodes);
-			registerHoverHandlers(popup);
-		}
-	}
-});
-observer.observe($("#siteTable").get(0), {childList: true, subtree: true});
+
+// var observer = new MutationObserver(function(mutations) {
+// 	for(var i = 0; i < mutations.length; i++) {
+// 		if(mutations[i].addedNodes.length > 0) {
+// 			var popup = $('#ff-popup');
+// 			injectMarkup(mutations[i].addedNodes);
+// 			registerHoverHandlers(popup);
+// 		}
+// 	}
+// });
+// observer.observe($("#siteTable").get(0), {childList: true, subtree: true});
 
 // document.body.addEventListener('DOMNodeInserted', function(event) {
 // 	if((event.target.tagName == 'DIV') && (event.target.getAttribute('id') && event.target.getAttribute('id').indexOf('siteTable') != -1)){
