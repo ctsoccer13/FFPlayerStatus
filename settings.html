@@ -29,16 +29,11 @@
                 <li>
                     <h3>Teams</h3>
                     <div class="teamlist_ctnr">
-                        <ul class="teamlist"></ul>
-                        <input type="text" id="teamlist_input" />
-                        <button type="submit" id="teamlist_add_btn">Add</button>
-                        <script type="text/javascript">
-                            $('#teamlist_btn').click(function(){
-                                $('.teamlist').append($('<li>', {
-                                    text: $('#teamlist_input').val()
-                                }));
-                            });
-                        </script>
+                        <ul id="teamlist" class="list-group"></ul>
+                        <input type="text" id="teamlist_input" class="form-control" placeholder="Enter URL">
+                        <span class="input-group-btn" id="teamlist-btn-span">
+                            <button type="submit" class="btn btn-primary" id="teamlist_add_btn">Add</button>
+                        </span>
                     </div>
                 </li>
 

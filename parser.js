@@ -14,9 +14,9 @@ var injectMarkup = function(inNodes) {
 	var nodes = [];
 
 	var addMarkup = function(node, firstName, lastName, playerId) {
-		var regex = new RegExp('(' + firstName + '\\s' + lastName + ')', 'gi');
-		var surround = '<span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
-			'"" style="display:inline;">$1</span></span>';
+		var regex = new RegExp('(?![^<]*>|[^<>]*</)(' + firstName + '\\s' + lastName + ')', 'gi');
+		var surround = ' <span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
+			'"" style="display:inline;">$1</span></span> ';
 		var newtext = node.replace(regex, surround);
 		//html = html.replaceText(regex,surround);
 		//text = text.replace(regex, surround);
@@ -75,6 +75,9 @@ var injectMarkup = function(inNodes) {
 	};
 
 	var findTextNodes = function(index, node) {
+		_findTextNodes(node);
+	};
+	var _findTextNodes = function(node) {
 		// If this is a TEXT Node trim the whitespace and push.
 
 		//console.log($(node).prop("tagName"));
@@ -138,7 +141,7 @@ var injectMarkup = function(inNodes) {
 	if (inNodes===undefined) {
 		$(document.body).contents().each(findTextNodes);
 	} else {
-		inNodes.contents().each(findTextNodes);
+		inNodes.forEach(_findTextNodes);
 	}
 
 	for (var i = 0; i < nodes.length; ++i) {
@@ -395,9 +398,13 @@ evaluateUrl(function() {
   	});
 });
 var observer = new MutationObserver(function(mutations) {
-	var popup = $('#ff-popup');
-	injectMarkup(mutations.addedNodes);
-	registerHoverHandlers(popup);
+	for(var i = 0; i < mutations.length; i++) {
+		if(mutations[i].addedNodes.length > 0) {
+			var popup = $('#ff-popup');
+			injectMarkup(mutations[i].addedNodes);
+			registerHoverHandlers(popup);
+		}
+	}
 });
 observer.observe($("#siteTable").get(0), {childList: true, subtree: true});
 
