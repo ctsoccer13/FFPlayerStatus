@@ -340,5 +340,77 @@
 			$(this).closest('li').remove();
 			chrome.runtime.sendMessage({method: 'removeTeam', site: 'espn', leagueId: $(this).closest('li').attr('id')}, function(response){});
 		});
+		$('#search').on('search', searchInput);
 	});
+
+var searchInput = function(event) {
+	var value = $(event.target).val().trim().toLowerCase();
+	$('#player-results').empty();
+	if (value.length < 3) {
+		return;
+	}
+
+	$('#player-results').append('<div class="loading-spinner icon-refresh icon-spin icon-large"></div>');
+
+	chrome.extension.sendMessage({method: 'playerSearch', query: value}, function(response) {
+		_gaq.push(['_trackEvent', 'Search', value]);
+		var container = $('#cm-player-results');
+		container.empty();
+
+		response.results = _.sortBy(response.results, 'name');
+
+		_.each(response.results, function(player) {
+
+			var tempPlayer = $('<div class="search-player" data-player-id="' + player.id + '"><div class="player-img"><img class="fix-error" src="' + player.profileImage + '"></div><div class="player-search-name"><a target="_blank" href="' + player.playerProfileUrl + '">' + player.name + '</a><div class="player-positions">' + player.positions + '</div></div><div class="player-search-availability"></div><div class="player-search-expand" data-player-id="' + player.id + '"><span class="expand-icon icon-chevron-sign-right"></span></div><div class="player-details"><div class="player-details-header"><h2 class="selected" data-section-ref=".player-details-availability" data-player-id="' + player.id + '">Availability</h2><h2 data-section-ref=".player-details-stats" data-player-id="' + player.id + '">Stats</h2></div><div class="player-details-availability active player-details-section"></div><div class="player-details-stats player-details-section"><div class="loading-spinner icon-refresh icon-spin icon-large"></div></div></div></div>');
+
+			tempPlayer.find(".fix-error").on("error", function (event) {
+				$(event.currentTarget).attr("src", "images/default_profile.png");
+			});
+
+			container.append(tempPlayer);
+		});
+
+		if (response.results.length == 0) {
+			container.append('<div class="no-search-results">No players found.</div>');
+		}
+
+		$(".search-player").on("click", function (event) {
+			var playerId = $(event.currentTarget).data().playerId;
+			console.log("chose " + playerId);
+		});
+
+		// $(".player-details-header h2").click(function (event) {
+		// 	var currTarget = $(event.currentTarget);
+		// 	var playerId = currTarget.data().playerId;
+		// 	currTarget.parent().find("h2").removeClass("selected");
+		// 	currTarget.addClass("selected");
+
+		// 	var ref = currTarget.data().sectionRef;
+		// 	$(".search-player[data-player-id='" + playerId + "'] .player-details-section").removeClass("active");
+		// 	$(".search-player[data-player-id='" + playerId + "'] .player-details-section" + ref).addClass("active");
+
+		// 	$.ajax({
+		// 		url: location.protocol + "//games.espn.go.com/ffl/format/playerpop/overview?playerId=" + playerId + "&playerIdType=playerId&seasonId=2013&xhr=1",
+		// 		type: "GET",
+		// 		success: function (response) {
+		// 			var jqResp = $(response);
+		// 			jqResp.find("#overviewTabs #moreStatsView0 .pc").remove();
+		// 			jqResp.find("#overviewTabs #moreStatsView0 table").removeAttr("style");
+		// 			$(".search-player[data-player-id='" + playerId + "'] .player-details-stats").html(jqResp.find("#overviewTabs #moreStatsView0").html());
+		// 		}
+		// 	});
+		// 	event.preventDefault();
+		// 	event.stopPropagation();
+		// 	return false;
+
+		// });
+
+		// $('.ff-btn').click(function(event) {
+		// 	var data = $(event.currentTarget).data();
+		// 	if (data.actionType !== undefined) {
+		// 		_gaq.push(['_trackEvent', 'PlayerAction', data.actionType, data.playerName + ':' + data.playerId, 0]);
+		// 	}
+		// });
+	});
+};
 })();

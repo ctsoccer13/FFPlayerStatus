@@ -105,5 +105,16 @@
                 <tbody></tbody>
             </table>
         </div>
+        <div class="customMapping">
+            <h1>Custom Mappings</h1>
+            The terms below will prevent the plugin from running on certain pages. If a term is found within the page's URL, the plugin will not work on that page.
+            <div id="custom-mapping-input-grp">
+                <input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input">
+                <input id="search" class="player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/>
+                <button type="submit" class="btn btn-primary" id="blacklist_add_btn">Submit</button>
+            </div>
+            <div id="cm-player-results">
+            </div>
+        </div>
     </body>
 </html>
