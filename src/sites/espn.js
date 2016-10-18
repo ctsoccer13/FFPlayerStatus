@@ -96,7 +96,7 @@ ff.Espn = Site.extend({
 	// },
 
 
-	footballFetchTakenPlayers: function(league) {
+	fetchTakenPlayers: function(league) {
 		this._fetchTakenPlayersForLeague(league);
 	},
 

@@ -153,12 +153,30 @@ var Site = Class.extend({
   },
 
   addUserTeam: function(leagueVars) {
-    this._fetchTakenPlayersForLeague(leagueVars);
+    this.fetchTakenPlayers(leagueVars);
     var tempLeaguesObject = this.ff.storage.get(this.getSiteUserKey(), 'leagues');
     tempLeaguesObject = tempLeaguesObject || [];
     tempLeaguesObject.push(leagueVars);
     this.ff.storage.set(this.getSiteUserKey(), 'leagues', tempLeaguesObject);
     this.leagues.push(leagueVars);
+  },
+
+  removeUserTeam: function(leagueId) {
+    for(var i = 0; i < this.leagues.length; i++) {
+      if(this.leagues[i].leagueId === leagueId) {
+        this.leagues.splice(i, 1);
+        break;
+      }
+    }
+    var leagues = this.ff.storage.get(this.getSiteUserKey(), 'leagues');
+    leagues = leagues || [];
+    for(var i = 0; i < leagues.length; i++) {
+      if(leagues[i].leagueId === leagueId) {
+        leagues.splice(i, 1);
+        this.ff.storage.set(this.getSiteUserKey(), 'leagues', leagues);
+        return;
+      }
+    }
   },
 
   addPlayerMapping: function(league, currPlayerId, owningTeamId) {

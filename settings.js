@@ -232,6 +232,17 @@
 		});
 	}
 
+	var getLeagueNameYahoo = function(url, league) {
+		$.ajax({
+			url: url,
+			data: 'text',
+			success: _.bind(function(response) {
+				var item = $(response).find("title").text();
+				league.leagueName = item;
+			}, this)
+		});
+	};
+
 	var parseURL = function(url) {
 		var hash;
     	var vars = {};
@@ -245,6 +256,14 @@
     	return vars;
 	};
 
+	var parseURLYahoo = function(url) {
+		var league = {};
+		var hashes = url.split('/');
+		league['leagueId'] = hashes[hashes.length-2];
+		league['teamId'] = hashes[hashes.length-1];
+		return league;
+	};
+
 	var populateListOnLoad = function() {
 		var leagues = this.FF.getLeaguesFromStorage();
 		var leaguesLength = 0;
@@ -255,30 +274,51 @@
 		}
 		var div = $('.teamlist');
 		for (var i = 0; i < leaguesLength; ++i) {
-			var template = $('<li>' + leagues[i].teamName + '</li>');
+			var template = $('<li class="espnleague">' + leagues[i].teamName + '</li>');
 			div.append(template);
+		}
+	}
+
+	var populateBlacklistOnLoad = function() {
+		var settings = this.FF.getUserSettings();
+		if(settings) {
+			var blacklist = settings['blacklist'];
+			if(blacklist) {
+				for (var i = 0; i < blacklist.length; i++) {
+					$('#blacklist_tbl > tbody:last-child').append('<tr><td>' + blacklist[i] + '</td><td id="blacklist_remove_cell"><i class="fa fa-remove" id="blacklist_remove_btn" aria-hidden="true"></i></td></tr>');
+				}
+			}
 		}
 	}
 
 	$(document).ready(function() {
 		populateListOnLoad();
+		populateBlacklistOnLoad();
 		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
-	    	var league = parseURL(url);
-	    	var teams = getLeagueTeams(url);
-	    	getLeagueName(url, league);
-	    	league.teamName = teams[league.teamId];
-	    	league.shortNames = getLeagueTeamsShortNames(teams);
-	    	league.site = 'espn';
-	    	league.sport = 'football';
-			league.playerIdToTeamIndex = {};
-			league.availablePlayers = {};
-			$('.teamlist').append($('<li>', {
-	    		text: league.teamName
-	    	}));
-	    	//leagues.push(league);
-	    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
-	    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
+			if(url.indexOf("espn") !== -1) {
+		    	var league = parseURL(url);
+		    	var teams = getLeagueTeams(url);
+		    	getLeagueName(url, league);
+		    	league.teamName = teams[league.teamId-1];
+		    	league.shortNames = getLeagueTeamsShortNames(teams);
+		    	league.site = 'espn';
+		    	league.sport = 'football';
+				league.playerIdToTeamIndex = {};
+				league.availablePlayers = {};
+				var row = $('<li class="espnleague" id="' + league.leagueId + '">' + league.teamName + '<i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></li>');
+				$('.teamlist').append(row);
+				$('#teamlist_input').val('');
+		    	//leagues.push(league);
+		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
+		    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
+		    }
+		    if(url.indexOf("yahoo") !== -1) {
+		    	// var YF = require('yahoo-fantasy');
+		    	// var yf = new YF('dj0yJmk9bThpaW5rRFVhTnBhJmQ9WVdrOVdHNXFTMEpUTnpZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1kNA--', '23fa5e57515e7ccdfc47e8702ad7911cd0ba76ad');
+		    	var league = parseURLYahoo(url);
+		    	getLeagueNameYahoo(url, league);
+		    }
 		});
 		$('#blacklist_add_btn').click(function() {
 			var url = $('#blacklist_input').val();
@@ -294,7 +334,11 @@
 		});
 		$('#blacklist_tbl').on('click', '#blacklist_remove_btn', function(){
 			$(this).closest('tr').remove();
-			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: url}, function(response){});
+			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: $(this).closest('tr').text()}, function(response){});
+		});
+		$('.teamlist').on('click', '#team_remove_btn', function() {
+			$(this).closest('li').remove();
+			chrome.runtime.sendMessage({method: 'removeTeam', site: 'espn', leagueId: $(this).closest('li').attr('id')}, function(response){});
 		});
 	});
 })();

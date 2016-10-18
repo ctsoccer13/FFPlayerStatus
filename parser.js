@@ -182,7 +182,7 @@ var registerHoverHandlers = function(popup) {
 		// TODO: Cancel this timeout if a user makes interaction inside of the popup.
 		cancelId = setTimeout(function() {
 			popup.toggleClass('active', false);
-		}, 1500);
+		}, 500);
 	};
 
 	$('.ff-name').hover(handlerIn, handlerOut);
@@ -218,7 +218,7 @@ var fillPopup = function(playerId, closeHandler) {
 			$('#ff-popup').toggleClass('active', false);
 		});
 
-		var leagueId;
+		var leagueId = 0;
 		for (var i = 0; i < player.leagueStatus.length; i++) {
 			var currLeague = player.leagueStatus[i];
 			if(leagueId===undefined) {
@@ -360,7 +360,7 @@ var evaluateUrl = function(callback) {
 
 		addInlineAvailability = !!response.inline;
 		var proceed = true;
-		blacklist = response.blacklist ? blacklist.push(response.blacklist) : blacklist;
+		blacklist = response.blacklist ? blacklist.concat(response.blacklist) : blacklist;
 
 		for (var i = 0; i < blacklist.length; i++) {
 			if (window.location.href.indexOf(blacklist[i]) > -1)  {
@@ -373,6 +373,10 @@ var evaluateUrl = function(callback) {
 			callback();
 		}
 	});
+}
+
+if(performance.navigation.type == 1) {
+	cachedResponses = {};
 }
 
 evaluateUrl(function() {

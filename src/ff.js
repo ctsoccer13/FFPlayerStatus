@@ -214,3 +214,29 @@ Player = function(id, name, team, pos, leagueId) {
 	this.leagueStatus = [];
 	this.positions = pos;
 };
+
+ff.FF.prototype.addBlacklistURL = function(url) {
+	var currSettings = this.getUserSettings();
+	var blacklist = currSettings===undefined ? [] : currSettings['blacklist'];
+	if(blacklist===undefined) {
+		blacklist = [];
+	}
+
+	if(blacklist.indexOf(url) == -1) {
+		blacklist.push(url);
+	}
+	this.setUserSettings({'blacklist' : blacklist});
+};
+
+ff.FF.prototype.removeBlacklistURL = function(url) {
+	var currSettings = this.getUserSettings();
+	var blacklist = currSettings===undefined ? [] : currSettings['blacklist'];
+	if(blacklist===undefined) {
+		blacklist = [];
+	}
+	var idx = blacklist.indexOf(url);
+	if(idx !== -1) {
+		blacklist.splice(idx, 1);
+	}
+	this.setUserSettings({'blacklist' : blacklist});
+};
