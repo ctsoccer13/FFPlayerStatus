@@ -394,23 +394,23 @@ evaluateUrl(function() {
 		registerHoverHandlers(popup);
   	});
 });
-// var observer = new MutationObserver(function(mutations) {
-// 	var popup = $('#ff-popup');
-// 	injectMarkup(mutations.addedNodes);
-// 	registerHoverHandlers(popup);
-// });
-// observer.observe(document, {childList: true, subtree: true});
-
-document.body.addEventListener('DOMNodeInserted', function(event) {
-	if((event.target.tagName == 'DIV') && (event.target.getAttribute('id') && event.target.getAttribute('id').indexOf('siteTable') != -1)){
-		evaluateUrl(function() {
-			chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
-		  		window.playerDict = response;
-		  		buildPopup();
-				var popup = $('#ff-popup');
-				injectMarkup();
-				registerHoverHandlers(popup);
-		  	});
-		});
-	}
+var observer = new MutationObserver(function(mutations) {
+	var popup = $('#ff-popup');
+	injectMarkup(mutations.addedNodes);
+	registerHoverHandlers(popup);
 });
+observer.observe($("#siteTable").get(0), {childList: true, subtree: true});
+
+// document.body.addEventListener('DOMNodeInserted', function(event) {
+// 	if((event.target.tagName == 'DIV') && (event.target.getAttribute('id') && event.target.getAttribute('id').indexOf('siteTable') != -1)){
+// 		evaluateUrl(function() {
+// 			chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
+// 		  		window.playerDict = response;
+// 		  		buildPopup();
+// 				var popup = $('#ff-popup');
+// 				injectMarkup();
+// 				registerHoverHandlers(popup);
+// 		  	});
+// 		});
+// 	}
+// });

@@ -434,6 +434,7 @@ body {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
   position: relative;
+  white-space: normal;
 }
 .fantasy-finder .pointer {
   cursor: pointer;
