@@ -34,6 +34,7 @@ var injectMarkup = function(inNodes) {
 	var findName = function(node) {
 		var parts =  node.nodeValue.split(/\s/);
 		var text = $(node).text();
+		var parent = node.parentElement;
 		var changed = false;
 		for (var i = 0; i < parts.length; i++) {
 			// This includes  ` and . - which break a.j. green da`quan etc..
@@ -64,7 +65,11 @@ var injectMarkup = function(inNodes) {
 			// }
 		};
 		if(changed === true) {
-			node.parentElement.innerHTML = text;
+			var newNode = document.createElement('span');
+			newNode.innerHTML = text;
+			node.parentNode.insertBefore(newNode, node);
+			node.parentNode.removeChild(node);
+			//node.parentElement.innerHTML = text;
 		}
 	};
 

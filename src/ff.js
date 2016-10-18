@@ -90,7 +90,7 @@ ff.FF.prototype.updatePlayerStatus = function(player) {
 		var ownedByTeamId = league.playerIdToTeamIndex[idForSite];
 
 		if (ownedByTeamId) {
-			playerStatus.ownedByTeamName = league.shortNames[ownedByTeamId-1];
+			playerStatus.ownedByTeamName = league.shortNames[ownedByTeamId];
 			if (ownedByTeamId === teamId) {
 				playerStatus.status = DROP;
 				playerStatus.actionUrl = this[league.site].buildDropUrl(idForSite, league);

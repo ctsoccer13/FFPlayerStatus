@@ -195,7 +195,7 @@
 	loadSettings();
 
 	var getLeagueTeams = function(url) {
-		var teams= [];
+		var teams= {};
 		$.ajax({
 			url: url,
 			data: 'text',
@@ -203,7 +203,8 @@
 			success: _.bind(function(response) {
 				var listItems = $(response).find('#games-tabs1 li a');
 				listItems.each(function(i, elem) {
-					teams.push($(elem).text());
+					var parts = parseURL(elem.getAttribute("href"));
+					teams[parts['teamId']] = $(elem).text();
 				});
 	  		}, this)
 		});
@@ -212,10 +213,10 @@
 
 	var getLeagueTeamsShortNames = function(teams) {
 		var abbrevs = [];
-		teams.forEach(function(team) {
-			var parts = team.split(/\s/);
-			abbrevs.push(parts[parts.length-1]);
-		});
+		for (var key in teams) {
+			var parts = teams[key].split(/\s/);
+			abbrevs[key] = parts[parts.length-1];
+		}
 		return abbrevs;
 	}
 
@@ -266,7 +267,7 @@
 	    	var league = parseURL(url);
 	    	var teams = getLeagueTeams(url);
 	    	getLeagueName(url, league);
-	    	league.teamName = teams[league.teamId-1];
+	    	league.teamName = teams[league.teamId];
 	    	league.shortNames = getLeagueTeamsShortNames(teams);
 	    	league.site = 'espn';
 	    	league.sport = 'football';
