@@ -35,6 +35,7 @@ var injectMarkup = function(inNodes) {
 		var parts =  node.nodeValue.split(/\s/);
 		var text = $(node).text();
 		var parent = node.parentElement;
+		if(parent.getAttribute('class')==="ff-name") return;
 		var changed = false;
 		for (var i = 0; i < parts.length; i++) {
 			// This includes  ` and . - which break a.j. green da`quan etc..
@@ -123,7 +124,12 @@ var injectMarkup = function(inNodes) {
 						}
 
 					}
-					$('.ff-name[data-playerid="' + player.id + '"]').append(Handlebars.templates.InlineAvailability(leagueStatusMap));
+					$('.ff-name[data-playerid="' + player.id + '"]').each(function(i) {
+						var found = $(this).find('#inline-availability-marker');
+						if(found.length===0) {
+							$(this).append(Handlebars.templates.InlineAvailability(leagueStatusMap));
+						}
+					});
 				}
 			});
 		}
@@ -395,3 +401,16 @@ evaluateUrl(function() {
 // });
 // observer.observe(document, {childList: true, subtree: true});
 
+document.body.addEventListener('DOMNodeInserted', function(event) {
+	if((event.target.tagName == 'DIV') && (event.target.getAttribute('id') && event.target.getAttribute('id').indexOf('siteTable') != -1)){
+		evaluateUrl(function() {
+			chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
+		  		window.playerDict = response;
+		  		buildPopup();
+				var popup = $('#ff-popup');
+				injectMarkup();
+				registerHoverHandlers(popup);
+		  	});
+		});
+	}
+});

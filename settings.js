@@ -300,7 +300,7 @@
 		    	var league = parseURL(url);
 		    	var teams = getLeagueTeams(url);
 		    	getLeagueName(url, league);
-		    	league.teamName = teams[league.teamId-1];
+		    	league.teamName = teams[league.teamId];
 		    	league.shortNames = getLeagueTeamsShortNames(teams);
 		    	league.site = 'espn';
 		    	league.sport = 'football';

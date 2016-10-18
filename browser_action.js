@@ -239,5 +239,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#settings-btn").click(function (event) {
 		window.open(chrome.extension.getURL("settings.html"), "_blank");
 	});
+	$("#refresh-btn").click(function (event) {
+		location.reload();
+	});
     loadSettings();
 })
