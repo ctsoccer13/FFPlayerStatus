@@ -414,6 +414,7 @@ evaluateUrl(function() {
 });
 
 // var observer = new MutationObserver(function(mutations) {
+// 	this.disconnect();
 // 	for(var i = 0; i < mutations.length; i++) {
 // 		if(mutations[i].addedNodes.length > 0) {
 // 			var popup = $('#ff-popup');
@@ -421,6 +422,7 @@ evaluateUrl(function() {
 // 			registerHoverHandlers(popup);
 // 		}
 // 	}
+// 	this.observe($("#siteTable").get(0), {childList: true, subtree: true});
 // });
 // observer.observe($("#siteTable").get(0), {childList: true, subtree: true});
 
