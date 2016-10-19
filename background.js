@@ -40,6 +40,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
 	} else if (details.reason == 'update') {
 		chrome.tabs.create({url: 'settings.html', active: true}, function(tab) {});
 	}
+	chrome.alarms.create('updateLeagues', {delayInMinutes: 30, periodInMinutes: 30});
 });
 
 var loadInstallPage = function() {
@@ -170,18 +171,27 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		return true;
 });
 
+chrome.alarms.onAlarm.addListener(function(alarm) {
+	if(alarm.name==='updateLeagues') {
+		var leagues = this.fantasyFind.getLeaguesFromStorage();
+    	leagues = leagues || [];
+    	for(var i = 0; i < leagues.length; i++) {
+    		this.fantasyFind[leagues[i].site].fetchTakenPlayers(leagues[i]);
+    	}
+    }
+});
 
 // A little bit janky, but works incredibly better than chrome.tabs.update.
-setInterval(function() {
-	console.log('INTERVAL UPDATE');
+// setInterval(function() {
+// 	console.log('INTERVAL UPDATE');
 
-	var lastLeagueUpdate = FFStorage.get('global', 'lastLeagueUpdate');
-	if ((!lastLeagueUpdate) || (lastLeagueUpdate + MILLISECONDS_ONE_HOUR) < Date.now()) {
-		console.log('no update in ages fetching new teams');
-		// this.fantasyFind.espn.fetchUserTeams(true /* forceReset */);
-		// this.fantasyFind.yahoo.fetchUserTeams(true /* forceReset */);
-	}
-}, MILLISECONDS_ONE_HOUR);
+// 	var lastLeagueUpdate = FFStorage.get('global', 'lastLeagueUpdate');
+// 	if ((!lastLeagueUpdate) || (lastLeagueUpdate + MILLISECONDS_ONE_HOUR) < Date.now()) {
+// 		console.log('no update in ages fetching new teams');
+// 		// this.fantasyFind.espn.fetchUserTeams(true /* forceReset */);
+// 		// this.fantasyFind.yahoo.fetchUserTeams(true /* forceReset */);
+// 	}
+// }, MILLISECONDS_ONE_HOUR);
 
 
 // setInterval(function() {

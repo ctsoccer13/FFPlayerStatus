@@ -12,7 +12,8 @@
    "activeTab",
    "webNavigation",
    "tabs",
-   "http://*/"
+   "http://*/",
+   "alarms"
  ],
  "background": {
    "page": "background.html"
