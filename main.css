@@ -397,7 +397,7 @@
 .settings {
   display: inline-block;
   padding-left: 10px;
-  width: 33%;
+  width: 45%;
 }
 .settings .hide {
   display: none;
@@ -871,7 +871,7 @@ body {
 .blacklist {
   display: inline-block;
   vertical-align: top;
-  width: 33%;
+  width: 45%;
 }
 #blacklist-input-grp {
   display: inline-block;
@@ -900,12 +900,17 @@ body {
 #teamlist {
   list-style-type: none;
 }
-li.espnleague {
+/*td.espnleague > a {
+  width: 50px;
+  height: 50px;
   background: url("chrome-extension://__MSG_@@extension_id__/images/espn.png");
-  background-size: 10px;
+  background-size: 50% 50%;
   background-repeat: no-repeat;
-  background-position: left center;
-  padding-left: 20px;
+  background-position: center center;
+}*/
+#teamlist-icon {
+  height: 20px;
+  width: 20px;
 }
 #teamlist_input {
   display: inline-block;
@@ -922,6 +927,23 @@ li.espnleague {
 .fantasy-finder #refresh-btn .fa-refresh {
   margin-right: 5px;
 }
-#team_remove_btn {
+/*#team_remove_btn {
   padding-left: 20px;
+}*/
+.custom-mapping {
+  width: 65%;
+}
+.teamlist_ctnr {
+  width: 80%;
+}
+#teamlist_remove_cell {
+  width: 10%;
+  text-align: center;
+}
+td.tl-icon {
+  width: 1px;
+  white-space: nowrap;
+}
+td.tl-teamname {
+  text-align: center;
 }

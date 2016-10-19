@@ -194,7 +194,7 @@ PlayerStatus = function() {
 // 	this.positions = this.positions.join(',');
 // };
 
-Player = function(id, name, team, pos, leagueId) {
+Player = function(id, name, team, pos, leagueId, status) {
 	this.id = id;
 	this.name = name;
 	this.leagueIds;
@@ -213,6 +213,7 @@ Player = function(id, name, team, pos, leagueId) {
 	this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
 	this.leagueStatus = [];
 	this.positions = pos;
+	this.status = status;
 };
 
 ff.FF.prototype.addBlacklistURL = function(url) {

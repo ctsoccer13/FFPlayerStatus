@@ -108,6 +108,14 @@ ff.Espn = Site.extend({
 		}	
 	},
 
+	updateLocalLeague: function(league) {
+		for(var i = 0; i < this.leagues.length; i++) {
+			if(this.leagues[i].leagueId === league.leagueId) {
+				this.leagues[i] = league;
+			}
+		}
+	},
+
 	_fetchTakenPlayersForLeague: function(league, opt_offset, opt_slotCategoryGroup) {
 		// var shortcut = league.sport === 'baseball' ? 'flb' : 'ffl
 		// league = this.getLocalLeague(league);
@@ -143,6 +151,7 @@ ff.Espn = Site.extend({
 	      	opt_offset += 50;
 	      	this._fetchTakenPlayersForLeague(league, opt_offset, opt_slotCategoryGroup);
 	      } else {
+	      	this.updateLocalLeague(league);
 	      	this.save();
 	      }
 	  	}, this)
@@ -184,7 +193,7 @@ ff.Espn = Site.extend({
 	           if(name.includes("D/ST")) {
 	           		var nametoks = name.split(/\s+/);
 	           		name = nametoks[0] + " " + nametoks[1];
-	           		var player = new Player(currPlayerId, name, null, "D/ST", league.leagueId);
+	           		var player = new Player(currPlayerId, name, null, "D/ST", league.leagueId, '');
 	           		listOfPlayers[currPlayerId] = player;
 	           		this.addPlayerToDict(player);
 	           		continue;
@@ -192,6 +201,8 @@ ff.Espn = Site.extend({
 	           var tmp = nameDiv[0].innerText.split(" ")[2];
 	           var team = tmp.split(/\s+/)[0];
 	           var pos = tmp.split(/\s+/)[1];
+	           var statusSpan = $(nameDiv).find("span");
+	           var status = statusSpan ? $(statusSpan).attr("title") : '';
 	           var player = new Player(currPlayerId, name, team, pos, league.leagueId);
 
 	           listOfPlayers[currPlayerId] = player;

@@ -272,10 +272,9 @@
 		} else {
 			leaguesLength = leagues.length;
 		}
-		var div = $('.teamlist');
 		for (var i = 0; i < leaguesLength; ++i) {
-			var template = $('<li class="list-group-item espnleague">' + leagues[i].teamName + '</li>');
-			div.append(template);
+			var template = $('<tr><td class="tl-icon"><img id="teamlist-icon" src="images/espn.png"/></td><td class="list-group-item tl-teamname" id="' + leagues[i].leagueId + '">' + leagues[i].teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
+			$('#teamlist_tbl > tbody:last-child').append(template);
 		}
 	}
 
@@ -306,8 +305,8 @@
 		    	league.sport = 'football';
 				league.playerIdToTeamIndex = {};
 				league.availablePlayers = {};
-				var row = $('<li class="list-group-item espnleague" id="' + league.leagueId + '">' + league.teamName + '<i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></li>');
-				$('#teamlist').append(row);
+				var row = $('<tr><td class="tl-icon"><a href="' + url + '"><img id="teamlist-icon" src="images/espn.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
+				$('#teamlist_tbl > tbody:last-child').append(row);
 				$('#teamlist_input').val('');
 		    	//leagues.push(league);
 		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
