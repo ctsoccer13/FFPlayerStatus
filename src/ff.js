@@ -7,27 +7,8 @@ ff.FF = function(storage) {
 
 	this.espn = new ff.Espn(this);
 	this.yahoo = new ff.Yahoo(this);
+	this.customMappings = {};
 };
-
-// ff.FF.prototype.getUserIds = function(callback) {
-// 	async.parallel([
-// 		_.bind(function(callback) {
-// 			this.espn.getUserId(function(userId) {
-// 				console.log('espn getUserId came back with', userId);
-// 			  callback();
-// 		  });
-// 		}, this),
-// 		// _.bind(function(callback) {
-// 		// 	this.yahoo.getUserId(function(userId) {
-// 		// 		console.log('yahoo getUserId came back with ', userId);
-// 		// 		callback();
-// 		// 	});
-// 		// }, this),
-// 	], _.bind(function(err, results) {
-// 		this.installContext = false;
-// 		callback({espn: this.espn.getSiteUserKey(), yahoo: this.yahoo.getSiteUserKey()});
-// 	}, this));
-// };
 
 ff.FF.prototype.getLeaguesFromStorage = function() {
 	var leagues = [];
@@ -51,27 +32,6 @@ ff.FF.prototype.getUrlVars = function(url) {
     }
     return vars;
 };
-
-// ff.FF.prototype.fetchPage = function(url, callback) {
-// 	var waiting = false;
-// 	var requestedUrl = '';
-// 	function loadPage(url){ // Call this function to start
-// 	    var frame = document.getElementsByTagName('iframe')[0];
-// 	    frame.src = url;
-// 	    waiting = true;
-// 	    requestedUrl = url;
-// 	};
-
-// 	chrome.extension.onMessage.addListener(function(request, sender, sendResponse){
-// 	    if(request.loaded && waiting && request.loaded === requestedUrl){
-// 	        document.getElementsByTagName('iframe')[0].src = 'about:blank';
-// 	        waiting = false;
-// 	        callback(request.page);
-// 	    }
-// 	});
-
-// 	loadPage(url);
-// };
 
 ff.FF.prototype.updatePlayerStatus = function(player) {
 	var leagues = this.getLeaguesFromStorage();
@@ -108,7 +68,6 @@ ff.FF.prototype.updatePlayerStatus = function(player) {
 	}
 };
 
-// TODO
 ff.FF.prototype.playerSearch = function(searchSpace, playerName, callback) {
 	var players = _.values(searchSpace);
 	var names = _.keys(searchSpace);
@@ -119,18 +78,13 @@ ff.FF.prototype.playerSearch = function(searchSpace, playerName, callback) {
 	return callback(validPlayers);
 };
 
-// TODO: This needs to configure the actionUrls by sport and orgin of the league's site.
-// If this call is coming from the parser, this will always be the espnId because
-// it uses allNames to do the parsing.
 ff.FF.prototype.getPlayerById = function(playerId) {
 	var player = window.listOfPlayers[playerId];
-	// We have to do this because Tony Curtis ID: 9434 exists in players.js but not in nameDict.js
-	// TODO(tyler): Please pull all our data from the same data place...
 	if (!player.id) {
 		return;
 	}
-	this.updatePlayerStatus(player);
 
+	this.updatePlayerStatus(player);
 	return player;
 };
 
@@ -150,70 +104,6 @@ ff.FF.prototype.setUserSettings = function(settingObj) {
 	}
 
 	this.storage.set("global", "settings", currSettings);
-};
-
-// var POSITION_NAMES = {
-//   0: 'QB',
-//   2: 'RB',
-//   4: 'WR',
-//   6: 'TE',
-//   8: 'DT',
-//   9: 'DE',
-//   10: 'LB',
-//   12: 'CB',
-//   13: 'S',
-//   17: 'K',
-//   18: 'P'
-// };
-
-
-PlayerStatus = function() {
-	this.leagueId;
-	this.leagueName;
-	this.status;
-	this.site;
-	this.actionUrl;
-	this.ownedByTeamName;
-};
-
-// Player = function(id) {
-// 	this.id = id;
-// 	this.name = window.players[id];
-// 	this.leagueIds;
-// 	if (!this.name) {
-// 		return;
-// 	}
-
-// 	this.profileImage = 'http://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/' +
-// 			this.id + '.png&w=350&h=254';
-// 	this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
-// 	this.leagueStatus = [];
-// 	this.positions = _.map(window.playerIdToPosition[id], function(val) {
-// 		return POSITION_NAMES[val]
-// 	});
-// 	this.positions = this.positions.join(',');
-// };
-
-Player = function(id, name, team, pos, leagueId, status) {
-	this.id = id;
-	this.name = name;
-	this.leagueIds;
-	if (!this.name) {
-		return;
-	}
-	this.team = team;
-	var year = new Date().getFullYear();
-	$.ajax({
-		url: "http://games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + this.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
-		type: "GET",
-		success: function (response) {
-			this.profileImage = $(response).find('.mugshot img').attr('src');
-		}.bind(this)
-	});
-	this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
-	this.leagueStatus = [];
-	this.positions = pos;
-	this.status = status;
 };
 
 ff.FF.prototype.addBlacklistURL = function(url) {
@@ -240,4 +130,49 @@ ff.FF.prototype.removeBlacklistURL = function(url) {
 		blacklist.splice(idx, 1);
 	}
 	this.setUserSettings({'blacklist' : blacklist});
+};
+
+ff.FF.prototype.addCustomMapping = function(nickname, playerId) {
+	this.customMappings[nickname] = playerId;
+	this.storage.set("global", "nicknames", this.customMappings);
+};
+
+ff.FF.prototype.removeCustomMapping = function(nickname, playerId) {
+	delete this.customMappings[nickname];
+	this.storage.set("global", "nicknames", this.customMappings);
+};
+
+ff.FF.prototype.getCustomMapping = function() {
+	return this.customMappings;
+};
+
+PlayerStatus = function() {
+	this.leagueId;
+	this.leagueName;
+	this.status;
+	this.site;
+	this.actionUrl;
+	this.ownedByTeamName;
+};
+
+Player = function(id, name, team, pos, leagueId, status) {
+	this.id = id;
+	this.name = name;
+	this.leagueIds;
+	if (!this.name) {
+		return;
+	}
+	this.team = team;
+	var year = new Date().getFullYear();
+	$.ajax({
+		url: "http://games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + this.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
+		type: "GET",
+		success: function (response) {
+			this.profileImage = $(response).find('.mugshot img').attr('src');
+		}.bind(this)
+	});
+	this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
+	this.leagueStatus = [];
+	this.positions = pos;
+	this.status = status;
 };

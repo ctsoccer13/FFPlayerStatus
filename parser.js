@@ -6,6 +6,8 @@ var cachedResponses = {};
 
 var playerDict = {};
 
+var customMappings = {};
+
 /**
  * Parse the DOM and search for valid player names. Surround names with <span>
  * tags.
@@ -32,11 +34,15 @@ var injectMarkup = function(inNodes) {
 	};
 
 	var checkCustomMapping = function(text) {
-		var idx = text.toLowerCase().indexOf("big ben");
-		if(idx !== -1) {
-			var regex = new RegExp('(?![^<]*>|[^<>]*</)(big ben)', 'gi');
-			var surround = ' <span class="fantasy-finder"><span class="ff-name" data-playerId="5536" style="display:inline;">$1</span></span> ';
-			text = text.replace(regex, surround);
+		if(! _.isEmpty(window.customMappings)) {
+			for (var key in window.customMappings) {
+				var idx = text.toLowerCase().indexOf(key);
+				if(idx !== -1) {
+					var regex = new RegExp('(?![^<]*>|[^<>]*</)('+ key + ')', 'gi');
+					var surround = ' <span class="fantasy-finder"><span class="ff-name" data-playerId="' + window.customMappings[key] + '" style="display:inline;">$1</span></span> ';
+					text = text.replace(regex, surround);
+				}
+			}
 		}
 		return text;
 	};
@@ -406,6 +412,7 @@ if(performance.navigation.type == 1) {
 evaluateUrl(function() {
 	chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
   		window.playerDict = response;
+  		chrome.runtime.sendMessage({method: 'getCustomMapping'}, function(response) {window.customMappings = response;});
   		buildPopup();
 		var popup = $('#ff-popup');
 		injectMarkup();

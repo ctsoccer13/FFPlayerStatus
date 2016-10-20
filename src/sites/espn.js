@@ -40,67 +40,7 @@ ff.Espn = Site.extend({
 		this._super(ff, 'espn');
 
 		this.fetchUserInfoUrl = 'http://www.espn.com/fantasy';
-		// this.requireIframe = true;
 		this.baseUrl = 'http://games.espn.go.com/';
-
-		// This is a little weird, but not sure where else to put it.
-		// this.urlToSport = {
-		// 	"ffl": "football",
-		// 	"flb": "baseball"
-		// };
-	},
-
-	// handleUserTeamsPage: function(userId, page) {
-	// 	// var leagueElements = $(page).find('ul.my-teams li.user-entry:not(.signup) a.leagueoffice-link');
-	// 	// var teamElements = $(page).find('ul.my-teams li.user-entry:not(.signup) a.clubhouse-link');
-
-	// 	// if (leagueElements.length > 0 && userId !== undefined) {
-	// 	// 	this.resetStorage();
-	// 	// } else {
-	// 	// 	// TODO(tyler): What should we do here? Show a popup? this can happen if the user has
-	// 	// 	// logged out of espn as well.
-	// 	// 	console.warn('no leagues found for user');
-	// 	// 	console.log($(page));
-	// 	// 	return;
-	// 	// }
-	// 	// for(var i = 0; i < leagueElements.length; i++) {
-	// 	// 	var leagueElement = $(leagueElements[i]);
-	// 	// 	var team = $(teamElements[i]);
-	// 	// 	var leagueName = leagueElement.text();
-	// 	// 	var teamName = team.text();
-	// 	// 	var leagueOfficeLink = leagueElement.attr('href');
-	// 	var leagues = this.getLeaguesFromStorage();
-
-	// 		// var league = this.ff.getUrlVars("http://games.espn.com/ffl/freeagency?leagueId=703055&seasonId=2016");
-	// 		// league.leagueName = 'Taco\'s Truck';
-	// 		// league.teamName = 'Slob on my Cobb';
-	// 		// league.site = 'espn';
-	// 		// league.sport = 'football';
-	// 		// league.playerIdToTeamIndex = {};
-
-	// 		// this.addUserTeam(league);
-	// 		// if (league.seasonId === '2014') {
-	// 		// 	this.addUserTeam(userId, league);
-	// 		// }
-	// 	//}
-	// },
-
-	// baseballFetchTakenPlayers: function(league) {
-	// 	console.log('baseball league', league);
-
-	// 	//batters
-	// 	//&slotCategoryGroup=1
-	// 	//pitchers = 2
-	// 	this._fetchTakenPlayersForLeague(league, undefined, 1);
-	// 	this._fetchTakenPlayersForLeague(league, undefined, 2);
-	// },
-	resetTakenPlayers: function(league) {
-		league.playerIdToTeamIndex = {};
-		this.fetchTakenPlayers(league);
-	},
-
-	fetchTakenPlayers: function(league) {
-		this._fetchTakenPlayersForLeague(league);
 	},
 
 	getLocalLeague: function(league) {
@@ -119,9 +59,16 @@ ff.Espn = Site.extend({
 		}
 	},
 
+	refreshTakenPlayers: function(league) {
+		league.playerIdToTeamIndex = {};
+		this.fetchTakenPlayers(league);
+	},
+
+	fetchTakenPlayers: function(league) {
+		this._fetchTakenPlayersForLeague(league);
+	},
+
 	_fetchTakenPlayersForLeague: function(league, opt_offset, opt_slotCategoryGroup) {
-		// var shortcut = league.sport === 'baseball' ? 'flb' : 'ffl
-		// league = this.getLocalLeague(league);
 		var urlString = 'http://games.espn.go.com/ffl/freeagency?leagueId=' + league.leagueId + '&seasonId=' + league.seasonId + '&avail=4';
 		if (!!opt_offset) {
 			urlString += '&startIndex=' + opt_offset;
@@ -163,8 +110,14 @@ ff.Espn = Site.extend({
 	},
 
 	addPlayerToDict: function(player) {
-		var firstName = player.name.split(/\s+/)[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
-		var lastName = player.name.split(/\s+/)[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+		var parts = player.name.split(/\s+/);
+		var firstName = parts[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+		var lastName = parts[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+		// if (parts.length > 2 && parts[2] !== 'Jr.') {
+		// 	lastName = parts[2].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+		// } else {
+		// 	lastName= parts[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+		// }
 		// var firstName = player.name.substring(0, player.name.lastIndexOf(" ") + 1);
 		// var lastName = player.name.substring(player.name.lastIndexOf(" ") + 1, player.name.length);
 		// ^^ This won't work for "Odell Beckham Jr." -- last name will be Jr.
@@ -223,101 +176,6 @@ ff.Espn = Site.extend({
 	      }
 	  	}, this)
 		});
-	},
-
-	fetchPlayerOptionsForLeagueId: function(league) {
-		var shortcut = league.sport === 'baseball' ? 'flb' : 'ffl';
-		var regex = new RegExp(/\((.*?)\)/);
-		var urlString = 'http://games.espn.go.com/' + shortcut + '/leaguesetup/settings?leagueId=' + league.leagueId;
-		$.ajax({
-			url: urlString,
-			data: 'text',
-			success: _.bind(function(data) {
-				var positionRows = $(data).find('.leagueSettingsTable .slotSectionMiniHeader').siblings();
-				var ESPN_POSITIONS = [];
-				for (var i = positionRows.length - 1; i >= 0; i--) {
-					var children = $(positionRows[i]).children();
-					var text = $(children[0]).text();
-
-					var matches = regex.exec(text);
-					if (matches[1]) {
-						var ps = matchPlayerType(matches[1]);
-						ESPN_POSITIONS = ESPN_POSITIONS.concat(ps);
-					}
-				}
-				league.playerOptions = _.uniq(ESPN_POSITIONS);
-				console.log('player options ', league)
-				this.save();
-			}, this)
-		});
-
-
-		var matchPlayerType = function(leaguePlayerOption) {
-			var ESPN_POSITIONS = [];
-			switch (leaguePlayerOption) {
-			  case 'QB':
-			    ESPN_POSITIONS.push('QB');
-			    break;
-			  case 'RB':
-			    ESPN_POSITIONS.push('RB');
-			    break;
-			  case 'RB/WR':
-			    ESPN_POSITIONS.push('RB'); ESPN_POSITIONS.push('WR');
-			    break;
-			  case 'WR':
-			    ESPN_POSITIONS.push('WR');
-			    break;
-			  case 'WR/TE':
-			    ESPN_POSITIONS.push('WR'); ESPN_POSITIONS.push('TE');
-			    break;
-			  case 'TE':
-			    ESPN_POSITIONS.push('TE');
-			    break;
-			  case 'RB/WR/TE':
-			    ESPN_POSITIONS.push('WR'); ESPN_POSITIONS.push('TE'); ESPN_POSITIONS.push('RB');
-			    break;
-			  case 'OP':
-			    ESPN_POSITIONS.push('QB'); ESPN_POSITIONS.push('WR'); ESPN_POSITIONS.push('TE');
-			    ESPN_POSITIONS.push('RB');
-			    break;
-			  case 'DT':
-			    ESPN_POSITIONS.push('DT');
-			    break;
-			  case 'DE':
-			    ESPN_POSITIONS.push('DE');
-			    break;
-			  case 'LB':
-			    ESPN_POSITIONS.push('LB');
-			    break;
-			  case 'DL':
-			    ESPN_POSITIONS.push('DT'); ESPN_POSITIONS.push('DE');
-			    break;
-			  case 'DT':
-			    ESPN_POSITIONS.push('DT');
-			    break;
-			  case 'CB':
-			    ESPN_POSITIONS.push('CB');
-			    break;
-			  case 'S':
-			    ESPN_POSITIONS.push('S');
-			    break;
-			  case 'DB':
-			    ESPN_POSITIONS.push('S');
-			    ESPN_POSITIONS.push('CB');
-			    break;
-			  case 'DP':
-			    ESPN_POSITIONS.push('S'); ESPN_POSITIONS.push('CB'); ESPN_POSITIONS.push('DT');
-			    ESPN_POSITIONS.push('DE'); ESPN_POSITIONS.push('LB');
-			    break;
-			  case 'K':
-			    ESPN_POSITIONS.push('K');
-			    break;
-			  case 'P':
-			    ESPN_POSITIONS.push('P');
-			    break;
-			};
-			return ESPN_POSITIONS;
-		}
 	},
 
 	buildDropUrl: function(playerId, league) {

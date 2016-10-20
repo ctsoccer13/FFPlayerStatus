@@ -313,8 +313,51 @@
 			$(this).closest('li').remove();
 			chrome.runtime.sendMessage({method: 'removeTeam', site: 'espn', leagueId: $(this).closest('li').attr('id')}, function(response){});
 		});
-		$('#search').on('search', searchInput);
+
+		// Custom mapping listeners
+		$('#cm_add_btn').click(function() {
+			if($('#custom-mapping-table').find('input').length===0) {
+				$('#custom-mapping-table > tbody:last-child').append(buildCMRow());
+			}
+		});
+		$('#custom-mapping-table').on('search', '#search', searchInput);
+		$('#custom-mapping-table').on('click', '#cm-remove-btn', function() {
+			var row = $(this).closest('tr');
+			var nickname = $(row).find('.cm-nickname-text').text();
+			var playerId = $(row).find('.cm-player-text').attr('data-player-id');
+			chrome.runtime.sendMessage({method: 'removeCustomMapping', playerId: playerId, name: nickname}, function(response){
+				$(row).remove();
+			}.bind(this, row));
+		});
+		$('#custom-mapping-table').on('blur', '#cm-nickname-input', function(){
+			var row = $(this).closest("tr");
+			var text = $('#cm-nickname-input').val();
+			$(this).replaceWith('<span class="cm-nickname-text">' + text + '</span>');
+			checkIfRowDone(row);
+		});
+		$('#custom-mapping-table').on('click', '.search-player', function() {
+			var row = $(this).closest("tr");
+			var player = $(this).find('.player-search-name > a').text();
+			var playerId = $(this).attr('data-player-id');
+			var inp = $(this).parent().parent().find('#search');
+			inp.replaceWith('<span class="cm-player-text" data-player-id="' + playerId + '">' + player + '</span>');
+			$(this).parent().remove();
+			checkIfRowDone(row);
+		});
 	});
+
+	var buildCMRow = function() {
+		var row = $('<tr><td class="cm-nickname-cell"><input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input"></td><td class="cm-player-results-cell"><input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div></td><td id="cm-remove-cell"><i class="fa fa-remove" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
+		return row;
+	};
+
+	var checkIfRowDone = function(row) {
+		if($(row).find('input').length === 0) {
+			var nickname = $(row).find('.cm-nickname-text').text();
+			var playerId = $(row).find('.cm-player-text').attr('data-player-id');
+			chrome.runtime.sendMessage({method: 'addCustomMapping', playerId: playerId, name: nickname}, function(response){});
+		}
+	};
 
 var searchInput = function(event) {
 	var value = $(event.target).val().trim().toLowerCase();

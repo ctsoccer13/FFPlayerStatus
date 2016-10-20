@@ -164,8 +164,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				}
 				sendResponse(true);
 				break;
+
 			case "getDict":
 				sendResponse(window.playerDict);
+				break;
+
+			case "addCustomMapping":
+				sendResponse(this.fantasyFind.addCustomMapping(request.name, request.playerId));
+				break;
+
+			case "removeCustomMapping":
+				sendResponse(this.fantasyFind.removeCustomMapping(request.name, request.playerId));
+				break;
+
+			case "getCustomMapping":
+				sendResponse(this.fantasyFind.getCustomMapping());
 				break;
 		}
 		return true;
@@ -177,7 +190,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 		var leagues = this.fantasyFind.getLeaguesFromStorage();
     	leagues = leagues || [];
     	for(var i = 0; i < leagues.length; i++) {
-    		this.fantasyFind[leagues[i].site].resetTakenPlayers(leagues[i]);
+    		this.fantasyFind[leagues[i].site].refreshTakenPlayers(leagues[i]);
     	}
     }
 });

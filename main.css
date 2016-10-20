@@ -947,3 +947,7 @@ td.tl-icon {
 td.tl-teamname {
   text-align: center;
 }
+#cm_add_btn {
+  width: 100px;
+  height: 40px;
+}
