@@ -412,11 +412,13 @@ if(performance.navigation.type == 1) {
 evaluateUrl(function() {
 	chrome.runtime.sendMessage({method: 'getDict'}, function(response) {
   		window.playerDict = response;
-  		chrome.runtime.sendMessage({method: 'getCustomMapping'}, function(response) {window.customMappings = response;});
-  		buildPopup();
-		var popup = $('#ff-popup');
-		injectMarkup();
-		registerHoverHandlers(popup);
+  		chrome.runtime.sendMessage({method: 'getCustomMapping'}, function(response) {
+  			window.customMappings = response;
+  			buildPopup();
+			var popup = $('#ff-popup');
+			injectMarkup();
+			registerHoverHandlers(popup);
+		});
   	});
 });
 
