@@ -33,16 +33,6 @@
 			renderPopupPosition(response.popup_position);
 			renderAnnotations(response.globalAnnotations, response.rosterAnnotations);
 
-			// this.FF.getUserIds(function(userIdObj) {
-			// 	var siteKeys = _.keys(userIdObj);
-
-			// 	if (siteKeys.length === 0) {
-			// 		chrome.tabs.create({url: 'install.html', active: true}, function(tab) {});
-			// 	} else {
-			// 		renderUserTeams();
-			// 	}
-			// });
-
 			/**
 			*	Had to put this here because we don't have access to the dom structure at the beginning of the self executing function.
 			*/
@@ -107,50 +97,6 @@
 	    });
 	};
 
-	var renderUserTeams = function() {
-		// 99% of this code came from installed.js can we share this code somehow?
-		var leagues = this.FF.getLeaguesFromStorage();
-		var leaguesLength = 0;
-		if (!leagues) {
-			console.warn('installer received no leagues for user');
-		} else {
-			leaguesLength = leagues.length;
-		}
-		var div = $('#team-data');
-		for (var i = 0; i < leaguesLength; ++i) {
-			var template = $('<div class="league-row"><div class="league-text"><div class="league-col">' + leagues[i].leagueName + '</div> <div class="league-col">' +
-			leagues[i].teamName + '</div></div><div class="ff-btn" data-league-id="' + leagues[i].leagueId + '"><div class="state-text state1">Active</div><div class="state-text state2">Inactive</div></div></div>');
-
-			if (leagues[i].hidden === undefined || leagues[i].hidden !== 1) {
-				template.find(".ff-btn").addClass("status1");
-			} else {
-				template.find(".ff-btn").addClass("status2");
-			}
-
-			div.append(template);
-		}
-		$(".league-table.hide").removeClass("hide");
-		$(".win-info.hide").removeClass("hide");
-
-		// new bogus code to be replaced.
-		$('.visibility-settings .league-row .ff-btn').click(function(event) {
-			var leagueClicked = $(event.currentTarget).data().leagueId;
-			var hiddenProperty = $(event.currentTarget).hasClass("status1") ? 1 : 0;
-			chrome.extension.sendMessage({method: 'changeLeagueVisibility',
-				leagueId: leagueClicked,
-				hidden: hiddenProperty
-			});
-
-			if (hiddenProperty === 1) {
-				$(event.currentTarget).removeClass("status1").addClass("status2");
-			} else {
-				$(event.currentTarget).removeClass("status2").addClass("status1");
-
-			}
-			_gaq.push(['_trackEvent', 'leagueVisibility', hiddenProperty]);
-		});
-	};
-
 	var renderAnnotations = function (globalAnnotations, rosterAnnotations) {
 		setAnnotationsState(globalAnnotations, rosterAnnotations);
 		$(".global-annotations-settings-enable .ff-btn").click(_.bind(function (event) {
@@ -178,6 +124,7 @@
 			setAnnotationsState(null, annotationsEnabled);
 		}, this));
 	};
+
 	var setAnnotationsState = function (globalAnnotations, rosterAnnotations) {
 		if (globalAnnotations) {
 			$(".global-annotations-settings-enable .ff-btn").removeClass("status2").addClass("status1");
@@ -194,19 +141,33 @@
 	}
 	loadSettings();
 
-	var getLeagueTeams = function(url) {
-		var teams= {};
+	var initLeague = function(url) {
+		var league = parseURL(url);
+		league.url = url;
 		$.ajax({
 			url: url,
 			data: 'text',
 			async: false,
 			success: _.bind(function(response) {
-				var listItems = $(response).find('#games-tabs1 li a');
-				listItems.each(function(i, elem) {
-					var parts = parseURL(elem.getAttribute("href"));
-					teams[parts['teamId']] = $(elem).text();
-				});
+				league.leagueName = getLeagueName(response);
+
+				var teams = getLeagueTeams(response);
+				league.teamName = teams[league.teamId];
+				league.shortNames = getLeagueTeamsShortNames(teams);
+				league.site = 'espn';
+		    	league.sport = 'football';
+				league.playerIdToTeamIndex = {};
 	  		}, this)
+		});
+		return league;
+	}
+
+	var getLeagueTeams = function(response) {
+		var teams= {};
+		var listItems = $(response).find('#games-tabs1 li a');
+		listItems.each(function(i, elem) {
+			var parts = parseURL(elem.getAttribute("href"));
+			teams[parts['teamId']] = $(elem).text();
 		});
 		return teams;
 	}
@@ -220,16 +181,9 @@
 		return abbrevs;
 	}
 
-	var getLeagueName = function(url, league) {
-		$.ajax({
-			url: url,
-			data: 'text',
-			async: false,
-			success: _.bind(function(response) {
-				var item = $(response).find("div.nav-main-breadcrumbs").children().eq(2);
-				league.leagueName = $(item).text();
-	  		}, this)
-		});
+	var getLeagueName = function(response) {
+		var item = $(response).find("div.nav-main-breadcrumbs").children().eq(2);
+		return $(item).text();
 	}
 
 	var getLeagueNameYahoo = function(url, league) {
@@ -245,15 +199,15 @@
 
 	var parseURL = function(url) {
 		var hash;
-    	var vars = {};
+    	var league = {};
     	var hashes = url.slice(url.indexOf('?') + 1).split('&');
     	for(var i = 0; i < hashes.length; i++)
     	{
         	hash = hashes[i].split('=');
         	// vars.push(hash[0]);
-        	vars[hash[0]] = hash[1];
+        	league[hash[0]] = hash[1];
     	}
-    	return vars;
+    	return league;
 	};
 
 	var parseURLYahoo = function(url) {
@@ -264,6 +218,11 @@
 		return league;
 	};
 
+	var addLeagueToTeamList = function(league) {
+		var template = $('<tr><td class="tl-icon"><a href="' + league.url + '"><img id="teamlist-icon" src="images/espn.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
+		$('#teamlist_tbl > tbody:last-child').append(template);
+	}
+
 	var populateListOnLoad = function() {
 		var leagues = this.FF.getLeaguesFromStorage();
 		var leaguesLength = 0;
@@ -273,8 +232,7 @@
 			leaguesLength = leagues.length;
 		}
 		for (var i = 0; i < leaguesLength; ++i) {
-			var template = $('<tr><td class="tl-icon"><img id="teamlist-icon" src="images/espn.png"/></td><td class="list-group-item tl-teamname" id="' + leagues[i].leagueId + '">' + leagues[i].teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
-			$('#teamlist_tbl > tbody:last-child').append(template);
+			addLeagueToTeamList(leagues[i]);
 		}
 	}
 
@@ -290,34 +248,50 @@
 		}
 	}
 
+	var validateURL = function(url) {
+		var reg = /^.*\?leagueId=.*&teamId=.*&seasonId=.*$/gi;
+		return reg.test(url);
+	}
+
 	$(document).ready(function() {
+		// Assuming refresh, rebuild the lists on load
 		populateListOnLoad();
 		populateBlacklistOnLoad();
+
+		// Add a team/league
 		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
+			if( !validateURL(url) ) {
+				$('#teamlist_ctnr').removeClass("has-success");
+				$('#teamlist_ctnr').addClass("has-warning");
+
+				$('#teamlist_input').removeClass("form-control-success");
+				$('#teamlist_input').addClass("form-control-warning");
+
+				return;
+			} else {
+				$('#teamlist_ctnr').removeClass("has-warning");
+				$('#teamlist_ctnr').addClass("has-success");
+
+				$('#teamlist_input').removeClass("form-control-warning");
+				$('#teamlist_input').addClass("form-control-success");
+			}
+			// ESPN league
 			if(url.indexOf("espn") !== -1) {
-		    	var league = parseURL(url);
-		    	var teams = getLeagueTeams(url);
-		    	getLeagueName(url, league);
-		    	league.teamName = teams[league.teamId];
-		    	league.shortNames = getLeagueTeamsShortNames(teams);
-		    	league.site = 'espn';
-		    	league.sport = 'football';
-				league.playerIdToTeamIndex = {};
-				league.availablePlayers = {};
-				var row = $('<tr><td class="tl-icon"><a href="' + url + '"><img id="teamlist-icon" src="images/espn.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
-				$('#teamlist_tbl > tbody:last-child').append(row);
-				$('#teamlist_input').val('');
-		    	//leagues.push(league);
+				// Build league object, populate info
+		    	var league = initLeague(url);
+				addLeagueToTeamList(league);
 		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
 		    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
 		    }
+		    // Yahoo league (not yet working)
 		    if(url.indexOf("yahoo") !== -1) {
 		    	// var YF = require('yahoo-fantasy');
 		    	// var yf = new YF('dj0yJmk9bThpaW5rRFVhTnBhJmQ9WVdrOVdHNXFTMEpUTnpZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1kNA--', '23fa5e57515e7ccdfc47e8702ad7911cd0ba76ad');
 		    	var league = parseURLYahoo(url);
 		    	getLeagueNameYahoo(url, league);
 		    }
+		    $('#teamlist_input').val('');
 		});
 		$('#blacklist_add_btn').click(function() {
 			var url = $('#blacklist_input').val();

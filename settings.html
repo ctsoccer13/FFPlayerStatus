@@ -25,21 +25,24 @@
     <body class="fantasy-finder">
         <div class="settings">
             <h1>Settings</h1>
-            <ul>
-                <li>
+
                     <h3>Teams</h3>
-                    <div class="teamlist_ctnr">
-                        <ul id="teamlist" class="list-group"></ul>
-                        <input type="text" id="teamlist_input" class="form-control" placeholder="Enter URL">
-                        <span class="input-group-btn" id="teamlist-btn-span">
-                            <button type="submit" class="btn btn-primary" id="teamlist_add_btn">Add</button>
-                        </span>
+                    <div id="teamlist_ctnr">
+                        <div class="form-group">
+                            <!-- <label class="form-control-label" for="teamlist_input">League URL</label> -->
+                            <input type="text" id="teamlist_input" class="form-control" placeholder="Enter URL">
+                            <span class="input-group-btn" id="teamlist-btn-span">
+                                <button type="submit" class="btn btn-primary" id="teamlist_add_btn">Add</button>
+                            </span>
+                            <!-- <div class="form-control-feedback">Feedback</div> -->
+                            <small class="form-text text-muted">Paste the URL of your ESPN "My Team" page</small>
+                        </div>
                         <table class="table table-striped table-bordered" id="teamlist_tbl">
                             <tbody></tbody>
                         </table>
                     </div>
-                </li>
 
+            <ul>
 <!--             	<li>
             		<h3>Syncing</h3>
             		 <div id="sync" class="ff-btn grey"><span class="sync-text">Sync my leagues</span><div id="loader"><div class="icon-refresh icon-spin"></div></div></div>
@@ -64,7 +67,7 @@
                         <li id="league-annotations">
                             <H4>League and Roster Pages.</h4>
                             <div class="settings-caption-text">
-                            Show Annontations on your league and roster pages.
+                            Show Annontations on your league and roster pages
                             </div>
                             <div class="roster-annotations-settings-enable">
                                 <div class="ff-btn"><div class="state-text state1">Enabled</div><div class="state-text state2">Disabled</div></div>
@@ -98,7 +101,7 @@
         <div class="blacklist">
             <h1>URL Blacklist</h1>
             The terms below will prevent the plugin from running on certain pages. If a term is found within the page's URL, the plugin will not work on that page.
-            <div id="blacklist-input-grp">
+            <div id="blacklist-input-grp" class="form-group">
                 <input type="text" class="form-control" placeholder="Enter URL" id="blacklist_input">
                 <span class="input-group-btn" id="blacklist_btn_span">
                     <button type="submit" class="btn btn-primary" id="blacklist_add_btn">Submit</button>

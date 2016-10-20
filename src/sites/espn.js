@@ -94,7 +94,10 @@ ff.Espn = Site.extend({
 	// 	this._fetchTakenPlayersForLeague(league, undefined, 1);
 	// 	this._fetchTakenPlayersForLeague(league, undefined, 2);
 	// },
-
+	resetTakenPlayers: function(league) {
+		league.playerIdToTeamIndex = {};
+		this.fetchTakenPlayers(league);
+	},
 
 	fetchTakenPlayers: function(league) {
 		this._fetchTakenPlayersForLeague(league);
@@ -162,6 +165,9 @@ ff.Espn = Site.extend({
 	addPlayerToDict: function(player) {
 		var firstName = player.name.split(/\s+/)[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
 		var lastName = player.name.split(/\s+/)[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+		// var firstName = player.name.substring(0, player.name.lastIndexOf(" ") + 1);
+		// var lastName = player.name.substring(player.name.lastIndexOf(" ") + 1, player.name.length);
+		// ^^ This won't work for "Odell Beckham Jr." -- last name will be Jr.
 
 		if(!(lastName in window.playerDict)) {
 			window.playerDict[lastName] = {};
@@ -189,7 +195,8 @@ ff.Espn = Site.extend({
 	           var currPlayerRow = $(elements[i]);
 	           var currPlayerId =  $(currPlayerRow).attr('id').substring(4);
 	           var nameDiv = $(currPlayerRow).find('td.playertablePlayerName');
-	           var name = nameDiv[0].innerText.split(",")[0];
+	           var parts = nameDiv[0].innerText.split(",");
+	           var name = parts[0];
 	           if(name.includes("D/ST")) {
 	           		var nametoks = name.split(/\s+/);
 	           		name = nametoks[0] + " " + nametoks[1];
@@ -198,9 +205,8 @@ ff.Espn = Site.extend({
 	           		this.addPlayerToDict(player);
 	           		continue;
 	           }
-	           var tmp = nameDiv[0].innerText.split(" ")[2];
-	           var team = tmp.split(/\s+/)[0];
-	           var pos = tmp.split(/\s+/)[1];
+	           var team = parts[1].split(/\s+/)[1];
+	           var pos = parts[1].split(/\s+/)[2];
 	           var statusSpan = $(nameDiv).find("span");
 	           var status = statusSpan ? $(statusSpan).attr("title") : '';
 	           var player = new Player(currPlayerId, name, team, pos, league.leagueId);

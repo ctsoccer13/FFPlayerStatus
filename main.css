@@ -933,7 +933,7 @@ body {
 .custom-mapping {
   width: 65%;
 }
-.teamlist_ctnr {
+#teamlist_ctnr {
   width: 80%;
 }
 #teamlist_remove_cell {
