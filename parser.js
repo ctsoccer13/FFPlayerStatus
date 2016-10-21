@@ -383,8 +383,8 @@ var evaluateUrl = function(callback) {
 			return;
 		}
 		if (response.rosterAnnotations === false) {
-			blacklist.push('games.espn.go.com/ffl');
-			blacklist.push('football.fantasysports.yahoo.com/f1')
+			blacklist.push('espn.com/ffl');
+			// blacklist.push('football.fantasysports.yahoo.com/f1');
 		}
 
 

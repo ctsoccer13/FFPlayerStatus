@@ -931,6 +931,8 @@ body {
   padding-left: 20px;
 }*/
 .custom-mapping {
+  display: inline-block;
+  padding-left: 10px;
   width: 65%;
 }
 #teamlist_ctnr {

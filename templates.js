@@ -99,7 +99,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   buffer += escapeExpression(stack1)
     + "\n		</a>\n	</div>\n	<div class=\"player-positions\">\n		";
   if (helper = helpers.positions) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && (depth0.positions + (depth0.team===undefined ? '' : ' (' + depth0.team + ')'))); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  else { helper = (depth0 && (depth0.positions + (depth0.team===undefined || depth0.team===null ? '' : ' (' + depth0.team + ')'))); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
     + "\n	</div>\n</div>\n<div class=\"player-league-data\">\n	<div class=\"player-section-header\"><h2 class=\"selected pointer\" data-section-ref=\".league-data\">Availability</h2><h2 class=\"pointer player-statistics\" data-section-ref=\".player-stats\">Stats</h2></div>\n	<div class=\"league-data player-data-section active\"></div>\n	<div class=\"player-stats player-data-section\"></div>\n</div>";
   return buffer;

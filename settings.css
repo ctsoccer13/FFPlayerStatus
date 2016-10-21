@@ -1,3 +1,873 @@
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+/*!
+ *  Font Awesome 3.2.1
+ *  the iconic font designed for Bootstrap
+ *  ------------------------------------------------------------------------------
+ *  The full suite of pictographic icons, examples, and documentation can be
+ *  found at http://fontawesome.io.  Stay up to date on Twitter at
+ *  http://twitter.com/fontawesome.
+ *
+ *  License
+ *  ------------------------------------------------------------------------------
+ *  - The Font Awesome font is licensed under SIL OFL 1.1 -
+ *    http://scripts.sil.org/OFL
+ *  - Font Awesome CSS, LESS, and SASS files are licensed under MIT License -
+ *    http://opensource.org/licenses/mit-license.html
+ *  - Font Awesome documentation licensed under CC BY 3.0 -
+ *    http://creativecommons.org/licenses/by/3.0/
+ *  - Attribution is no longer required in Font Awesome 3.0, but much appreciated:
+ *    "Font Awesome by Dave Gandy - http://fontawesome.io"
+ *
+ *  Author - Dave Gandy
+ *  ------------------------------------------------------------------------------
+ *  Email: dave@fontawesome.io
+ *  Twitter: http://twitter.com/davegandy
+ *  Work: Lead Product Designer @ Kyruus - http://kyruus.com
+ */
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.eot?v=4.6.3');
+  src: url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.eot?#iefix&v=4.6.3') format('embedded-opentype'), url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.woff?v=4.6.3') format('woff'), url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.ttf?v=4.6.3') format('truetype'), url('chrome-extension://__MSG_@@extension_id__/font/fontawesome-webfont.svg#fontawesomeregular?v=4.6.3') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+#inline-availability-marker {
+  display: inline;
+  color: white;
+  position: relative;
+  font-size: 8px;
+  vertical-align: middle;
+  white-space: normal;
+}
+#inline-availability-marker .availability-type {
+  display: none;
+}
+#inline-availability-marker .availability-type [class*="icon-"] {
+  font-size: 80%;
+}
+#inline-availability-marker .availability-type.active {
+  display: inline;
+}
+#inline-availability-marker .availability-type.add-leagues {
+  background: #5cb85c;
+}
+#inline-availability-marker .availability-type.drop-leagues {
+  background: #d9534f;
+}
+#inline-availability-marker .availability-type.trade-leagues {
+  background: #f0ad4e;
+}
+#inline-availability-marker span {
+  display: inline;
+  padding: 0px;
+  color: white;
+}
+.fantasy-finder .browser-action-footer {
+  vertical-align: bottom;
+  background: rgba(0, 0, 0, 0.1);
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  text-align: center;
+}
+.fantasy-finder .browser-action-footer #loader {
+  display: none;
+}
+.fantasy-finder .browser-action-footer .footer-btn {
+  display: inline-block;
+  vertical-align: bottom;
+}
+.fantasy-finder #player-results {
+  position: absolute;
+  top: 40px;
+  bottom: 28px;
+  left: 0px;
+  right: 0px;
+  overflow: scroll;
+}
+.fantasy-finder #player-results .loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -10px;
+  margin-top: -15px;
+  font-size: 21px;
+  color: black;
+}
+.fantasy-finder .player-search-input-wrapper {
+  padding: 5px 10px;
+}
+.fantasy-finder .player-search-input-wrapper .player-search-input {
+  width: 100%;
+}
+.fantasy-finder .search-player {
+  text-align: left;
+  font-size: 14px;
+}
+.fantasy-finder .search-player .player-img {
+  display: inline-block;
+}
+.fantasy-finder .search-player .player-img img {
+  height: 40px;
+  width: 55px;
+}
+.fantasy-finder .search-player .player-search-name {
+  display: inline-block;
+  vertical-align: top;
+  padding: 15px 5px 15px 10px;
+  max-width: 125px;
+}
+.fantasy-finder .search-player .player-search-name a {
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+.fantasy-finder .search-player .player-search-name a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+.fantasy-finder .search-player .player-search-name .player-positions {
+  font-size: 12px;
+}
+.fantasy-finder .search-player #inline-availability-marker {
+  font-size: 12px;
+  padding: 15px 0px;
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .search-player:nth-child(odd) {
+  background: #f9f9f9;
+}
+.fantasy-finder .search-player:nth-child(odd).current {
+  background: #c6c6c6;
+}
+.fantasy-finder .search-player:nth-child(even) {
+  background: rgba(15, 91, 26, 0.1);
+}
+.fantasy-finder .search-player:nth-child(even).current {
+  background: #c6c6c6;
+}
+.fantasy-finder .search-player .player-search-availability {
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .search-player .player-details {
+  display: none;
+}
+.fantasy-finder .search-player .player-details .player-details-header {
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-topleft: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 5px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  background: #168727;
+  color: white;
+  padding: 0px 5px;
+}
+.fantasy-finder .search-player .player-details .player-details-header h2 {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  text-align: center;
+  font-size: 16px;
+  margin: 5px 0px;
+}
+.fantasy-finder .search-player .player-details .player-details-header h2:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.fantasy-finder .search-player .player-details .player-details-header h2.selected {
+  background: rgba(0, 0, 0, 0.2);
+}
+.fantasy-finder .search-player .player-details .player-details-section {
+  display: none;
+}
+.fantasy-finder .search-player .player-details .player-details-section.active {
+  display: block;
+}
+.fantasy-finder .search-player .player-details .player-details-section.player-details-stats table {
+  font-size: 12px;
+}
+.fantasy-finder .search-player .player-search-expand {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 14px;
+  float: right;
+  margin-top: 15px;
+}
+.fantasy-finder .search-player .expand-icon {
+  margin-right: 5px;
+  padding: 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 18px;
+}
+.fantasy-finder .search-player .expand-icon:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.fantasy-finder .search-player.open {
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  margin: 10px 5px;
+}
+.fantasy-finder .search-player.open #inline-availability-marker {
+  display: none;
+}
+.fantasy-finder .search-player.open .player-details {
+  display: block;
+  margin: auto;
+}
+.fantasy-finder .search-player.open .player-details .league-row {
+  width: 100%;
+}
+.fantasy-finder #settings-btn .fa-gear {
+  margin-right: 5px;
+}
+.reasons {
+  width: 100%;
+}
+.win-reason {
+  vertical-align: top;
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}
+.win-reason img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+}
+.win-reason-padder {
+  padding: 0px 20px;
+}
+.install-text {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+#auth-text {
+  width: 100%;
+}
+#auth-text .login-buttons {
+  margin-top: 15px;
+}
+.win-title {
+  text-align: center;
+}
+.win-info {
+  margin: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  border: 1px solid black;
+  padding: 20px;
+  padding-bottom: 50px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.win-info.hide {
+  display: none;
+}
+.league-table {
+  display: table;
+  margin: auto;
+  text-align: left;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.league-table.hide {
+  display: none;
+}
+.league-table .league-row {
+  display: table-row;
+}
+.league-table .league-row:first-child .league-col {
+  font-weight: bold;
+  text-align: center;
+}
+.league-table .league-col {
+  display: table-cell;
+  padding: 5px 10px;
+}
+.login {
+  display: inline-block;
+  text-align: center;
+  font-size: 24px;
+}
+.login .site-icon {
+  width: 75px;
+  height: 20px;
+  background-size: 75px 20px;
+  margin-top: 10px;
+}
+.install-centerer {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  background: white;
+  margin: auto;
+  padding: 20px 30px;
+}
+.install-full {
+  background: #ebebeb;
+  min-height: 100%;
+}
+.fantasy-finder .visibility-settings .league-row {
+  width: 400px;
+}
+.fantasy-finder .visibility-settings .league-row .league-text {
+  width: 250px;
+  display: inline-block;
+}
+.fantasy-finder .visibility-settings .league-row .ff-btn {
+  display: inline-block;
+  vertical-align: top;
+}
+.settings-caption-text {
+  width: 100%;
+  margin: 10px 0px;
+}
+.settings {
+  display: inline-block;
+  padding-left: 10px;
+  width: 45%;
+}
+.settings .hide {
+  display: none;
+}
+.changelog {
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .site-icon.espn {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn.png");
+  background-size: 10px;
+}
+.fantasy-finder .site-icon.espn.full {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn-full-red.png");
+  background-size: 75px 20px;
+}
+.fantasy-finder .site-icon.espn.full.red {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/espn-full-white.png");
+}
+.fantasy-finder .site-icon.yahoo {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/yahoo.png");
+  background-size: 10px;
+}
+.fantasy-finder .site-icon.yahoo.full {
+  background: url("chrome-extension://__MSG_@@extension_id__/images/yahoo-full.png");
+  background-size: 75px 20px;
+}
+body {
+  font-family: helvetica, arial, sans-serif;
+}
+.fantasy-finder .hide {
+  display: none;
+}
+.fantasy-finder .ff-name {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+  position: relative;
+  white-space: normal;
+}
+.fantasy-finder .pointer {
+  cursor: pointer;
+}
+.fantasy-finder #ff-popup {
+  font-family: helvetica, arial, sans-serif;
+  display: none;
+  position: absolute;
+  height: auto;
+  width: auto;
+  background-color: white;
+  -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  z-index: 2147483647;
+  /* Maximum possible Z-value take that ESPN! */
+  padding: 12px;
+  font-size: 14px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.fantasy-finder #ff-popup:hover {
+  display: block;
+}
+.fantasy-finder #ff-popup .popup-arrow {
+  position: absolute;
+  left: -31px;
+  top: 50px;
+  border: 15px solid transparent;
+  border-right-color: rgba(0, 0, 0, 0.6);
+}
+.fantasy-finder #ff-popup .popup-arrow .popup-arrow-inner {
+  position: absolute;
+  top: -15px;
+  left: -14px;
+  border: 15px solid transparent;
+  border-right-color: white;
+}
+.fantasy-finder #ff-popup h2 {
+  color: white;
+  font-size: 14px;
+  margin: 0px;
+}
+.fantasy-finder #ff-popup.arrow-right .popup-arrow {
+  right: -30px;
+  left: auto;
+  border-color: transparent;
+  border-left-color: rgba(0, 0, 0, 0.6);
+}
+.fantasy-finder #ff-popup.arrow-right .popup-arrow .popup-arrow-inner {
+  position: absolute;
+  top: -15px;
+  right: -14px;
+  left: auto;
+  border: 15px solid transparent;
+  border-left-color: white;
+}
+.fantasy-finder #ff-popup .league-data .league-name {
+  width: 140px;
+}
+.fantasy-finder #ff-popup .close {
+  cursor: pointer;
+  float: right;
+}
+.fantasy-finder #ff-popup .league-data .not-available {
+  max-width: 20em;
+}
+.fantasy-finder .player-data-section {
+  display: none;
+  width: 270px;
+}
+.fantasy-finder .player-data-section.active {
+  display: block;
+}
+.fantasy-finder .player-data-section.player-stats table {
+  font-size: 12px;
+}
+.fantasy-finder #ff-popup.active {
+  display: block;
+}
+.fantasy-finder #ff-large {
+  display: none;
+  opacity: 0;
+  position: absolute;
+  background-color: red;
+  top: 0;
+  right: 0;
+  z-index: 2147483647;
+  /* Maximum possible Z-value take that ESPN! */
+  -webkit-transition: opacity 1s;
+}
+.fantasy-finder #ff-large.active {
+  opacity: 1;
+  height: 100px;
+}
+.fantasy-finder .player-profile-img {
+  width: 75px;
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .player-profile-img img {
+  width: 75px;
+}
+.fantasy-finder .player-profile-img .temp-default-player {
+  height: 40px;
+  width: 55px;
+  background-image: url("chrome-extension://__MSG_@@extension_id__/images/default_profile.png");
+}
+.fantasy-finder .player-info {
+  display: inline-block;
+  vertical-align: top;
+  max-width: 160px;
+}
+.fantasy-finder .player-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+.fantasy-finder .player-name a {
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+}
+.fantasy-finder .player-name a:hover {
+  text-decoration: underline;
+  color: blue;
+}
+/*.fantasy-finder .ff-btn {
+  display: inline-block;
+  padding: 5px 10px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
+  margin: 2px;
+}
+.fantasy-finder .ff-btn.grey {
+  background: #6b717c;
+  background: -ms-linear-gradient(top, #898c91, #4e5766);
+  background: -webkit-gradient(linear, left top, left bottom, from(#898c91), to(#4e5766));
+  background: -moz-linear-gradient(center top, #898c91 0%, #4e5766 100%);
+  background: -moz-gradient(center top, #898c91 0%, #4e5766 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.grey:hover {
+  background: #757b87;
+  background: -ms-linear-gradient(top, #919498, #596375);
+  background: -webkit-gradient(linear, left top, left bottom, from(#919498), to(#596375));
+  background: -moz-linear-gradient(center top, #919498 0%, #596375 100%);
+  background: -moz-gradient(center top, #919498 0%, #596375 100%);
+}
+.fantasy-finder .ff-btn.grey:active {
+  background: #757b87;
+  background: -ms-linear-gradient(top, #919498, #596375);
+  background: -webkit-gradient(linear, left top, left bottom, from(#919498), to(#596375));
+  background: -moz-linear-gradient(center top, #919498 0%, #596375 100%);
+  background: -moz-gradient(center top, #919498 0%, #596375 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.status1 {
+  background: #449d44;
+  background: -ms-linear-gradient(top, #5cb85c, #2c822c);
+  background: -webkit-gradient(linear, left top, left bottom, from(#5cb85c), to(#2c822c));
+  background: -moz-linear-gradient(center top, #5cb85c 0%, #2c822c 100%);
+  background: -moz-gradient(center top, #5cb85c 0%, #2c822c 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.status1:hover {
+  background: #4da94d;
+  background: -ms-linear-gradient(top, #67bd67, #339533);
+  background: -webkit-gradient(linear, left top, left bottom, from(#67bd67), to(#339533));
+  background: -moz-linear-gradient(center top, #67bd67 0%, #339533 100%);
+  background: -moz-gradient(center top, #67bd67 0%, #339533 100%);
+}
+.fantasy-finder .ff-btn.status1:active {
+  background: #4da94d;
+  background: -ms-linear-gradient(top, #67bd67, #339533);
+  background: -webkit-gradient(linear, left top, left bottom, from(#67bd67), to(#339533));
+  background: -moz-linear-gradient(center top, #67bd67 0%, #339533 100%);
+  background: -moz-gradient(center top, #67bd67 0%, #339533 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.status2 {
+  background: #c13834;
+  background: -ms-linear-gradient(top, #d9534f, #a91d19);
+  background: -webkit-gradient(linear, left top, left bottom, from(#d9534f), to(#a91d19));
+  background: -moz-linear-gradient(center top, #d9534f 0%, #a91d19 100%);
+  background: -moz-gradient(center top, #d9534f 0%, #a91d19 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.status2:hover {
+  background: #ce403c;
+  background: -ms-linear-gradient(top, #dc5f5c, #bf211c);
+  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f5c), to(#bf211c));
+  background: -moz-linear-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+  background: -moz-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+}
+.fantasy-finder .ff-btn.status2:active {
+  background: #ce403c;
+  background: -ms-linear-gradient(top, #dc5f5c, #bf211c);
+  background: -webkit-gradient(linear, left top, left bottom, from(#dc5f5c), to(#bf211c));
+  background: -moz-linear-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+  background: -moz-gradient(center top, #dc5f5c 0%, #bf211c 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.status3 {
+  background: #e1952a;
+  background: -ms-linear-gradient(top, #f0ad4e, #d27e06);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f0ad4e), to(#d27e06));
+  background: -moz-linear-gradient(center top, #f0ad4e 0%, #d27e06 100%);
+  background: -moz-gradient(center top, #f0ad4e 0%, #d27e06 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.status3:hover {
+  background: #eea031;
+  background: -ms-linear-gradient(top, #f1b45c, #eb8c07);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f1b45c), to(#eb8c07));
+  background: -moz-linear-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+  background: -moz-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+}
+.fantasy-finder .ff-btn.status3:active {
+  background: #eea031;
+  background: -ms-linear-gradient(top, #f1b45c, #eb8c07);
+  background: -webkit-gradient(linear, left top, left bottom, from(#f1b45c), to(#eb8c07));
+  background: -moz-linear-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+  background: -moz-gradient(center top, #f1b45c 0%, #eb8c07 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.login {
+  background: #30487b;
+  background: -ms-linear-gradient(top, #425f9c, #1e315a);
+  background: -webkit-gradient(linear, left top, left bottom, from(#425f9c), to(#1e315a));
+  background: -moz-linear-gradient(center top, #425f9c 0%, #1e315a 100%);
+  background: -moz-gradient(center top, #425f9c 0%, #1e315a 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.login:hover {
+  background: #35518a;
+  background: -ms-linear-gradient(top, #4766a7, #243c6e);
+  background: -webkit-gradient(linear, left top, left bottom, from(#4766a7), to(#243c6e));
+  background: -moz-linear-gradient(center top, #4766a7 0%, #243c6e 100%);
+  background: -moz-gradient(center top, #4766a7 0%, #243c6e 100%);
+}
+.fantasy-finder .ff-btn.login:active {
+  background: #35518a;
+  background: -ms-linear-gradient(top, #4766a7, #243c6e);
+  background: -webkit-gradient(linear, left top, left bottom, from(#4766a7), to(#243c6e));
+  background: -moz-linear-gradient(center top, #4766a7 0%, #243c6e 100%);
+  background: -moz-gradient(center top, #4766a7 0%, #243c6e 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.twitter {
+  background: #0087ba;
+  background: -ms-linear-gradient(top, #00aced, #006287);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00aced), to(#006287));
+  background: -moz-linear-gradient(center top, #00aced 0%, #006287 100%);
+  background: -moz-gradient(center top, #00aced 0%, #006287 100%);
+  color: #ffffff;
+}
+.fantasy-finder .ff-btn.twitter:hover {
+  background: #0096ce;
+  background: -ms-linear-gradient(top, #00b7fc, #0074a1);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00b7fc), to(#0074a1));
+  background: -moz-linear-gradient(center top, #00b7fc 0%, #0074a1 100%);
+  background: -moz-gradient(center top, #00b7fc 0%, #0074a1 100%);
+}
+.fantasy-finder .ff-btn.twitter:active {
+  background: #0096ce;
+  background: -ms-linear-gradient(top, #00b7fc, #0074a1);
+  background: -webkit-gradient(linear, left top, left bottom, from(#00b7fc), to(#0074a1));
+  background: -moz-linear-gradient(center top, #00b7fc 0%, #0074a1 100%);
+  background: -moz-gradient(center top, #00b7fc 0%, #0074a1 100%);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+.fantasy-finder .ff-btn.twitter .icon-twitter {
+  margin-right: 5px;
+}
+.fantasy-finder .ff-btn.medium {
+  padding: 15px 30px;
+  font-size: 20px;
+}
+.fantasy-finder .ff-btn.large {
+  padding: 20px 40px;
+  font-size: 24px;
+}*/
+.fantasy-finder .state-text {
+  display: none;
+}
+.fantasy-finder .status1 .state-text.state1 {
+  display: block;
+}
+.fantasy-finder .status2 .state-text.state2 {
+  display: block;
+}
+.fantasy-finder .login-centerer {
+  margin-bottom: 20px;
+}
+.fantasy-finder .ff-btn-text {
+  display: inline-block;
+  vertical-align: top;
+}
+.fantasy-finder .ff-btn-icon {
+  margin-right: 5px;
+}
+.fantasy-finder .league-name {
+  display: inline-block;
+  vertical-align: top;
+  width: 130px;
+  line-height: 20px;
+  margin-top: 5px;
+  padding: 0px 5px;
+  max-height: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.fantasy-finder .player-league-data {
+  margin: 5px 0px;
+}
+.fantasy-finder .player-section-header {
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-topleft: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 5px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  background: #168727;
+  padding: 5px;
+  color: white;
+}
+.fantasy-finder .player-section-header h2 {
+  display: inline-block;
+  width: 50%;
+  vertical-align: top;
+  text-align: center;
+}
+.fantasy-finder .player-section-header h2:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+.fantasy-finder .player-section-header h2.selected {
+  background: rgba(0, 0, 0, 0.2);
+}
+.fantasy-finder .league-row {
+  width: 260px;
+  height: 30px;
+  padding: 5px 0px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.fantasy-finder .league-row .league-row-padder {
+  padding: 0px 5px;
+}
+.fantasy-finder .league-row .ff-btn {
+  float: right;
+  width: 80px;
+  margin: 0px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.fantasy-finder .league-row:last-child {
+  border-bottom: 0px;
+}
+.fantasy-finder .league-row:nth-child(odd) {
+  background: #f9f9f9;
+}
+.fantasy-finder .league-row:nth-child(even) {
+  background: rgba(15, 91, 26, 0.1);
+}
+.fantasy-finder .league-row .site-icon {
+  width: 10px;
+  height: 10px;
+  margin-top: 9px;
+  display: inline-block;
+}
+.fantasy-finder #player-results .no-search-results {
+  text-align: center;
+  margin-top: 7em;
+}
+.fantasy-finder #sync #loader {
+  display: none;
+}
 .blacklist {
   display: inline-block;
   vertical-align: top;
@@ -61,6 +931,8 @@
   padding-left: 20px;
 }*/
 .custom-mapping {
+  display: inline-block;
+  padding-left: 10px;
   width: 65%;
 }
 #teamlist_ctnr {
@@ -76,4 +948,8 @@ td.tl-icon {
 }
 td.tl-teamname {
   text-align: center;
+}
+#cm_add_btn {
+  width: 100px;
+  height: 40px;
 }
