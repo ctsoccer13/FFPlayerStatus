@@ -252,12 +252,16 @@
 		chrome.runtime.sendMessage({method: 'getCustomMapping'}, function(response) {
 			var mappings = response;
 			for (var key in mappings) {
-				chrome.runtime.sendMessage({method: 'getPlayerById', playerId: mappings[key]}, function(player) {
-					$('#custom-mapping-table > tbody:last-child').append(buildCMRowAfter(key, mappings[key], player.name));
-				}.bind(this, mappings, key));
+				getPlayerIdAndAddRow(mappings, key);
 			};
 		});
 	};
+
+	var getPlayerIdAndAddRow = function(mappings, key) {
+		chrome.runtime.sendMessage({method: 'getPlayerById', playerId: mappings[key]}, function(player) {
+			$('#custom-mapping-table > tbody:last-child').append(buildCMRowAfter(key, mappings[key], player.name));
+		}.bind(this));
+	}
 
 	var validateURL = function(url) {
 		var reg = /^.*\?leagueId=.*&teamId=.*&seasonId=.*$/gi;
