@@ -7,7 +7,7 @@ ff.FF = function(storage) {
 
 	this.espn = new ff.Espn(this);
 	this.yahoo = new ff.Yahoo(this);
-	this.customMappings = {};
+	this.customMappings = this.storage.get("global", "nicknames") || {};
 };
 
 ff.FF.prototype.getLeaguesFromStorage = function() {

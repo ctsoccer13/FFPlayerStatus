@@ -248,6 +248,17 @@
 		}
 	}
 
+	var populateCustomMappings = function() {
+		chrome.runtime.sendMessage({method: 'getCustomMapping'}, function(response) {
+			var mappings = response;
+			for (var key in mappings) {
+				chrome.runtime.sendMessage({method: 'getPlayerById', playerId: mappings[key]}, function(player) {
+					$('#custom-mapping-table > tbody:last-child').append(buildCMRowAfter(key, mappings[key], player.name));
+				}.bind(this, mappings, key));
+			};
+		});
+	};
+
 	var validateURL = function(url) {
 		var reg = /^.*\?leagueId=.*&teamId=.*&seasonId=.*$/gi;
 		return reg.test(url);
@@ -257,6 +268,7 @@
 		// Assuming refresh, rebuild the lists on load
 		populateListOnLoad();
 		populateBlacklistOnLoad();
+		populateCustomMappings();
 
 		// Add a team/league
 		$('#teamlist_add_btn').click(function(){
@@ -348,6 +360,11 @@
 
 	var buildCMRow = function() {
 		var row = $('<tr><td class="cm-nickname-cell"><input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input"></td><td class="cm-player-results-cell"><input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div></td><td id="cm-remove-cell"><i class="fa fa-remove" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
+		return row;
+	};
+
+	var buildCMRowAfter = function(nickname, id, name) {
+		var row = $('<tr><td class="cm-nickname-cell"><span class="cm-nickname-text">' + nickname + '</span></td><td class="cm-player-results-cell"><span class="cm-player-text" data-player-id="' + id + '">' + name + '</td><td id="cm-remove-cell"><i class="fa fa-remove" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
 		return row;
 	};
 
