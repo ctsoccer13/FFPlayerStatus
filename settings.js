@@ -48,7 +48,7 @@
 	};
 
 	var renderInlineAvailability = function (inlineVal) {
-		var inlineDom = $('<div class="form-check"><label class="form-check-label"><input clas="form-check-input" id="inline-availability-check" type="checkbox" name="inline-availability" value="inline" />Show availability next to name.</label></div>');
+		var inlineDom = $('<div class="checkbox"><label><input class="form-check-input" id="inline-availability-check" type="checkbox" name="inline-availability" value="inline" />Show availability next to name.</label></div>');
 		if (inlineVal === true) {
 			$(inlineDom).find("#inline-availability-check").attr("checked", "checked");
 		}
