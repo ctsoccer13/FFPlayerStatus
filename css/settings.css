@@ -164,7 +164,7 @@
   display: inline-block;
   vertical-align: top;
   padding: 15px 5px 15px 10px;
-  max-width: 125px;
+  max-width: 300px;
 }
 .fantasy-finder .search-player .player-search-name a {
   font-weight: bold;

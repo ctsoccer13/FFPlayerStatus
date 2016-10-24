@@ -17,6 +17,7 @@ var injectMarkup = function(inNodes) {
 
 	var addMarkup = function(node, firstName, lastName, playerId) {
 		var regex = new RegExp('(?![^<]*>|[^<>]*</)(' + firstName + '\\s' + lastName + ')', 'gi');
+		//var regex = new RegExp('\\b(' + firstName + '\\s' + lastName + ')\\b', 'gi'); need to test this
 		var surround = ' <span class="fantasy-finder" style=\"padding-right: 4px;\"><span class="ff-name" data-playerId="' + playerId +
 			'"" style="display:inline;">$1</span></span> ';
 		var newtext = node.replace(regex, surround);

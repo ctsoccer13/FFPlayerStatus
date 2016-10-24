@@ -29,8 +29,8 @@
 			response = _.extend(settingDefaults, response);
 
 			renderInlineAvailability(response.inline);
-			renderPopupTrigger(response.popup_trigger);
-			renderPopupPosition(response.popup_position);
+			// renderPopupTrigger(response.popup_trigger);
+			// renderPopupPosition(response.popup_position);
 			renderAnnotations(response.globalAnnotations, response.rosterAnnotations);
 
 			/**
@@ -46,56 +46,63 @@
 			});
 		});
 	};
+	
+	var setInlineAvailability = function(inline) {
+		if (inline) {
+			$(".inline-availability-settings-enable .ff-btn").removeClass("status2").addClass("status1");
+		} else if (inline == false) {
+			$(".inline-availability-settings-enable .ff-btn").removeClass("status1").addClass("status2");
+		}
+	};
 
 	var renderInlineAvailability = function (inlineVal) {
-		var inlineDom = $('<div class="checkbox"><label><input class="form-check-input" id="inline-availability-check" type="checkbox" name="inline-availability" value="inline" />Show availability next to name.</label></div>');
-		if (inlineVal === true) {
-			$(inlineDom).find("#inline-availability-check").attr("checked", "checked");
-		}
-		$(".inline-settings").html(inlineDom);
-		$("#inline-availability-check").change(function (event) {
-	    	var value = {
-	    		inline: $(event.currentTarget).is(":checked")
-	    	};
-	    	chrome.extension.sendMessage({method: 'changeSetting', query: value});
-	    	_gaq.push(['_trackEvent', 'InlineSetting', value.inline]);
-	    });
-
+	    setInlineAvailability(inlineVal);
+		$(".inline-availability-settings-enable .ff-btn").click(_.bind(function (event) {
+			var inlineEnabled = !$(event.currentTarget).hasClass("status1");
+			var data = {
+				inline: inlineEnabled
+			};
+			chrome.extension.sendMessage({
+				method: 'changeSetting',
+				query: data
+			});
+			setInlineAvailability(inlineEnabled);
+		}, this));
 	};
 
-	var renderPopupTrigger = function (popupTriggerVal) {
-		$(".popup-trigger").hide();
+	// var renderPopupTrigger = function (popupTriggerVal) {
+	// 	$(".popup-trigger").hide();
 
-		return;
+	// 	return;
 
-		var popupTriggerDom = $('<label><input type="radio" name="popupTriggerGroup" value="hover">Hover</label><br><label><input type="radio" name="popupTriggerGroup" value="click">Click</label><br>');
+	// 	var popupTriggerDom = $('<label><input type="radio" name="popupTriggerGroup" value="hover">Hover</label><br><label><input type="radio" name="popupTriggerGroup" value="click">Click</label><br>');
 
-		$(popupTriggerDom).find("[value='" + popupTriggerVal + "']").attr("checked", "checked");
+	// 	$(popupTriggerDom).find("[value='" + popupTriggerVal + "']").attr("checked", "checked");
 
-		$(".popup-trigger-settings").html(popupTriggerDom);
-		$("[name='popupTriggerGroup']").change(function (event) {
-	    	var value = {
-	    		popup_trigger: $(event.currentTarget).attr("value")
-	    	};
-	    	chrome.extension.sendMessage({method: 'changeSetting', query: value});
-	    	_gaq.push(['_trackEvent', 'popupTriggerSetting', value.popup_trigger]);
-	    });
-	};
+	// 	$(".popup-trigger-settings").html(popupTriggerDom);
+	// 	$("[name='popupTriggerGroup']").change(function (event) {
+	//     	var value = {
+	//     		popup_trigger: $(event.currentTarget).attr("value")
+	//     	};
+	//     	chrome.extension.sendMessage({method: 'changeSetting', query: value});
+	//     	_gaq.push(['_trackEvent', 'popupTriggerSetting', value.popup_trigger]);
+	//     });
+	// };
 
-	var renderPopupPosition = function (popupPositionVal) {
-		var popupPositionDom = $('<label><input type="radio" name="popupPositionGroup" value="hovercard">Hovercard</label><br><label><input type="radio" name="popupPositionGroup" value="toprightcorner">Top Right Corner</label><br>');
+	// var renderPopupPosition = function (popupPositionVal) {
+	// 	var popupPositionDom = $('<label><input type="radio" name="popupPositionGroup" value="hovercard">Hovercard</label><br><label><input type="radio" name="popupPositionGroup" value="toprightcorner">Top Right Corner</label><br>');
 
-		$(popupPositionDom).find("[value='" + popupPositionVal + "']").attr("checked", "checked");
+	// 	$(popupPositionDom).find("[value='" + popupPositionVal + "']").attr("checked", "checked");
 
-		$(".popup-position-settings").html(popupPositionDom);
-		$("[name='popupPositionGroup']").change(function (event) {
-	    	var value = {
-	    		popup_position: $(event.currentTarget).attr("value")
-	    	};
-	    	chrome.extension.sendMessage({method: 'changeSetting', query: value});
-	    	_gaq.push(['_trackEvent', 'popupPositionSetting', value.popup_position]);
-	    });
-	};
+	// 	$(".popup-position-settings").html(popupPositionDom);
+	// 	$("[name='popupPositionGroup']").change(function (event) {
+	//     	var value = {
+	//     		popup_position: $(event.currentTarget).attr("value")
+	//     	};
+	//     	chrome.extension.sendMessage({method: 'changeSetting', query: value});
+	//     	_gaq.push(['_trackEvent', 'popupPositionSetting', value.popup_position]);
+	//     });
+	// };
 
 	var renderAnnotations = function (globalAnnotations, rosterAnnotations) {
 		setAnnotationsState(globalAnnotations, rosterAnnotations);
@@ -400,7 +407,7 @@
 		// Custom mapping row - Player search select
 		$('#custom-mapping-table').on('click', '.search-player', function() {
 			var row = $(this).closest("tr");
-			var player = $(this).find('.player-search-name > a').text();
+			var player = $(this).find('.player-search-name > span').text();
 			var playerId = $(this).attr('data-player-id');
 			var inp = $(this).parent().parent().find('#search');
 			inp.replaceWith('<span class="cm-player-text" data-player-id="' + playerId + '">' + player + '</span>');
@@ -471,7 +478,7 @@
 
 			_.each(response.results, function(player) {
 
-				var tempPlayer = $('<div class="search-player" data-player-id="' + player.id + '"><div class="player-img"><img class="fix-error" src="' + player.profileImage + '"></div><div class="player-search-name"><a target="_blank" href="' + player.playerProfileUrl + '">' + player.name + '</a><div class="player-positions">' + player.positions + '</div></div><div class="player-search-availability"></div><div class="player-search-expand" data-player-id="' + player.id + '"><span class="expand-icon icon-chevron-sign-right"></span></div><div class="player-details"><div class="player-details-header"><h2 class="selected" data-section-ref=".player-details-availability" data-player-id="' + player.id + '">Availability</h2><h2 data-section-ref=".player-details-stats" data-player-id="' + player.id + '">Stats</h2></div><div class="player-details-availability active player-details-section"></div><div class="player-details-stats player-details-section"><div class="loading-spinner icon-refresh icon-spin icon-large"></div></div></div></div>');
+				var tempPlayer = $('<div class="search-player" data-player-id="' + player.id + '"><div class="player-img"><img class="fix-error" src="' + player.profileImage + '"></div><div class="player-search-name"><span>' + player.name + '</span><div class="player-positions">' + player.positions + '</div></div><div class="player-search-availability"></div><div class="player-search-expand" data-player-id="' + player.id + '"><span class="expand-icon icon-chevron-sign-right"></span></div><div class="player-details"><div class="player-details-header"><h2 class="selected" data-section-ref=".player-details-availability" data-player-id="' + player.id + '">Availability</h2><h2 data-section-ref=".player-details-stats" data-player-id="' + player.id + '">Stats</h2></div><div class="player-details-availability active player-details-section"></div><div class="player-details-stats player-details-section"><div class="loading-spinner icon-refresh icon-spin icon-large"></div></div></div></div>');
 
 				tempPlayer.find(".fix-error").on("error", function (event) {
 					$(event.currentTarget).attr("src", "images/default_profile.png");
