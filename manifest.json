@@ -5,7 +5,7 @@
  "name": "Fantasy Finder",
  "version": "1.1.4",
  "icons": {
-  "128": "images/FantasyFinder.png"
+  "128": "images/ffplayerstatus-large.png"
  },
  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; https://platform.twitter.com; https://connect.facebook.net; object-src 'self'",
  "permissions": [
@@ -72,7 +72,7 @@
  "browser_action": {
      "default_name": "FF Player Status",
      "default_popup": "browser_action.html",
-     "default_icon": "images/FantasyFinder.png"
+     "default_icon": "images/ffplayerstatus-large.png"
  }
 }
 

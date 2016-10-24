@@ -432,13 +432,13 @@
 	
 	// Build a custom mapping row with input
 	var buildCMRowInput = function() {
-		var row = $('<tr><td class="cm-nickname-cell"><input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input"></td><td class="cm-player-results-cell"><input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div></td><td id="cm-remove-cell"><i class="fa fa-edit cm-btn" id="cm-edit-btn" aria-hidden="true" style="display: none;"></i><i class="fa fa-remove cm-btn" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
+		var row = $('<tr><td class="cm-cell cm-nickname-cell"><input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input"></td><td class="cm-cell cm-player-results-cell"><input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div></td><td class="cm-cell" id="cm-remove-cell"><i class="fa fa-edit cm-btn" id="cm-edit-btn" aria-hidden="true" style="display: none;"></i><i class="fa fa-remove cm-btn" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
 		return row;
 	};
 
 	// Build a custom mapping row static - for page reload purposes
 	var buildCMRowStatic = function(nickname, id, name) {
-		var row = $('<tr><td class="cm-nickname-cell"><span class="cm-nickname-text">' + nickname + '</span></td><td class="cm-player-results-cell"><span class="cm-player-text" data-player-id="' + id + '">' + name + '</td><td id="cm-remove-cell"><i class="fa fa-edit cm-btn" id="cm-edit-btn" aria-hidden="true"></i><i class="fa fa-remove cm-btn" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
+		var row = $('<tr><td class="cm-cell cm-nickname-cell"><span class="cm-nickname-text">' + nickname + '</span></td><td class="cm-cell cm-player-results-cell"><span class="cm-player-text" data-player-id="' + id + '">' + name + '</td><td class="cm-cell" id="cm-remove-cell"><i class="fa fa-edit cm-btn" id="cm-edit-btn" aria-hidden="true"></i><i class="fa fa-remove cm-btn" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
 		return row;
 	};
 

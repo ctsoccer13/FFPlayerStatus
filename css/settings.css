@@ -955,6 +955,8 @@ td.tl-teamname {
 }
 #cm-remove-cell {
   width: 100px;
+}
+.cm-cell {
   text-align: center;
 }
 .cm-btn {
