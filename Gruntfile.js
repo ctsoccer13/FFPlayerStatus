@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 					syncImport: true
 				},
 				files: {
-					"main.css": "less/main.less"
+					"css/main.css": "less/main.less"
 				}
 			}
 		},

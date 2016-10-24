@@ -21,7 +21,7 @@
  "content_scripts": [
    {
      "matches": ["<all_urls>"],
-     "css": ["main.css", "css/font-awesome.min.css"],
+     "css": ["css/main.css", "css/font-awesome.min.css"],
      "js": [
        "lib/jquery-2.0.3.min.js",
        "lib/replaceText.min.js",
