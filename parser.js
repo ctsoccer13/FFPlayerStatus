@@ -36,7 +36,8 @@ var injectMarkup = function(inNodes) {
 	var checkCustomMapping = function(text) {
 		if(! _.isEmpty(window.customMappings)) {
 			for (var key in window.customMappings) {
-				var idx = text.toLowerCase().indexOf(key.toLowerCase());
+				var regex = new RegExp('\\b' + key.toLowerCase() + '\\b');
+				var idx = text.toLowerCase().search(regex);
 				if(idx !== -1) {
 					var regex = new RegExp('(?![^<]*>|[^<>]*</)('+ key + ')', 'gi');
 					var surround = ' <span class="fantasy-finder" style=\"padding-right: 4px;\"><span class="ff-name" data-playerId="' + window.customMappings[key] + '" style="display:inline;">$1</span></span> ';
