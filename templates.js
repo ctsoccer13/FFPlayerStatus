@@ -12,7 +12,7 @@ function program1(depth0,data) {
   return "active";
   }
 
-  buffer += "<span id=\"inline-availability-marker\" class=\"inline-availability\">\n	<span class=\"availability-type add-leagues ";
+  buffer += "<span id=\"inline-availability-marker\" class=\"inline-availability\" style=\"padding-right: 2px;\">\n	<span class=\"availability-type add-leagues ";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.add), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\">\n		<i class=\"fa fa-plus\" aria-hidden=\"true\"></i>\n		<span class=\"inline-availability-txt\">";

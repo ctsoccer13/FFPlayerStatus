@@ -17,7 +17,7 @@ var injectMarkup = function(inNodes) {
 
 	var addMarkup = function(node, firstName, lastName, playerId) {
 		var regex = new RegExp('(?![^<]*>|[^<>]*</)(' + firstName + '\\s' + lastName + ')', 'gi');
-		var surround = ' <span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
+		var surround = ' <span class="fantasy-finder" style=\"padding-right: 4px;\"><span class="ff-name" data-playerId="' + playerId +
 			'"" style="display:inline;">$1</span></span> ';
 		var newtext = node.replace(regex, surround);
 		//html = html.replaceText(regex,surround);
@@ -27,7 +27,7 @@ var injectMarkup = function(inNodes) {
 
 	var addMarkupDST = function(node, team, playerId) {
 		var regex = new RegExp('(' + team + '\\s' + 'D/ST' + ')', 'gi');
-		var surround = '<span class="fantasy-finder"><span class="ff-name" data-playerId="' + playerId +
+		var surround = '<span class="fantasy-finder" style=\"padding-right: 4px;\"><span class="ff-name" data-playerId="' + playerId +
 			'"" style="display:inline;">$1</span></span>';
 		var newtext = node.replace(regex, surround);
 		return newtext;
@@ -39,7 +39,7 @@ var injectMarkup = function(inNodes) {
 				var idx = text.toLowerCase().indexOf(key.toLowerCase());
 				if(idx !== -1) {
 					var regex = new RegExp('(?![^<]*>|[^<>]*</)('+ key + ')', 'gi');
-					var surround = ' <span class="fantasy-finder"><span class="ff-name" data-playerId="' + window.customMappings[key] + '" style="display:inline;">$1</span></span> ';
+					var surround = ' <span class="fantasy-finder" style=\"padding-right: 4px;\"><span class="ff-name" data-playerId="' + window.customMappings[key] + '" style="display:inline;">$1</span></span> ';
 					text = text.replace(regex, surround);
 				}
 			}
