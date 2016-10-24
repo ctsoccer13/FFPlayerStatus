@@ -139,8 +139,11 @@
 			$(".roster-annotations-settings-enable .ff-btn").removeClass("status1").addClass("status2");
 		}
 	}
+
 	loadSettings();
 
+	// Build and initialize league object
+	// Called when teamlist_add_btn pressed
 	var initLeague = function(url) {
 		var league = parseURL(url);
 		league.url = url;
@@ -162,6 +165,7 @@
 		return league;
 	}
 
+	// Fetch and parse all player team names in league
 	var getLeagueTeams = function(response) {
 		var teams= {};
 		var listItems = $(response).find('#games-tabs1 li a');
@@ -172,6 +176,7 @@
 		return teams;
 	}
 
+	// Fetch and parse all shortname/abbreviations for team names in league
 	var getLeagueTeamsShortNames = function(teams) {
 		var abbrevs = [];
 		for (var key in teams) {
@@ -181,22 +186,13 @@
 		return abbrevs;
 	}
 
+	// Get user team name
 	var getLeagueName = function(response) {
 		var item = $(response).find("div.nav-main-breadcrumbs").children().eq(2);
 		return $(item).text();
 	}
 
-	var getLeagueNameYahoo = function(url, league) {
-		$.ajax({
-			url: url,
-			data: 'text',
-			success: _.bind(function(response) {
-				var item = $(response).find("title").text();
-				league.leagueName = item;
-			}, this)
-		});
-	};
-
+	// Pull league variables from URL
 	var parseURL = function(url) {
 		var hash;
     	var league = {};
@@ -210,6 +206,20 @@
     	return league;
 	};
 
+	// ***** Yahoo functions *****
+	// Currently not used
+
+	var getLeagueNameYahoo = function(url, league) {
+		$.ajax({
+			url: url,
+			data: 'text',
+			success: _.bind(function(response) {
+				var item = $(response).find("title").text();
+				league.leagueName = item;
+			}, this)
+		});
+	};
+
 	var parseURLYahoo = function(url) {
 		var league = {};
 		var hashes = url.split('/');
@@ -218,11 +228,13 @@
 		return league;
 	};
 
+	// Teamlist - Insert row into table
 	var addLeagueToTeamList = function(league) {
 		var template = $('<tr><td class="tl-icon"><a href="' + league.url + '"><img id="teamlist-icon" src="images/espn.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
 		$('#teamlist_tbl > tbody:last-child').append(template);
 	}
 
+	// Teamlist - rebuild table on page refresh
 	var populateListOnLoad = function() {
 		var leagues = this.FF.getLeaguesFromStorage();
 		var leaguesLength = 0;
@@ -236,6 +248,7 @@
 		}
 	}
 
+	// Blacklist - rebuild table on page refresh
 	var populateBlacklistOnLoad = function() {
 		var settings = this.FF.getUserSettings();
 		if(settings) {
@@ -248,6 +261,7 @@
 		}
 	}
 
+	// Custom Mapping - rebuild table on page refresh
 	var populateCustomMappings = function() {
 		chrome.runtime.sendMessage({method: 'getCustomMapping'}, function(response) {
 			var mappings = response;
@@ -257,12 +271,14 @@
 		});
 	};
 
+	// Custom mapping row - build a row from existing mappings (for page refresh)
 	var getPlayerIdAndAddRow = function(mappings, key) {
 		chrome.runtime.sendMessage({method: 'getPlayerById', playerId: mappings[key]}, function(player) {
-			$('#custom-mapping-table > tbody:last-child').append(buildCMRowAfter(key, mappings[key], player.name));
+			$('#custom-mapping-table > tbody:last-child').append(buildCMRowStatic(key, mappings[key], player.name));
 		}.bind(this));
 	}
 
+	// Basic input validation for league URL
 	var validateURL = function(url) {
 		var reg = /^.*\?leagueId=.*&teamId=.*&seasonId=.*$/gi;
 		return reg.test(url);
@@ -274,7 +290,8 @@
 		populateBlacklistOnLoad();
 		populateCustomMappings();
 
-		// Add a team/league
+		// ***** Team list buttons *****
+		// Team button - Add a team/league
 		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
 			if( !validateURL(url) ) {
@@ -309,6 +326,23 @@
 		    }
 		    $('#teamlist_input').val('');
 		});
+
+		// Team button - 'Enter' handler
+		$('#teamlist_input').keyup(function(event){
+		    if(event.keyCode == 13){
+		        $("#teamlist_add_btn").click();
+		    }
+		});
+
+		// Team button - 'X'/Remove in row
+		$('.teamlist').on('click', '#team_remove_btn', function() {
+			chrome.runtime.sendMessage({method: 'removeTeam', site: 'espn', leagueId: $(this).closest('li').attr('id')}, function(response){
+				$(this).closest('li').remove();
+			}.bind(this));
+		});
+
+		// ***** Blacklist Buttons *****
+		// Blacklist button - Add blacklist term
 		$('#blacklist_add_btn').click(function() {
 			var url = $('#blacklist_input').val();
 			var element = '<tr><td>' + url + '</td><td id="blacklist_remove_cell"><i class="fa fa-remove" id="blacklist_remove_btn" aria-hidden="true"></i></td></tr>';
@@ -316,27 +350,34 @@
 			$('#blacklist_input').val('');
 			chrome.runtime.sendMessage({method: 'addBlacklistURL', url: url}, function(response){});
 		});
-		$("#blacklist_input").keyup(function(event){
+
+		// Blacklist button - 'Enter' handler
+		$('#blacklist_input').keyup(function(event){
 		    if(event.keyCode == 13){
 		        $("#blacklist_add_btn").click();
 		    }
 		});
+
+		// Blacklist button - 'X'/Remove in row
+		// Have to do .on('click'...) for dynamicaly added items
 		$('#blacklist_tbl').on('click', '#blacklist_remove_btn', function(){
-			$(this).closest('tr').remove();
-			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: $(this).closest('tr').text()}, function(response){});
-		});
-		$('.teamlist').on('click', '#team_remove_btn', function() {
-			$(this).closest('li').remove();
-			chrome.runtime.sendMessage({method: 'removeTeam', site: 'espn', leagueId: $(this).closest('li').attr('id')}, function(response){});
+			chrome.runtime.sendMessage({method: 'removeBlacklistURL', url: $(this).closest('tr').text()}, function(response){
+				$(this).closest('tr').remove();
+			}.bind(this));
 		});
 
-		// Custom mapping listeners
+		// ***** Custom mapping listeners *****
+		// Custom mapping button - Add new mapping
 		$('#cm_add_btn').click(function() {
 			if($('#custom-mapping-table').find('input').length===0) {
-				$('#custom-mapping-table > tbody:last-child').append(buildCMRow());
+				$('#custom-mapping-table > tbody:last-child').append(buildCMRowInput());
 			}
 		});
+
+		// Custom mapping row - Player search input
 		$('#custom-mapping-table').on('search', '#search', searchInput);
+
+		// Custom mapping row - 'X'/Remove in row
 		$('#custom-mapping-table').on('click', '#cm-remove-btn', function() {
 			var row = $(this).closest('tr');
 			var nickname = $(row).find('.cm-nickname-text').text();
@@ -345,12 +386,18 @@
 				$(row).remove();
 			}.bind(this, row));
 		});
+
+		// Custom mapping row - Nickname input
 		$('#custom-mapping-table').on('blur', '#cm-nickname-input', function(){
 			var row = $(this).closest("tr");
 			var text = $('#cm-nickname-input').val();
-			$(this).replaceWith('<span class="cm-nickname-text">' + text + '</span>');
-			checkIfRowDone(row);
+			if (text !== '') {
+				$(this).replaceWith('<span class="cm-nickname-text">' + text + '</span>');
+				checkIfRowDone(row);
+			}
 		});
+
+		// Custom mapping row - Player search select
 		$('#custom-mapping-table').on('click', '.search-player', function() {
 			var row = $(this).closest("tr");
 			var player = $(this).find('.player-search-name > a').text();
@@ -360,94 +407,82 @@
 			$(this).parent().remove();
 			checkIfRowDone(row);
 		});
+
+		$('#custom-mapping-table').on('click', '#cm-edit-btn', function() {
+			$(this).css("display", "none");
+			var row = $(this).closest("tr");
+
+			var playerNameSpan = $(row).find(".cm-player-text");
+			var nicknameSpan = $(row).find(".cm-nickname-text");
+
+			var playerName = playerNameSpan.text();
+			var nickname = nicknameSpan.text();
+			var playerId = $(row).find('.cm-player-text').attr('data-player-id');
+			chrome.runtime.sendMessage({method: 'removeCustomMapping', playerId: playerId, name: nickname}, function(response){});
+
+			playerNameSpan.replaceWith('<input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div>');
+			var pi = $(row).find("#search");
+			$(pi).val(playerName);
+			$(pi).trigger("search");
+			nicknameSpan.replaceWith('<input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input">');
+			var ni = $(row).find("#cm-nickname-input");
+			$(ni).val(nickname);
+		});
 	});
-
-	var buildCMRow = function() {
-		var row = $('<tr><td class="cm-nickname-cell"><input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input"></td><td class="cm-player-results-cell"><input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div></td><td id="cm-remove-cell"><i class="fa fa-remove" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
+	
+	// Build a custom mapping row with input
+	var buildCMRowInput = function() {
+		var row = $('<tr><td class="cm-nickname-cell"><input type="text" class="form-control" placeholder="Nickname" id="cm-nickname-input"></td><td class="cm-player-results-cell"><input id="search" class="form-control player-search-input" type="search" placeholder="i.e. Matt Ryan" results="10" autosave="player_search" onsearch="searchInput()" incremental="true"/><div id="cm-player-results"></div></td><td id="cm-remove-cell"><i class="fa fa-edit cm-btn" id="cm-edit-btn" aria-hidden="true" style="display: none;"></i><i class="fa fa-remove cm-btn" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
 		return row;
 	};
 
-	var buildCMRowAfter = function(nickname, id, name) {
-		var row = $('<tr><td class="cm-nickname-cell"><span class="cm-nickname-text">' + nickname + '</span></td><td class="cm-player-results-cell"><span class="cm-player-text" data-player-id="' + id + '">' + name + '</td><td id="cm-remove-cell"><i class="fa fa-remove" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
+	// Build a custom mapping row static - for page reload purposes
+	var buildCMRowStatic = function(nickname, id, name) {
+		var row = $('<tr><td class="cm-nickname-cell"><span class="cm-nickname-text">' + nickname + '</span></td><td class="cm-player-results-cell"><span class="cm-player-text" data-player-id="' + id + '">' + name + '</td><td id="cm-remove-cell"><i class="fa fa-edit cm-btn" id="cm-edit-btn" aria-hidden="true"></i><i class="fa fa-remove cm-btn" id="cm-remove-btn" aria-hidden="true"></i></td></tr>');
 		return row;
 	};
 
+	// Test if both inputs in CM row are set
 	var checkIfRowDone = function(row) {
 		if($(row).find('input').length === 0) {
 			var nickname = $(row).find('.cm-nickname-text').text();
 			var playerId = $(row).find('.cm-player-text').attr('data-player-id');
+			$(row).find("#cm-edit-btn").css("display", "inline");
 			chrome.runtime.sendMessage({method: 'addCustomMapping', playerId: playerId, name: nickname}, function(response){});
 		}
 	};
 
-var searchInput = function(event) {
-	var value = $(event.target).val().trim().toLowerCase();
-	$('#player-results').empty();
-	if (value.length < 3) {
-		return;
-	}
-
-	$('#player-results').append('<div class="loading-spinner icon-refresh icon-spin icon-large"></div>');
-
-	chrome.extension.sendMessage({method: 'playerSearch', query: value}, function(response) {
-		_gaq.push(['_trackEvent', 'Search', value]);
-		var container = $('#cm-player-results');
-		container.empty();
-
-		response.results = _.sortBy(response.results, 'name');
-
-		_.each(response.results, function(player) {
-
-			var tempPlayer = $('<div class="search-player" data-player-id="' + player.id + '"><div class="player-img"><img class="fix-error" src="' + player.profileImage + '"></div><div class="player-search-name"><a target="_blank" href="' + player.playerProfileUrl + '">' + player.name + '</a><div class="player-positions">' + player.positions + '</div></div><div class="player-search-availability"></div><div class="player-search-expand" data-player-id="' + player.id + '"><span class="expand-icon icon-chevron-sign-right"></span></div><div class="player-details"><div class="player-details-header"><h2 class="selected" data-section-ref=".player-details-availability" data-player-id="' + player.id + '">Availability</h2><h2 data-section-ref=".player-details-stats" data-player-id="' + player.id + '">Stats</h2></div><div class="player-details-availability active player-details-section"></div><div class="player-details-stats player-details-section"><div class="loading-spinner icon-refresh icon-spin icon-large"></div></div></div></div>');
-
-			tempPlayer.find(".fix-error").on("error", function (event) {
-				$(event.currentTarget).attr("src", "images/default_profile.png");
-			});
-
-			container.append(tempPlayer);
-		});
-
-		if (response.results.length == 0) {
-			container.append('<div class="no-search-results">No players found.</div>');
+	// Player search functionality - taken from browser_action and trimmed up
+	var searchInput = function(event) {
+		var value = $(event.target).val().trim().toLowerCase();
+		$('#player-results').empty();
+		if (value.length < 3) {
+			return;
 		}
 
-		$(".search-player").on("click", function (event) {
-			var playerId = $(event.currentTarget).data().playerId;
-			console.log("chose " + playerId);
+		$('#player-results').append('<div class="loading-spinner icon-refresh icon-spin icon-large"></div>');
+
+		chrome.extension.sendMessage({method: 'playerSearch', query: value}, function(response) {
+			_gaq.push(['_trackEvent', 'Search', value]);
+			var container = $('#cm-player-results');
+			container.empty();
+
+			response.results = _.sortBy(response.results, 'name');
+
+			_.each(response.results, function(player) {
+
+				var tempPlayer = $('<div class="search-player" data-player-id="' + player.id + '"><div class="player-img"><img class="fix-error" src="' + player.profileImage + '"></div><div class="player-search-name"><a target="_blank" href="' + player.playerProfileUrl + '">' + player.name + '</a><div class="player-positions">' + player.positions + '</div></div><div class="player-search-availability"></div><div class="player-search-expand" data-player-id="' + player.id + '"><span class="expand-icon icon-chevron-sign-right"></span></div><div class="player-details"><div class="player-details-header"><h2 class="selected" data-section-ref=".player-details-availability" data-player-id="' + player.id + '">Availability</h2><h2 data-section-ref=".player-details-stats" data-player-id="' + player.id + '">Stats</h2></div><div class="player-details-availability active player-details-section"></div><div class="player-details-stats player-details-section"><div class="loading-spinner icon-refresh icon-spin icon-large"></div></div></div></div>');
+
+				tempPlayer.find(".fix-error").on("error", function (event) {
+					$(event.currentTarget).attr("src", "images/default_profile.png");
+				});
+
+				container.append(tempPlayer);
+			});
+
+			if (response.results.length == 0) {
+				container.append('<div class="no-search-results">No players found.</div>');
+			}
 		});
-
-		// $(".player-details-header h2").click(function (event) {
-		// 	var currTarget = $(event.currentTarget);
-		// 	var playerId = currTarget.data().playerId;
-		// 	currTarget.parent().find("h2").removeClass("selected");
-		// 	currTarget.addClass("selected");
-
-		// 	var ref = currTarget.data().sectionRef;
-		// 	$(".search-player[data-player-id='" + playerId + "'] .player-details-section").removeClass("active");
-		// 	$(".search-player[data-player-id='" + playerId + "'] .player-details-section" + ref).addClass("active");
-
-		// 	$.ajax({
-		// 		url: location.protocol + "//games.espn.go.com/ffl/format/playerpop/overview?playerId=" + playerId + "&playerIdType=playerId&seasonId=2013&xhr=1",
-		// 		type: "GET",
-		// 		success: function (response) {
-		// 			var jqResp = $(response);
-		// 			jqResp.find("#overviewTabs #moreStatsView0 .pc").remove();
-		// 			jqResp.find("#overviewTabs #moreStatsView0 table").removeAttr("style");
-		// 			$(".search-player[data-player-id='" + playerId + "'] .player-details-stats").html(jqResp.find("#overviewTabs #moreStatsView0").html());
-		// 		}
-		// 	});
-		// 	event.preventDefault();
-		// 	event.stopPropagation();
-		// 	return false;
-
-		// });
-
-		// $('.ff-btn').click(function(event) {
-		// 	var data = $(event.currentTarget).data();
-		// 	if (data.actionType !== undefined) {
-		// 		_gaq.push(['_trackEvent', 'PlayerAction', data.actionType, data.playerName + ':' + data.playerId, 0]);
-		// 	}
-		// });
-	});
-};
+	};
 })();

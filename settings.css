@@ -933,7 +933,7 @@ body {
 .custom-mapping {
   display: inline-block;
   padding-left: 10px;
-  width: 65%;
+  width: 50%;
 }
 #teamlist_ctnr {
   width: 80%;
@@ -952,4 +952,17 @@ td.tl-teamname {
 #cm_add_btn {
   width: 100px;
   height: 40px;
+}
+#cm-remove-cell {
+  width: 100px;
+  text-align: center;
+}
+.cm-btn {
+  margin: 4px;
+}
+.cm-player-results-cell {
+  width: auto;
+}
+#custom-mapping-table {
+  margin-top: 4px;
 }
