@@ -88,6 +88,11 @@ ff.Yahoo = Site.extend({
 		return urlString;
 	},
 
+	refreshTakenPlayers: function(league) {
+		league.playerIdToTeamIndex = {};
+		this.fetchTakenPlayers(league);
+	},
+
 	fetchTakenPlayers: function(league) {
 		this._fetchTakenPlayersForLeague(league, 'O');
 		this._fetchTakenPlayersForLeague(league, 'K');
