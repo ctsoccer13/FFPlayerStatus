@@ -17,6 +17,8 @@ var loginTab;
 this.fantasyFind = new ff.FF(FFStorage);
 var listOfPlayers = {};
 var listOfPlayersInit = false;
+var listOfPlayersInitESPN = false;
+var listOfPlayersInitYahoo = false;
 var playerDict = {};
 
 chrome.runtime.onInstalled.addListener(function(details) {
@@ -157,10 +159,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				break;
 
 			case "checkAllPlayers":
-				if(!window.listOfPlayersInit) {
-					window.listOfPlayerInit = true;
+				if(!window.listOfPlayersInitESPN && !window.listOfPlayersInitYahoo) {
+					window.listOfPlayersInitESPN = request.site==='espn';
+					window.listOfPlayersInitYahoo = request.site==='yahoo';
 					//this.fantasyFind[request.site].resetLeagues();
 					this.fantasyFind[request.site].fetchAllPlayersForLeague(request.league, window.listOfPlayers);
+				} else {
+					if(request.site==='espn' && !window.listOfPlayersInitESPN) {
+						this.fantasyFind[request.site].addPlayerIdsForSite(request.league);
+						window.listOfPlayersInitESPN = true;
+					} else if (request.site === 'yahoo' && !window.listOfPlayersInitYahoo) {
+						this.fantasyFind[request.site].addPlayerIdsForSite(request.league);
+						window.listOfPlayersInitYahoo = true;
+					}
 				}
 				sendResponse(true);
 				break;

@@ -51,13 +51,13 @@ ff.Espn = Site.extend({
 		}	
 	},
 
-	updateLocalLeague: function(league) {
-		for(var i = 0; i < this.leagues.length; i++) {
-			if(this.leagues[i].leagueId === league.leagueId) {
-				this.leagues[i] = league;
-			}
-		}
-	},
+	// updateLocalLeague: function(league) {
+	// 	for(var i = 0; i < this.leagues.length; i++) {
+	// 		if(this.leagues[i].leagueId === league.leagueId) {
+	// 			this.leagues[i] = league;
+	// 		}
+	// 	}
+	// },
 
 	refreshTakenPlayers: function(league) {
 		league.playerIdToTeamIndex = {};
@@ -109,30 +109,6 @@ ff.Espn = Site.extend({
 
 	},
 
-	addPlayerToDict: function(player) {
-		var parts = player.name.split(/\s+/);
-		var firstName = parts[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
-		var lastName = parts[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
-		// if (parts.length > 2 && parts[2] !== 'Jr.') {
-		// 	lastName = parts[2].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
-		// } else {
-		// 	lastName= parts[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
-		// }
-		// var firstName = player.name.substring(0, player.name.lastIndexOf(" ") + 1);
-		// var lastName = player.name.substring(player.name.lastIndexOf(" ") + 1, player.name.length);
-		// ^^ This won't work for "Odell Beckham Jr." -- last name will be Jr.
-
-		if(!(lastName in window.playerDict)) {
-			window.playerDict[lastName] = {};
-		}
-		window.playerDict[lastName][firstName] = player;
-		// For players like C.J. Anderson with .'s in their name, which some type and others don't...
-		if(firstName.indexOf(".")!== -1) {
-			firstName = firstName.replace(/\./g, '');
-			window.playerDict[lastName][firstName] = player;
-		}
-	},
-
 	fetchAllPlayersForLeague: function(league, listOfPlayers, opt_offset) {
 		var urlString = 'http://games.espn.go.com/ffl/freeagency?leagueId=' + league.leagueId + '&seasonId=' + league.seasonId + '&avail=-1';
 		if (!!opt_offset) {
@@ -153,7 +129,7 @@ ff.Espn = Site.extend({
 	           if(name.includes("D/ST")) {
 	           		var nametoks = name.split(/\s+/);
 	           		name = nametoks[0] + " " + nametoks[1];
-	           		var player = new Player(currPlayerId, name, null, "D/ST", league.leagueId, '');
+	           		var player = new Player(currPlayerId, name, null, "D/ST", league.leagueId, 'espn');
 	           		listOfPlayers[currPlayerId] = player;
 	           		this.addPlayerToDict(player);
 	           		continue;
@@ -162,7 +138,7 @@ ff.Espn = Site.extend({
 	           var pos = parts[1].split(/\s+/)[2];
 	           var statusSpan = $(nameDiv).find("span");
 	           var status = statusSpan ? $(statusSpan).attr("title") : '';
-	           var player = new Player(currPlayerId, name, team, pos, league.leagueId);
+	           var player = new Player(currPlayerId, name, team, pos, league.leagueId, 'espn');
 
 	           listOfPlayers[currPlayerId] = player;
 	           this.addPlayerToDict(player);
@@ -173,6 +149,62 @@ ff.Espn = Site.extend({
 	      	}
 	      	opt_offset += 50;
 	      	this.fetchAllPlayersForLeague(league, listOfPlayers, opt_offset);
+	      }
+	  	}, this)
+		});
+	},
+
+	addPlayerIdsForSite: function(league, opt_offset) {
+		var urlString = 'http://games.espn.go.com/ffl/freeagency?leagueId=' + league.leagueId + '&seasonId=' + league.seasonId + '&avail=-1';
+		if (!!opt_offset) {
+			urlString += '&startIndex=' + opt_offset;
+		}
+		$.ajax({
+			url: urlString,
+			data: 'text',
+			success: _.bind(function(data) {
+	      var elements = $($('<div>').html(data)[0]).find('table.playerTableTable tr.pncPlayerRow');
+	      //Should be each player row
+	      for(var i = 0; i < elements.length; i++) {
+	           var currPlayerRow = $(elements[i]);
+	           var currPlayerId =  $(currPlayerRow).attr('id').substring(4);
+	           var nameDiv = $(currPlayerRow).find('td.playertablePlayerName');
+	           var parts = nameDiv[0].innerText.split(",");
+	           var name = parts[0];
+	           if(name.includes("D/ST")) {
+	           		continue;
+	           // 		var nametoks = name.split(/\s+/);
+	           // 		name = nametoks[0] + " " + nametoks[1];
+	           }
+	           var names = name.split(/\s+/);
+	           var firstName = names[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           var lastName = names[names.length-1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           if(window.playerDict[lastName]===undefined) {
+	           	console.log("no entry for " + firstName + " " + lastName);
+	           	continue;
+	           }
+	           var player = window.playerDict[lastName][firstName];
+	           if(player === undefined) { 
+	           		if(firstName === 'steven') firstName = 'stephen';
+	           		else if (firstName==='stephen') firstName = 'steven';
+	           		else if (firstName==='rob') firstName = 'robert';
+	           		else if (firstName==='robert') firstName = 'rob';
+	           		else if (firstName==='benjamin') firstName = 'benny';
+	           		else if (firstName==='benny') firstName = 'benjamin';
+	           		else if (firstName==='walt') firstName = 'walter';
+	           		else if (firstName==='walter') firstName = 'walt';
+	           		player = window.playerDict[lastName][firstName];
+	           }
+	           if(player !== undefined) {
+	           		player.otherIds['espn'] = currPlayerId;
+	           }
+	      }
+	      if (elements.length === 50) {
+	      	if (opt_offset === undefined) {
+	      		opt_offset = 0;
+	      	}
+	      	opt_offset += 50;
+	      	this.addPlayerIdsForSite(league, opt_offset);
 	      }
 	  	}, this)
 		});

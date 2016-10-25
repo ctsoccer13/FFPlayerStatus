@@ -46,7 +46,12 @@ ff.FF.prototype.updatePlayerStatus = function(player) {
 		playerStatus.leagueId = leagueId;
 		playerStatus.leagueName = leagues[i].leagueName;
 
-		var idForSite = player.id;
+		var idForSite;
+		if (league.site === player.site) {
+			idForSite = player.id;
+		} else {
+			idForSite = player.otherIds[league.site];
+		}
 		var ownedByTeamId = league.playerIdToTeamIndex[idForSite];
 
 		if (ownedByTeamId) {
@@ -155,7 +160,7 @@ PlayerStatus = function() {
 	this.ownedByTeamName;
 };
 
-Player = function(id, name, team, pos, leagueId, status) {
+Player = function(id, name, team, pos, leagueId, site) {
 	this.id = id;
 	this.name = name;
 	this.leagueIds;
@@ -164,15 +169,33 @@ Player = function(id, name, team, pos, leagueId, status) {
 	}
 	this.team = team;
 	var year = new Date().getFullYear();
-	$.ajax({
-		url: "http://games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + this.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
-		type: "GET",
-		success: function (response) {
-			this.profileImage = $(response).find('.mugshot img').attr('src');
-		}.bind(this)
-	});
-	this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
+	if(site === 'espn') {
+		$.ajax({
+			url: "http://games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + this.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
+			type: "GET",
+			success: function (response) {
+				this.profileImage = $(response).find('.mugshot img').attr('src');
+			}.bind(this)
+		});
+		this.playerProfileUrl = 'http://espn.go.com/nfl/player/_/id/' + this.id + '/';
+	}
+	else if (site === 'yahoo') {
+		this.playerProfileUrl = 'http://sports.yahoo.com/nfl/players/' + this.id;
+		$.ajax({
+			url: this.playerProfileUrl,
+			type: "GET",
+			success: function (response) {
+				var img = $(response).find('.player-image > img').css('background-image');
+				if (img !== undefined) {
+					img = img.replace('url(', '').replace(')', '').replace(/\"/gi, "");
+				}
+				this.profileImage = img;
+			}.bind(this)
+		});
+	}
+	this.site = site;
+	this.otherIds = {};
 	this.leagueStatus = [];
 	this.positions = pos;
-	this.status = status;
+	// this.status = status;
 };

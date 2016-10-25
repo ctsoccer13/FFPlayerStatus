@@ -267,6 +267,7 @@ var fillPopup = function(playerId, closeHandler) {
 				playerId: player.id,
 				playerName: player.name
 			}));
+			$(leagueEntry).find('.league-name').prop('title', leagueName);
 
 			$("#ff-popup .league-data").append(leagueEntry);
 		}

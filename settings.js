@@ -215,29 +215,59 @@
 
 	// ***** Yahoo functions *****
 	// Currently not used
-
-	var getLeagueNameYahoo = function(url, league) {
+	var initLeagueYahoo = function(url) {
+		var league = parseURLYahoo(url);
+		league.url = url;
 		$.ajax({
 			url: url,
 			data: 'text',
+			async: false,
 			success: _.bind(function(response) {
-				var item = $(response).find("title").text();
-				league.leagueName = item;
-			}, this)
+				league.leagueName = getLeagueNameYahoo(response);
+				var teams = getLeagueTeamsYahoo(response);
+				league.teamName = teams[league.teamId];
+				league.shortNames = teams;
+				league.site = 'yahoo';
+		    	league.sport = 'football';
+				league.playerIdToTeamIndex = {};
+	  		}, this)
 		});
+		return league;
 	};
+
+	var getLeagueNameYahoo = function(response) {
+		var text = $(response).find("span.Ta-end.Mend-sm").text();
+		var end = text.replace("Viewing Info for League: ", "");
+		var name = end.substring(0, end.indexOf(" ("));
+		return name;
+	};
+
+	// Fetch and parse all player team names in league
+	var getLeagueTeamsYahoo = function(response) {
+		var teams= {};
+		var myTeamElem = $(response).find('li.Navitem.Navitem-main.Wordwrap-bw');
+		var listItems = $(response).find('ul.Nav-v.Dropdown.Nowrap.Nav-main.No-mtop.Fz-xxs').children();
+		listItems.push(myTeamElem);
+		listItems.each(function(i, elem) {
+			var link = $(elem).children(":first");
+			var parts = $(link).attr('href').split('/');
+			teams[parts[3]] = $.trim($(link).text());
+		});
+		return teams;
+	}
 
 	var parseURLYahoo = function(url) {
 		var league = {};
-		var hashes = url.split('/');
-		league['leagueId'] = hashes[hashes.length-2];
-		league['teamId'] = hashes[hashes.length-1];
+		var urlParts = url.split('.');
+		var hashes = urlParts[urlParts.length-1].split('/');
+		league['leagueId'] = hashes[2];
+		league['teamId'] = hashes[3];
 		return league;
 	};
 
 	// Teamlist - Insert row into table
 	var addLeagueToTeamList = function(league) {
-		var template = $('<tr><td class="tl-icon"><a href="' + league.url + '"><img id="teamlist-icon" src="images/espn.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
+		var template = $('<tr><td class="tl-icon"><a href="' + league.url + '"><img id="teamlist-icon" src="images/' + league.site + '.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
 		$('#teamlist_tbl > tbody:last-child').append(template);
 	}
 
@@ -291,6 +321,11 @@
 		return reg.test(url);
 	}
 
+	var validateURLYahoo = function(url) {
+		var reg = /^.*\/.*\/\d+\/\d+$/gi;
+		return reg.test(url);
+	}
+
 	$(document).ready(function() {
 		// Assuming refresh, rebuild the lists on load
 		populateListOnLoad();
@@ -301,7 +336,7 @@
 		// Team button - Add a team/league
 		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
-			if( !validateURL(url) ) {
+			if( !validateURL(url) && !validateURLYahoo(url) ) {
 				$('#teamlist_ctnr').removeClass("has-success");
 				$('#teamlist_ctnr').addClass("has-warning");
 
@@ -328,8 +363,10 @@
 		    if(url.indexOf("yahoo") !== -1) {
 		    	// var YF = require('yahoo-fantasy');
 		    	// var yf = new YF('dj0yJmk9bThpaW5rRFVhTnBhJmQ9WVdrOVdHNXFTMEpUTnpZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1kNA--', '23fa5e57515e7ccdfc47e8702ad7911cd0ba76ad');
-		    	var league = parseURLYahoo(url);
-		    	getLeagueNameYahoo(url, league);
+		    	var league = initLeagueYahoo(url);
+		    	addLeagueToTeamList(league);
+		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: league.site, league: league}, function(response) {});
+		    	chrome.runtime.sendMessage({method: 'addTeam', site: league.site, league: league}, function(response) {});
 		    }
 		    $('#teamlist_input').val('');
 		});
