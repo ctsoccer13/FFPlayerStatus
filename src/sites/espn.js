@@ -184,7 +184,8 @@ ff.Espn = Site.extend({
 	           	continue;
 	           }
 	           var player = window.playerDict[lastName][firstName];
-	           if(player === undefined) { 
+	           if(player === undefined) {
+	           		var oldFirstName = firstName; 
 	           		if(firstName === 'steven') firstName = 'stephen';
 	           		else if (firstName==='stephen') firstName = 'steven';
 	           		else if (firstName==='rob') firstName = 'robert';
@@ -194,6 +195,7 @@ ff.Espn = Site.extend({
 	           		else if (firstName==='walt') firstName = 'walter';
 	           		else if (firstName==='walter') firstName = 'walt';
 	           		player = window.playerDict[lastName][firstName];
+	           		window.playerDict[lastName][oldFirstName] = player;
 	           }
 	           if(player !== undefined) {
 	           		player.otherIds['espn'] = currPlayerId;

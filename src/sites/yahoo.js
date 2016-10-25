@@ -228,13 +228,27 @@ ff.Yahoo = Site.extend({
 	           // }
 	           var firstName = name.split(/\s+/)[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
 	           var lastName = name.split(/\s+/)[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           if(window.playerDict[lastName]===undefined) {
+		           console.log("no entry for " + firstName + " " + lastName);
+		           continue;
+	           }
 	           var player = window.playerDict[lastName][firstName];
-	           if(player === undefined) { 
+	           if(player === undefined) {
+	           		var oldFirstName = firstName; 
 	           		if(firstName === 'steven') firstName = 'stephen';
 	           		else if (firstName==='stephen') firstName = 'steven';
+	           		else if (firstName==='rob') firstName = 'robert';
+	           		else if (firstName==='robert') firstName = 'rob';
+	           		else if (firstName==='benjamin') firstName = 'benny';
+	           		else if (firstName==='benny') firstName = 'benjamin';
+	           		else if (firstName==='walt') firstName = 'walter';
+	           		else if (firstName==='walter') firstName = 'walt';
 	           		player = window.playerDict[lastName][firstName];
+	           		window.playerDict[lastName][oldFirstName] = player;
 	           }
-	           player.otherIds['yahoo'] = currPlayerId;
+	           if(player !== undefined) {
+	           		player.otherIds['espn'] = currPlayerId;
+	           }
 	      }
 	      if (elements.length === 25) {
 	      	if (offset === undefined) {
