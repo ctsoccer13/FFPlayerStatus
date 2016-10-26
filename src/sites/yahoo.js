@@ -205,15 +205,20 @@ ff.Yahoo = Site.extend({
 	      } else {
 	      	console.log("done");
 	      	if(port !== undefined) {
-	      		port.postMessage({status: "allPlayersComplete"});
+	      		port.postMessage({status: "addLeagueComplete"});
 	      	}
 	      }
 	  	}, this)
 		});
 	},
 
-	addPlayerIdsForSite: function(league, offset) {
-		var urlString = this.getFetchPlayersUrl(league);
+	addPlayerIdsForSite: function(league, port) {
+		this._addPlayerIdsForSite(league, 'O', port);
+		this._addPlayerIdsForSite(league, 'K');
+	},
+
+	_addPlayerIdsForSite: function(league, position, port, offset) {
+		var urlString = this.getFetchPlayersUrl(league, false, position);
 		if (offset !== undefined) {
 			urlString += '&count=' + offset;
 		}
@@ -258,7 +263,7 @@ ff.Yahoo = Site.extend({
 	           		window.playerDict[lastName][oldFirstName] = player;
 	           }
 	           if(player !== undefined) {
-	           		player.otherIds['espn'] = currPlayerId;
+	           		player.otherIds[league.site] = currPlayerId;
 	           }
 	      }
 	      if (elements.length === 25) {
@@ -266,9 +271,12 @@ ff.Yahoo = Site.extend({
 	      		offset = 0;
 	      	}
 	      	offset += 25;
-	      	this.fetchAllPlayersForLeague(league, offset);
+	      	this._addPlayerIdsForSite(league, position, port, offset);
 	      } else {
 	      	console.log("done");
+	      	if(port !== undefined) {
+	      		port.postMessage({status: "addLeagueComplete"});
+	      	}
 	      }
 	  	}, this)
 		});

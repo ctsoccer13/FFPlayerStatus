@@ -167,11 +167,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					this.fantasyFind[request.site].fetchAllPlayersForLeague(request.league, window.listOfPlayers, settingsPort);
 				} else {
 					if(request.site==='espn' && !window.listOfPlayersInitESPN) {
-						this.fantasyFind[request.site].addPlayerIdsForSite(request.league);
+						this.fantasyFind[request.site].addPlayerIdsForSite(request.league, settingsPort);
 						window.listOfPlayersInitESPN = true;
 					} else if (request.site === 'yahoo' && !window.listOfPlayersInitYahoo) {
-						this.fantasyFind[request.site].addPlayerIdsForSite(request.league);
+						this.fantasyFind[request.site].addPlayerIdsForSite(request.league, settingsPort);
 						window.listOfPlayersInitYahoo = true;
+					} else {
+						settingsPort.postMessage({status: "addLeagueComplete"});
 					}
 				}
 				sendResponse(true);

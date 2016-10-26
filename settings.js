@@ -334,7 +334,7 @@
 
 		var port = chrome.runtime.connect({name: "settings"});
 		port.onMessage.addListener(function(msg) {
-			if (msg.status === 'allPlayersComplete') {
+			if (msg.status === 'addLeagueComplete') {
 				$('#teamlist_input').prop('disabled', false);
 		    	$('#teamlist_input').val('');
 			}

@@ -109,7 +109,7 @@ ff.Espn = Site.extend({
 
 	},
 
-	fetchAllPlayersForLeague: function(league, listOfPlayers, opt_offset) {
+	fetchAllPlayersForLeague: function(league, listOfPlayers, port, opt_offset) {
 		var urlString = 'http://games.espn.go.com/ffl/freeagency?leagueId=' + league.leagueId + '&seasonId=' + league.seasonId + '&avail=-1';
 		if (!!opt_offset) {
 			urlString += '&startIndex=' + opt_offset;
@@ -134,8 +134,12 @@ ff.Espn = Site.extend({
 	           		this.addPlayerToDict(player);
 	           		continue;
 	           }
-	           var team = parts[1].split(/\s+/)[1];
-	           var pos = parts[1].split(/\s+/)[2];
+	           var team;
+	           var pos;
+	           if(parts[1]!==undefined) {
+		           team = parts[1].split(/\s+/)[1];
+		           pos = parts[1].split(/\s+/)[2];
+		       }
 	           var statusSpan = $(nameDiv).find("span");
 	           var status = statusSpan ? $(statusSpan).attr("title") : '';
 	           var player = new Player(currPlayerId, name, team, pos, league.leagueId, 'espn');
@@ -148,13 +152,18 @@ ff.Espn = Site.extend({
 	      		opt_offset = 0;
 	      	}
 	      	opt_offset += 50;
-	      	this.fetchAllPlayersForLeague(league, listOfPlayers, opt_offset);
+	      	this.fetchAllPlayersForLeague(league, listOfPlayers, port, opt_offset);
+	      } else {
+	      	console.log("done");
+	      	if(port !== undefined) {
+	      		port.postMessage({status: "addLeagueComplete"});
+	      	}
 	      }
 	  	}, this)
 		});
 	},
 
-	addPlayerIdsForSite: function(league, opt_offset) {
+	addPlayerIdsForSite: function(league, port, opt_offset) {
 		var urlString = 'http://games.espn.go.com/ffl/freeagency?leagueId=' + league.leagueId + '&seasonId=' + league.seasonId + '&avail=-1';
 		if (!!opt_offset) {
 			urlString += '&startIndex=' + opt_offset;
@@ -206,7 +215,12 @@ ff.Espn = Site.extend({
 	      		opt_offset = 0;
 	      	}
 	      	opt_offset += 50;
-	      	this.addPlayerIdsForSite(league, opt_offset);
+	      	this.addPlayerIdsForSite(league, port, opt_offset);
+	      } else {
+	      	console.log("done");
+	      	if(port !== undefined) {
+	      		port.postMessage({status: "addLeagueComplete"});
+	      	}
 	      }
 	  	}, this)
 		});
