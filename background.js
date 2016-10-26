@@ -20,6 +20,7 @@ var listOfPlayersInit = false;
 var listOfPlayersInitESPN = false;
 var listOfPlayersInitYahoo = false;
 var playerDict = {};
+var settingsPort;
 
 chrome.runtime.onInstalled.addListener(function(details) {
 	// Force install for latest update;
@@ -163,7 +164,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					window.listOfPlayersInitESPN = request.site==='espn';
 					window.listOfPlayersInitYahoo = request.site==='yahoo';
 					//this.fantasyFind[request.site].resetLeagues();
-					this.fantasyFind[request.site].fetchAllPlayersForLeague(request.league, window.listOfPlayers);
+					this.fantasyFind[request.site].fetchAllPlayersForLeague(request.league, window.listOfPlayers, settingsPort);
 				} else {
 					if(request.site==='espn' && !window.listOfPlayersInitESPN) {
 						this.fantasyFind[request.site].addPlayerIdsForSite(request.league);
@@ -204,4 +205,12 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     		this.fantasyFind[leagues[i].site].refreshTakenPlayers(leagues[i]);
     	}
     }
+});
+
+chrome.runtime.onConnect.addListener(function(port) {
+	console.assert(port.name == "settings");
+	window.settingsPort = port;
+	// port.onMessage.addListener(function(msg) {
+	// 	if(msg.)
+	// })
 });

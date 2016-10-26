@@ -150,12 +150,12 @@ ff.Yahoo = Site.extend({
 		});
 	},
 
-	fetchAllPlayersForLeague: function(league, listOfPlayers) {
-		this._fetchAllPlayersForLeague(league, listOfPlayers, 'O');
+	fetchAllPlayersForLeague: function(league, listOfPlayers, settingsPort) {
+		this._fetchAllPlayersForLeague(league, listOfPlayers, 'O', settingsPort);
 		this._fetchAllPlayersForLeague(league, listOfPlayers, 'K');
 	},
 
-	_fetchAllPlayersForLeague: function(league, listOfPlayers, position, offset) {
+	_fetchAllPlayersForLeague: function(league, listOfPlayers, position, port, offset) {
 		var urlString = this.getFetchPlayersUrl(league, false, position);
 		if (offset !== undefined) {
 			urlString += '&count=' + offset;
@@ -165,6 +165,9 @@ ff.Yahoo = Site.extend({
 		$.ajax({
 			url: urlString,
 			data: 'text',
+			error: function() {
+				console.log("error");
+			},
 			success: _.bind(function(data) {
 	      var elements = $($('<div>').html(data)[0]).find('.players tbody tr');
 	      //Should be each player row
@@ -198,9 +201,12 @@ ff.Yahoo = Site.extend({
 	      		offset = 0;
 	      	}
 	      	offset += 25;
-	      	this._fetchAllPlayersForLeague(league, listOfPlayers, position, offset);
+	      	this._fetchAllPlayersForLeague(league, listOfPlayers, position, port, offset);
 	      } else {
 	      	console.log("done");
+	      	if(port !== undefined) {
+	      		port.postMessage({status: "allPlayersComplete"});
+	      	}
 	      }
 	  	}, this)
 		});

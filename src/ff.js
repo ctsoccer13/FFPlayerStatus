@@ -181,17 +181,18 @@ Player = function(id, name, team, pos, leagueId, site) {
 	}
 	else if (site === 'yahoo') {
 		this.playerProfileUrl = 'http://sports.yahoo.com/nfl/players/' + this.id;
-		$.ajax({
-			url: this.playerProfileUrl,
-			type: "GET",
-			success: function (response) {
-				var img = $(response).find('.player-image > img').css('background-image');
-				if (img !== undefined) {
-					img = img.replace('url(', '').replace(')', '').replace(/\"/gi, "");
-				}
-				this.profileImage = img;
-			}.bind(this)
-		});
+		// $.ajax({
+		// 	url: this.playerProfileUrl,
+		// 	type: "GET",
+		// 	success: function (response) {
+		// 		var img = $(response).find('.player-image > img').css('background-image');
+		// 		if (img !== undefined) {
+		// 			img = img.replace('url(', '').replace(')', '').replace(/\"/gi, "");
+		// 		}
+		// 		this.profileImage = img;
+		// 	}.bind(this)
+		// });
+		this.profileImage = 'http://l1.yimg.com/bt/api/res/1.2/KP9FQm7CsLax5MVD020j_A--/YXBwaWQ9eW5ld3NfbGVnbztmaT1maWxsO2g9MjMwO3E9NzU7dz0zNDU-/https://s.yimg.com/xe/i/us/sp/v/nfl_cutout/players_l/20161007/' + this.id + '.png'
 	}
 	this.site = site;
 	this.otherIds = {};

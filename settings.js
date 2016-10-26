@@ -332,6 +332,14 @@
 		populateBlacklistOnLoad();
 		populateCustomMappings();
 
+		var port = chrome.runtime.connect({name: "settings"});
+		port.onMessage.addListener(function(msg) {
+			if (msg.status === 'allPlayersComplete') {
+				$('#teamlist_input').prop('disabled', false);
+		    	$('#teamlist_input').val('');
+			}
+		});
+
 		// ***** Team list buttons *****
 		// Team button - Add a team/league
 		$('#teamlist_add_btn').click(function(){
@@ -351,12 +359,15 @@
 				$('#teamlist_input').removeClass("form-control-warning");
 				$('#teamlist_input').addClass("form-control-success");
 			}
+			$('#teamlist_input').prop('disabled', true);
 			// ESPN league
 			if(url.indexOf("espn") !== -1) {
 				// Build league object, populate info
 		    	var league = initLeague(url);
 				addLeagueToTeamList(league);
-		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {});
+		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: 'espn', league: league}, function(response) {
+
+		    	});
 		    	chrome.runtime.sendMessage({method: 'addTeam', site: 'espn', league: league}, function(response) {});
 		    }
 		    // Yahoo league (not yet working)
@@ -365,10 +376,11 @@
 		    	// var yf = new YF('dj0yJmk9bThpaW5rRFVhTnBhJmQ9WVdrOVdHNXFTMEpUTnpZbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD1kNA--', '23fa5e57515e7ccdfc47e8702ad7911cd0ba76ad');
 		    	var league = initLeagueYahoo(url);
 		    	addLeagueToTeamList(league);
-		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: league.site, league: league}, function(response) {});
+		    	chrome.runtime.sendMessage({method: 'checkAllPlayers', site: league.site, league: league}, function(response) {
+
+		    	});
 		    	chrome.runtime.sendMessage({method: 'addTeam', site: league.site, league: league}, function(response) {});
 		    }
-		    $('#teamlist_input').val('');
 		});
 
 		// Team button - 'Enter' handler

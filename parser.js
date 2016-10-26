@@ -253,7 +253,7 @@ var fillPopup = function(playerId, closeHandler) {
 		var leagueId = 0;
 		for (var i = 0; i < player.leagueStatus.length; i++) {
 			var currLeague = player.leagueStatus[i];
-			if(leagueId===undefined) {
+			if(leagueId===undefined && currLeague.site==='espn') {
 				leagueId = currLeague.leagueId;
 			}
 			var leagueName = currLeague.status!==1 ? currLeague.leagueName + ' ' + currLeague.ownedByTeamName : currLeague.leagueName;
@@ -264,7 +264,7 @@ var fillPopup = function(playerId, closeHandler) {
 				btnClass: "status" + currLeague.status,
 				btnLink: currLeague.actionUrl,
 				iconClass: getIconClassForPlayerLeagueStatus(currLeague.status),
-				playerId: player.id,
+				playerId: player.id[currLeague.site],
 				playerName: player.name
 			}));
 			$(leagueEntry).find('.league-name').prop('title', leagueName);
