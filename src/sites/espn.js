@@ -3,11 +3,9 @@ if (!window.ff) {
 }
 
 ff.Espn = Site.extend({
-	
+
 	init: function(ff) {
 		this._super(ff, 'espn');
-
-		this.fetchUserInfoUrl = 'http://www.espn.com/fantasy';
 		this.baseUrl = 'http://games.espn.go.com/';
 	},
 
@@ -156,6 +154,9 @@ ff.Espn = Site.extend({
 	           var names = name.split(/\s+/);
 	           var firstName = names[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
 	           var lastName = names[names.length-1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           if(lastName==='jr.' || lastName==='sr.' || lastName==='v' || lastName==='ii' || lastName==='iii') {
+	           	lastName = names[names.length-2].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           }
 	           if(window.playerDict[lastName]===undefined) {
 	           	console.log("no entry for " + firstName + " " + lastName);
 	           	continue;
