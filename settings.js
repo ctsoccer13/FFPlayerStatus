@@ -267,7 +267,7 @@
 
 	// Teamlist - Insert row into table
 	var addLeagueToTeamList = function(league) {
-		var template = $('<tr><td class="tl-icon"><a href="' + league.url + '"><img id="teamlist-icon" src="images/' + league.site + '.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '</td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
+		var template = $('<tr><td class="tl-icon"><a href="' + league.url + '"><img id="teamlist-icon" src="images/' + league.site + '.png"/></a></td><td class="list-group-item tl-teamname" id="' + league.leagueId + '">' + league.teamName + '<i class="fa fa-spinner fa-spin" style="padding-left: 2px;"></i></td><td id="teamlist_remove_cell"><i class="fa fa-remove" id="team_remove_btn" aria-hidden="true"></i></td></tr>');
 		$('#teamlist_tbl > tbody:last-child').append(template);
 	}
 
@@ -317,12 +317,12 @@
 
 	// Basic input validation for league URL
 	var validateURL = function(url) {
-		var reg = /^.*\?leagueId=.*&teamId=.*&seasonId=.*$/gi;
-		return reg.test(url);
-	}
-
-	var validateURLYahoo = function(url) {
-		var reg = /^.*\/.*\/\d+\/\d+$/gi;
+		var reg;
+		if(url.indexOf('espn') !== -1) {
+			reg = /^.*\?leagueId=.*&teamId=.*&seasonId=.*$/gi;
+		} else if (url.indexOf('yahoo') !== -1) {
+			reg = /^.*\/.*\/\d+\/\d+$/gi;
+		}
 		return reg.test(url);
 	}
 
@@ -337,6 +337,8 @@
 			if (msg.status === 'addLeagueComplete') {
 				$('#teamlist_input').prop('disabled', false);
 		    	$('#teamlist_input').val('');
+
+		    	$('#teamlist_tbl').find(".fa-spin").remove();
 			}
 		});
 
@@ -344,7 +346,7 @@
 		// Team button - Add a team/league
 		$('#teamlist_add_btn').click(function(){
 			var url = $('#teamlist_input').val();
-			if( !validateURL(url) && !validateURLYahoo(url) ) {
+			if( !validateURL(url) ) {
 				$('#teamlist_ctnr').removeClass("has-success");
 				$('#teamlist_ctnr').addClass("has-warning");
 

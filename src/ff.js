@@ -2,6 +2,11 @@ if (!window.ff) {
 	window.ff = {};
 }
 
+var FREE_AGENT = 1;
+var DROP = 2;
+var TRADE = 3;
+
+// Init FF object
 ff.FF = function(storage) {
 	this.storage = storage;
 
@@ -10,6 +15,7 @@ ff.FF = function(storage) {
 	this.customMappings = this.storage.get("global", "nicknames") || {};
 };
 
+// Fetch leagues from localstorage
 ff.FF.prototype.getLeaguesFromStorage = function() {
 	var leagues = [];
 	leagues = leagues.concat(this.espn.getLeaguesFromStorage());
@@ -33,6 +39,7 @@ ff.FF.prototype.getUrlVars = function(url) {
     return vars;
 };
 
+// Refresh taken status for player
 ff.FF.prototype.updatePlayerStatus = function(player) {
 	var leagues = this.getLeaguesFromStorage();
 	player.leagueStatus.length = 0;
@@ -73,6 +80,7 @@ ff.FF.prototype.updatePlayerStatus = function(player) {
 	}
 };
 
+// Lookup player by name
 ff.FF.prototype.playerSearch = function(searchSpace, playerName, callback) {
 	var players = _.values(searchSpace);
 	var names = _.keys(searchSpace);
@@ -83,6 +91,7 @@ ff.FF.prototype.playerSearch = function(searchSpace, playerName, callback) {
 	return callback(validPlayers);
 };
 
+// Get player from list by ID and update status
 ff.FF.prototype.getPlayerById = function(playerId) {
 	var player = window.listOfPlayers[playerId];
 	if (!player.id) {
@@ -93,10 +102,12 @@ ff.FF.prototype.getPlayerById = function(playerId) {
 	return player;
 };
 
+// Fetch user settings from localstorage
 ff.FF.prototype.getUserSettings = function () {
 	return this.storage.get("global", "settings");
 };
 
+// Save user settings to localstorage
 ff.FF.prototype.setUserSettings = function(settingObj) {
 	var currSettings = this.getUserSettings();
 	if (!currSettings) {
@@ -111,6 +122,7 @@ ff.FF.prototype.setUserSettings = function(settingObj) {
 	this.storage.set("global", "settings", currSettings);
 };
 
+// Add a blacklist term and save to localstorage
 ff.FF.prototype.addBlacklistURL = function(url) {
 	var currSettings = this.getUserSettings();
 	var blacklist = currSettings===undefined ? [] : currSettings['blacklist'];
@@ -124,6 +136,7 @@ ff.FF.prototype.addBlacklistURL = function(url) {
 	this.setUserSettings({'blacklist' : blacklist});
 };
 
+// Remove a blacklist term
 ff.FF.prototype.removeBlacklistURL = function(url) {
 	var currSettings = this.getUserSettings();
 	var blacklist = currSettings===undefined ? [] : currSettings['blacklist'];
@@ -137,6 +150,7 @@ ff.FF.prototype.removeBlacklistURL = function(url) {
 	this.setUserSettings({'blacklist' : blacklist});
 };
 
+// Add a nickname and save to localstorage
 ff.FF.prototype.addCustomMapping = function(nickname, playerId) {
 	this.customMappings[nickname] = playerId;
 	this.storage.set("global", "nicknames", this.customMappings);

@@ -102,9 +102,6 @@ var injectMarkup = function(inNodes) {
 	};
 	var _findTextNodes = function(node) {
 		// If this is a TEXT Node trim the whitespace and push.
-
-		//console.log($(node).prop("tagName"));
-
 		if (node.nodeType == 3 && node.nodeValue.trim()) {
 			nodes.push(node);
 			// There are probably other kinds of nodes we should be skipping.
@@ -293,8 +290,10 @@ var fillPopup = function(playerId, closeHandler) {
 		});
 		var year = new Date().getFullYear();
 		//Add Stats
+		// if(leagueId===0) {
+		var espnURL = location.protocol + "//games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + /*player.otherIds['espn'] ? player.otherIds :*/ player.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1";
 		$.ajax({
-			url: location.protocol + "//games.espn.com/ffl/format/playerpop/overview?leagueId=" + leagueId + "&playerId=" + player.id + "&playerIdType=playerId&seasonId=" + year + "&xhr=1",
+			url: espnURL,
 
 			type: "GET",
 			success: function (response) {
@@ -309,6 +308,11 @@ var fillPopup = function(playerId, closeHandler) {
 				// }
 			}
 		});
+		// } else {
+		// 	$.ajax({
+		// 		url: 
+		// 	});   
+		// }
 
 		$('.player-statistics').click(function() {
 			chrome.runtime.sendMessage({method: 'logStuff', data: ['_trackEvent', 'PopUpStats', player.name + ':' + player.id]});
@@ -387,7 +391,7 @@ var evaluateUrl = function(callback) {
 		}
 		if (response.rosterAnnotations === false) {
 			blacklist.push('espn.com/ffl');
-			// blacklist.push('football.fantasysports.yahoo.com/f1');
+			blacklist.push('football.fantasysports.yahoo.com/f1');
 		}
 
 
@@ -408,6 +412,7 @@ var evaluateUrl = function(callback) {
 	});
 }
 
+// Flush cached responses on page refresh
 if(performance.navigation.type == 1) {
 	cachedResponses = {};
 }

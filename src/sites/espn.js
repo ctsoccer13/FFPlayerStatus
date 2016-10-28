@@ -2,40 +2,8 @@ if (!window.ff) {
 	window.ff = {};
 }
 
-
-var FREE_AGENT = 1;
-var DROP = 2;
-var TRADE = 3;
-
-var ESPN_POSITIONS = {
-  QB: 0,
-  RB: 2,
-  WR: 4,
-  TE: 6,
-  DT: 8,
-  DE: 9,
-  LB: 10,
-  CB: 12,
-  S: 13,
-  K: 17,
-  P: 18
-};
-
-var ESPN_POSITION_NAMES = {
-  0: 'QB',
-  2: 'RB',
-  4: 'WR',
-  6: 'TE',
-  8: 'DT',
-  9: 'DE',
-  10: 'LB',
-  12: 'CB',
-  13: 'S',
-  17: 'K',
-  18: 'P'
-};
-
 ff.Espn = Site.extend({
+	
 	init: function(ff) {
 		this._super(ff, 'espn');
 

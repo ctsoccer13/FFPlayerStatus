@@ -12,15 +12,13 @@ if (extensionId === 'ebaejgmbadoagcjkhimjifjhlckdmmbi') {
 var MILLISECONDS_ONE_DAY = 86400000;
 var MILLISECONDS_ONE_HOUR = 3600000;
 
-var loginTab;
-
 this.fantasyFind = new ff.FF(FFStorage);
-var listOfPlayers = {};
-var listOfPlayersInit = false;
-var listOfPlayersInitESPN = false;
-var listOfPlayersInitYahoo = false;
-var playerDict = {};
-var settingsPort;
+
+var listOfPlayers = {};					// Dict containing all known players in NFL - key=playerId, val=player object
+var listOfPlayersInitESPN = false;		// Flag indicating ESPN players have been initialized
+var listOfPlayersInitYahoo = false;		// Flag indicating Yahoo players have been initialized
+var playerDict = {};					// Dict for looking up players by name
+var settingsPort;						// Port for communicating between settings and background
 
 chrome.runtime.onInstalled.addListener(function(details) {
 	// Force install for latest update;
@@ -43,60 +41,19 @@ chrome.runtime.onInstalled.addListener(function(details) {
 	} else if (details.reason == 'update') {
 		chrome.tabs.create({url: 'settings.html', active: true}, function(tab) {});
 	}
+
+	// Setup alarm/timer for periodic league updates
 	chrome.alarms.create('updateLeagues', {delayInMinutes: 30, periodInMinutes: 30});
 });
 
-var loadInstallPage = function() {
-	chrome.tabs.create({url: 'install.html', active: true}, function(tab) {
-		loginTab = tab;
-	});
-};
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch (request.method) {
+
+			// Fetch player object by player id
 			case 'getPlayerById':
 				var player = this.fantasyFind.getPlayerById(request.playerId);
 				sendResponse(player);
 				break;
-
-				// User logged in on the FE script
-			// case 'yahooAuth':
-			// case 'espnAuth':
-
-			// 	var userId = request.userId;
-			// 	var site = request.site;
-			// 	console.log(site, ' has been authed with ', userId);
-			// 	this.fantasyFind[site].setUserId(userId);
-
-			// 	_gaq.push(['_trackEvent', 'Install', site + ' Auth Success']);
-
-			// 	// Fetch the users teams and display them.
-			// 	this.fantasyFind[site].fetchUserTeams(false /* forceReset */, function() {
-			// 		if (loginTab) {
-			// 			chrome.tabs.remove(loginTab.id);
-			// 			loginTab = null;
-			// 		}
-
-			// 		var closeMsg = site + 'CloseTab';
-			// 		// We have to ask the install script to close the tab for who knows what reason.
-			// 		chrome.runtime.sendMessage({method: closeMsg});
-			// 		chrome.runtime.sendMessage({method: 'loginSuccess',
-			// 			userId: this.fantasyFind[site].getSiteUserKey(), site: site});
-			// 	});
-			// 	break;
-
-			// case 'installFetchUserId':
-			// 	console.log('Background is requesting to fetch all the user ids')
-			// 	this.installContext = true;
-			// 	// This happens to also get all the user teams as well.
-			// 	this.fantasyFind.getUserIds(function(userIds) {
-			// 		sendResponse(userIds);
-			// 	});
-			// 	break;
-
-			// case 'parseUserRoster':
-			// 	this.espn.fetchTakenPlayersForAllLeagues();
-			// 	break;
 
 			// case 'hardReset':
 			// 	async.parallel([
@@ -116,6 +73,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			// 	}, this));
 			// 	break;
 
+			// Search for player by name
 			case 'playerSearch':
 				this.fantasyFind.playerSearch(window.listOfPlayers, request.query, function(results) {
 					results.forEach(function(p) {
@@ -125,24 +83,28 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				});
 				break;
 
-			case "changeLeagueVisibility":
-				var leagueId = request.leagueId;
-				var hidden = request.hidden;
-				this.fantasyFind.hideLeague(leagueId, hidden);
-				break;
+			// case "changeLeagueVisibility":
+			// 	var leagueId = request.leagueId;
+			// 	var hidden = request.hidden;
+			// 	this.fantasyFind.hideLeague(leagueId, hidden);
+			// 	break;
 
+			// Update/save user settings in local storage
 			case "changeSetting":
 				this.fantasyFind.setUserSettings(request.query);
 				break;
 
+			// Fetch user settings from local storage
 			case "getSettings":
 				sendResponse(this.fantasyFind.getUserSettings());
 				break;
 
+			// Add term to blacklist
 			case "addBlacklistURL":
 				sendResponse(this.fantasyFind.addBlacklistURL(request.url));
 				break;
 
+			// Remove term from blacklist
 			case "removeBlacklistURL":
 				sendResponse(this.fantasyFind.removeBlacklistURL(request.url));
 				break;
@@ -151,27 +113,35 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				_gaq.push(request.data);
 				break;
 
+			// Add team to local storage and get taken players
 			case "addTeam":
 				sendResponse(this.fantasyFind[request.site].addUserTeam(request.league));
 				break;
 
+			// Delete team from local storage and destroy league object
 			case "removeTeam":
 				sendResponse(this.fantasyFind[request.site].removeUserTeam(request.leagueId));
 				break;
 
+			// Update list of all players in both the list and name dict
 			case "checkAllPlayers":
+				// If neither ESPN or Yahoo has been initialized, we know this is the first run
+				// so we need to populate the player list
 				if(!window.listOfPlayersInitESPN && !window.listOfPlayersInitYahoo) {
 					window.listOfPlayersInitESPN = request.site==='espn';
 					window.listOfPlayersInitYahoo = request.site==='yahoo';
 					//this.fantasyFind[request.site].resetLeagues();
 					this.fantasyFind[request.site].fetchAllPlayersForLeague(request.league, window.listOfPlayers, settingsPort);
 				} else {
+				// We know that the player list must have been updated, and we have the potential to have different ID's from 
+				// different sites. So we need to create a mapping between the different site's IDs
 					if(request.site==='espn' && !window.listOfPlayersInitESPN) {
 						this.fantasyFind[request.site].addPlayerIdsForSite(request.league, settingsPort);
 						window.listOfPlayersInitESPN = true;
 					} else if (request.site === 'yahoo' && !window.listOfPlayersInitYahoo) {
 						this.fantasyFind[request.site].addPlayerIdsForSite(request.league, settingsPort);
 						window.listOfPlayersInitYahoo = true;
+					// We are adding a league for a site that has already been initialized. Not much to be done here.
 					} else {
 						settingsPort.postMessage({status: "addLeagueComplete"});
 					}
@@ -179,18 +149,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				sendResponse(true);
 				break;
 
+			// Fetch player name dict -- mainly used for parser.js
 			case "getDict":
 				sendResponse(window.playerDict);
 				break;
 
+			// Add a nickname->player mapping
 			case "addCustomMapping":
 				sendResponse(this.fantasyFind.addCustomMapping(request.name, request.playerId));
 				break;
 
+			// Remove a nickname mapping
 			case "removeCustomMapping":
 				sendResponse(this.fantasyFind.removeCustomMapping(request.name, request.playerId));
 				break;
 
+			// Get list of known mappings
 			case "getCustomMapping":
 				sendResponse(this.fantasyFind.getCustomMapping());
 				break;
@@ -209,6 +183,10 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
     }
 });
 
+// Handle the settings port. For now, all we need to do is store it to be used later
+// The main point of the settings port is to send a message back to settings.js to
+// re-enable the input field when the fetchAllPlayers function is done. Prevents collisions
+// when mapping different sites' player IDs
 chrome.runtime.onConnect.addListener(function(port) {
 	console.assert(port.name == "settings");
 	window.settingsPort = port;

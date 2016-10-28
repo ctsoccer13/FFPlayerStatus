@@ -1,13 +1,5 @@
 /*
-
-----------------------------------------------------------
-|
-| Fantasy Find Storage
-|
-----------------------------------------------------------
-
-- Just a helper object for dealing with local storage
-
+Just a helper object for dealing with local storage
 */
 
 
