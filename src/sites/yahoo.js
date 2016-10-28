@@ -181,6 +181,9 @@ ff.Yahoo = Site.extend({
 	           // }
 	           var firstName = name.split(/\s+/)[0].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
 	           var lastName = name.split(/\s+/)[1].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           if(lastName==='jr.' || lastName==='sr.' || lastName==='v' || lastName==='ii' || lastName==='iii') {
+	           	lastName = names[names.length-2].toLowerCase().replace(/[,\/#!$%\^&\*;:{}=~()]/g,'');
+	           }
 	           if(window.playerDict[lastName]===undefined) {
 		           console.log("no entry for " + firstName + " " + lastName);
 		           continue;
